@@ -83,7 +83,7 @@ a { color: inherit; }
 .hero-loc { margin-top: 0.6rem; color: var(--muted); }
 .hero-art { display: grid; place-items: center; margin-bottom: 1.25rem; }
 .hero-art img {
-  display: block; width: clamp(4.5rem, 9vw, 7rem); aspect-ratio: 1;
+  display: block; width: clamp(2.25rem, 4.5vw, 3.5rem); aspect-ratio: 1;
   border-radius: 50%; object-fit: cover;
   mix-blend-mode: screen;
 }
