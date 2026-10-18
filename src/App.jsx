@@ -23,7 +23,7 @@ const INFO = {
 const T = {
   fr: {
     tagline: "au delà de la psychédélique et du groove",
-    nav: ["Univers", "Sons", "Booking & collaborations", "Lien & contact"],
+    nav: ["Univers", "Origine", "Biographie", "Sons", "Booking", "Contact"],
     originTitle: "Origine",
     origin: [
       "Valana (वलन) puise ses racines dans le sanskrit, langue sacrée et ancestrale de l'Inde.",
@@ -38,7 +38,7 @@ const T = {
     ],
     soundTitle: "Identité musicale",
     soundIntro:
-      "Deux mondes, un seul fil : la nuit profonde et l’aube qui s’ouvre. VALANA passe de l’un à l’autre sans rupture.",
+      "Des styles variés, des mondes musicaux éclectiques",
     collectivesTitle: "Labels et collectifs",
     collectives: [
       {
@@ -72,19 +72,32 @@ const T = {
     collectiveLinksLabel: "Liens",
     worlds: [
       {
-        name: "Dancefloor",
-        mood: "Nuit, forêt, transe",
+        name: "Mainstage",
+        mood: "Énergie, puissance, transe",
         styles: [
-          ["Psyforest & twilight", "Textures organiques, atmosphères sombres et profondes, rythmes tribaux. Pensé pour les scènes nocturnes."],
-          ["Psytrance & psytechno", "Basslines entraînantes, structures évolutives, grooves répétitifs qui installent une vraie transe."],
+          ["Psytrance", "Des basses puissantes et des mélodies immersives pour faire monter l’énergie du dancefloor."],
+          ["Twilight", "Une psytrance plus sombre et intense, aux sonorités acides et aux rythmes entraînants."],
+          ["Forest", "Des textures organiques et mystérieuses, inspirées par la nature et les ambiances nocturnes."],
         ],
       },
       {
-        name: "Chill-out",
-        mood: "Aube, souffle, contemplation",
+        name: "Alternative",
+        mood: "Groove, exploration, liberté",
         styles: [
-          ["Psychill & psydub", "Nappes atmosphériques, basses enveloppantes, paysages sonores pour les moments de transition."],
-          ["Psybreak", "Rythmiques breakées, variations, énergie imprévisible entre groove et expérimentation."],
+          ["Psytechno", "La rencontre entre la pulsation hypnotique de la techno et les textures psychédéliques."],
+          ["Bush Prog", "Une progressive aux grooves souples et aux sonorités chaleureuses, pensée pour le mouvement."],
+          ["Electro groove & funk", "Des rythmes syncopés et des basses rebondissantes aux accents électro et funk."],
+        ],
+      },
+      {
+        name: "Chill",
+        mood: "Profondeur, nuances, évasion",
+        styles: [
+          ["Psygressive", "Des progressions psychédéliques qui développent le groove avec fluidité et subtilité."],
+          ["Psybass", "Des basses profondes et des textures psychédéliques dans des tempos plus posés."],
+          ["Psydub", "Des échos, des basses rondes et des paysages sonores inspirés du dub."],
+          ["Psybreak", "Des rythmiques breakées et des variations qui jouent entre groove et expérimentation."],
+          ["Psychill", "Des atmosphères amples et apaisées pour ralentir, respirer et voyager."],
         ],
       },
     ],
@@ -93,17 +106,17 @@ const T = {
       ["Format", "DJ sets adaptés aux festivals en plein air, scènes forestières, clubs underground et espaces chill-out."],
       ["Public", "Amateurs de musique électronique psychédélique, de cultures alternatives et d’expériences immersives."],
       ["Objectif", "Collaborations avec des collectifs et présence sur les scènes électroniques en France et à l’international."],
-      ["Durée", "[Ex : 1h30 à 3h, sets longs possibles]"],
+      ["Durée", "1h30 à 3h, sets longs possibles"],
       ["Technique", "[Ex : CDJ / contrôleur, rider disponible sur demande]"],
     ],
-    contactTitle: "Lien & contact",
+    contactTitle: "Contact & Lien",
     placeholderMail: "Contact à renseigner",
     print: "Imprimer / PDF",
     links: "Écoute",
   },
   en: {
     tagline: "Beyond psychedelia and groove",
-    nav: ["World", "Sound", "Booking & collaborations", "Links & contact"],
+    nav: ["World", "Origin", "Biography", "Sound", "Booking", "Contact"],
     originTitle: "Origin",
     origin: [
       "Valana (वलन) has its roots in Sanskrit, the sacred and ancient language of India.",
@@ -118,7 +131,7 @@ const T = {
     ],
     soundTitle: "Musical identity",
     soundIntro:
-      "Two worlds, one thread: the deep night and the opening dawn. VALANA moves between them without a break.",
+      "A wide range of styles across eclectic musical spectrums",
     collectivesTitle: "Labels & collectives",
     collectives: [
       {
@@ -152,19 +165,32 @@ const T = {
     collectiveLinksLabel: "Links",
     worlds: [
       {
-        name: "Dancefloor",
-        mood: "Night, forest, trance",
+        name: "Mainstage",
+        mood: "Energy, power, trance",
         styles: [
-          ["Psyforest & twilight", "Organic textures, dark and deep atmospheres, tribal rhythms. Made for night stages."],
-          ["Psytrance & psytechno", "Driving basslines, evolving structures and repetitive grooves that build a real trance."],
+          ["Psytrance", "Powerful basslines and immersive melodies that build energy on the dancefloor."],
+          ["Twilight", "A darker, more intense psytrance sound, with acidic textures and driving rhythms."],
+          ["Forest", "Organic, mysterious textures inspired by nature and nocturnal atmospheres."],
         ],
       },
       {
-        name: "Chill-out",
-        mood: "Dawn, breath, contemplation",
+        name: "Alternative",
+        mood: "Groove, exploration, freedom",
         styles: [
-          ["Psychill & psydub", "Atmospheric pads, enveloping bass and soundscapes for transitions and rest."],
-          ["Psybreak", "Broken rhythms, shifting patterns and unpredictable energy between groove and experiment."],
+          ["Psytechno", "The meeting point of techno's hypnotic pulse and psychedelic textures."],
+          ["Bush Prog", "Progressive sounds with fluid grooves and warm textures, made for movement."],
+          ["Electro groove & funk", "Syncopated rhythms and bouncing basslines with electro and funk influences."],
+        ],
+      },
+      {
+        name: "Chill",
+        mood: "Depth, nuance, escape",
+        styles: [
+          ["Psygressive", "Psychedelic progressions that build groove with fluidity and subtlety."],
+          ["Psybass", "Deep bass and psychedelic textures at more laid-back tempos."],
+          ["Psydub", "Echoes, rounded basslines and soundscapes inspired by dub."],
+          ["Psybreak", "Broken rhythms and shifting patterns between groove and experimentation."],
+          ["Psychill", "Expansive, calming atmospheres to slow down, breathe and drift."],
         ],
       },
     ],
@@ -183,7 +209,7 @@ const T = {
   },
 };
 
-const ANCHORS = ["univers", "sons", "booking", "contact"];
+const ANCHORS = ["univers", "origine", "biographie", "sons", "booking", "contact"];
 
 export default function App() {
   const [lang, setLang] = useState("fr");
@@ -201,7 +227,9 @@ export default function App() {
     <>
       <header className="bar">
         <a href="#top" className="bar-name">
-          <img src={publicAsset("/logo-90-opacity.png")} alt="" aria-hidden="true" />
+          <span className="bar-name-icon" aria-hidden="true">
+            <img src={publicAsset("/logo-90-opacity.png")} alt="" />
+          </span>
           <span>VALANA</span>
         </a>
         <nav aria-label="Navigation">
@@ -242,14 +270,14 @@ export default function App() {
           <div className="horizon" aria-hidden="true" />
         </section>
 
-        <section className="row">
+        <section className="row" id="origine">
           <h2>{t.originTitle}</h2>
           <div className="prose">
             {t.origin.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </section>
 
-        <section className="row">
+        <section className="row" id="biographie">
           <h2>{t.bioTitle}</h2>
           <div className="prose">
             {t.bio.map((p, i) => (
