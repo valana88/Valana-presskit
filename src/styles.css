@@ -72,13 +72,13 @@ a { color: inherit; }
   font: 400 clamp(3.2rem, 10vw, 7.5rem)/0.95 "Julius Sans One", var(--display);
   letter-spacing: 0.2em; padding-left: 0.2em;
   color: var(--bone); text-shadow: 0 2px 24px rgba(8, 19, 15, 0.75);
-  animation: rise 1.4s cubic-bezier(.2,.7,.2,1) both;
+  animation: rise 1.6s cubic-bezier(.2,.7,.2,1) both;
 }
 .hero-tag {
   margin-top: 1rem; font: 600 clamp(0.7rem, 1.5vw, 0.95rem)/1.5 var(--display);
   letter-spacing: 0.34em; text-transform: uppercase; color: var(--bone);
   text-shadow: 0 2px 12px rgba(8, 19, 15, 0.85);
-  animation: rise 1.4s 0.25s cubic-bezier(.2,.7,.2,1) both;
+  animation: rise 1.6s 0.25s cubic-bezier(.2,.7,.2,1) both;
 }
 .hero-loc { margin-top: 0.6rem; color: var(--muted); }
 .hero-art { display: grid; place-items: center; margin-bottom: 1.25rem; }
