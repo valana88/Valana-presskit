@@ -201,7 +201,7 @@ export default function App() {
     <>
       <header className="bar">
         <a href="#top" className="bar-name">
-          <img src={publicAsset("/logo.jpeg")} alt="" aria-hidden="true" />
+          <img src={publicAsset("/valana-logo.svg")} alt="" aria-hidden="true" />
           <span>VALANA</span>
         </a>
         <nav aria-label="Navigation">
@@ -225,7 +225,10 @@ export default function App() {
         >
           <div className="hero-content">
             <div className="hero-art">
-              <img src={imageUrl(INFO.photoUrl || "/logo.jpeg")} alt="Emblème VALANA" />
+              <img
+                src={imageUrl(INFO.photoUrl || "/valana-logo.svg")}
+                alt="Emblème VALANA"
+              />
             </div>
             <div className="hero-text">
               <h1>VALANA</h1>
