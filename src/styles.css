@@ -61,7 +61,7 @@ a { color: inherit; }
   padding: 3rem clamp(1rem, 4vw, 3rem) 6rem;
   background:
     linear-gradient(180deg, rgba(8, 19, 15, 0.34), rgba(8, 19, 15, 0.12) 48%, rgba(8, 19, 15, 0.62)),
-    url("/hero-background.jpeg") center / cover no-repeat;
+    var(--hero-background-image) center / cover no-repeat;
 }
 .hero-content {
   position: relative; z-index: 1;

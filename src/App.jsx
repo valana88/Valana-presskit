@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+const publicAsset = (path) =>
+  `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+const imageUrl = (path) =>
+  path.startsWith("/") ? publicAsset(path) : path;
+
 /* ------------------------------------------------------------------
    À REMPLIR : toutes les infos réelles de VALANA sont ici.
    Laisse une chaîne vide "" pour masquer une ligne.
@@ -196,7 +201,7 @@ export default function App() {
     <>
       <header className="bar">
         <a href="#top" className="bar-name">
-          <img src="/logo.jpeg" alt="" aria-hidden="true" />
+          <img src={publicAsset("/logo.jpeg")} alt="" aria-hidden="true" />
           <span>VALANA</span>
         </a>
         <nav aria-label="Navigation">
@@ -211,10 +216,16 @@ export default function App() {
       </header>
 
       <main id="top">
-        <section className="hero" id="univers">
+        <section
+          className="hero"
+          id="univers"
+          style={{
+            "--hero-background-image": `url("${publicAsset("/hero-background.jpeg")}")`,
+          }}
+        >
           <div className="hero-content">
             <div className="hero-art">
-              <img src={INFO.photoUrl || "/logo.jpeg"} alt="Emblème VALANA" />
+              <img src={imageUrl(INFO.photoUrl || "/logo.jpeg")} alt="Emblème VALANA" />
             </div>
             <div className="hero-text">
               <h1>VALANA</h1>
@@ -271,7 +282,7 @@ export default function App() {
             {t.collectives.map((collective) => (
               <article className="collective" key={collective.name}>
                 <h3 className="collective-title">
-                  <img src={collective.logo} alt="" aria-hidden="true" />
+                  <img src={publicAsset(collective.logo)} alt="" aria-hidden="true" />
                   <span>{collective.name}</span>
                 </h3>
                 {collective.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
