@@ -4,6 +4,28 @@ const publicAsset = (path) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 const imageUrl = (path) =>
   path.startsWith("/") ? publicAsset(path) : path;
+const WAVE_BAR_COUNT = 72;
+
+const getWaveBarHeight = (wave, index) => {
+  const position = index / (WAVE_BAR_COUNT - 1);
+  const envelope = 0.18 + 0.82 * Math.pow(Math.sin(Math.PI * position), 0.7);
+  const grain = 0.5 + 0.5 * Math.sin(index * 12.9898);
+
+  if (wave === "fast") {
+    const kick = Math.pow(Math.max(0, Math.sin((index + 0.5) * Math.PI / 8)), 5);
+    const detail = 0.5 + 0.5 * Math.sin(index * 2.17);
+    return 3 + envelope * (3 + kick * 18 + detail * 9 + grain * 6);
+  }
+
+  if (wave === "syncopated") {
+    const accents = [0.18, 0.08, 0.3, 0.68, 0.12, 0.24, 0.88, 0.16, 0.1, 0.52, 0.2, 0.36];
+    const accent = accents[index % accents.length];
+    return 3 + envelope * (3 + accent * 22 + grain * 7);
+  }
+
+  const swell = 0.5 + 0.5 * Math.sin(index * 0.22 - 1.1);
+  return 3 + envelope * (2 + swell * 12 + grain * 3);
+};
 
 /* ------------------------------------------------------------------
    À REMPLIR : toutes les infos réelles de VALANA sont ici.
@@ -23,12 +45,20 @@ const INFO = {
 const T = {
   fr: {
     tagline: "au delà de la psychédélique et du groove",
-    nav: ["Univers", "Origine", "Biographie", "Sons", "Booking", "Contact"],
+    bookingButton: "Booking",
+    navigationLabel: "Navigation",
+    menuOpenLabel: "Ouvrir le menu",
+    menuCloseLabel: "Fermer le menu",
+    heroGenresLabel: "Genres musicaux",
+    emblemAlt: "Emblème VALANA",
+    originImageAlt: "Spirale lumineuse dans une nébuleuse",
+    bioImageAlt: "VALANA en performance",
+    nav: ["Univers", "Origine", "Biographie", "Sons", "Label", "Booking", "Contact"],
     originTitle: "Origine",
     origin: [
-      "Valana (वलन) puise ses racines dans le sanskrit, langue sacrée et ancestrale de l'Inde.",
-      "Elle désigne le mouvement ondulatoire, les courbes et dynamiques fluides ainsi que le changement de direction et de fluctuation ; symbolisant l'évolution, la transition et le flux perpétuel des formes et des énergies.",
-      "Valana fait écho aux fréquences et aux rythmes évolutifs des genres musicaux où le son se déploie en vagues et en spirales hypnotiques, incarnant le mouvement perpétuel de la nature, de la conscience et du son.",
+      "VALANA (वलन) puise ses racines dans le sanskrit, langue sacrée et ancestrale de l’Inde.",
+      "Elle désigne le mouvement ondulatoire, les courbes et les dynamiques fluides, ainsi que le changement de direction et de fluctuation. Elle évoque aussi la déflexion de la lumière : le moment où un rayon lumineux, en traversant un milieu ou en rencontrant un obstacle, dévie de sa trajectoire et se révèle autrement. Elle symbolise ainsi l’évolution, la transition et le flux perpétuel des formes et des énergies.",
+      "VALANA fait écho aux fréquences et aux rythmes évolutifs des genres musicaux où le son se déploie en vagues et en spirales hypnotiques, incarnant le mouvement perpétuel de la nature, de la conscience et du son.",
     ],
     bioTitle: "Biographie",
     bio: [
@@ -38,15 +68,15 @@ const T = {
     ],
     soundTitle: "Identité musicale",
     soundIntro:
-      "Des styles variés, des mondes musicaux éclectiques",
-    collectivesTitle: "Labels et collectifs",
+      "Des styles variés, des univers musicaux éclectiques !",
+    collectivesTitle: "Labels & collectifs",
     collectives: [
       {
         name: "Unisson",
         logo: "/unisson-logo.png",
         paragraphs: [
           "Unisson est une association de passionnés de son et d’événementiel, qui réunit des pôles de mix, de production musicale et d’organisation de soirées. Elle propose des soirées accessibles et bienveillantes, avec une équipe de DJs maison.",
-          "VALANA a collaboré pendant cinq ans avec Unisson. Elle y a mixé et en a aussi créé les visuels.",
+          "VALANA a collaboré pendant cinq ans avec Unisson. Elle y a mixé et en a aussi créé des visuels.",
         ],
         links: [
           ["Facebook", "https://facebook.com/unisson"],
@@ -63,7 +93,7 @@ const T = {
         links: [
           ["Site internet", "https://nataraja.fun"],
           ["Artistes", "https://nataraja.fun/artistes"],
-          ["Facebook", "https://www.facebook.com/NatarajaOfficial"],
+          ["Facebook", "https://www.facebook.com/profile.php?id=61571059611305"],
           ["Bandcamp", "https://nataraja.bandcamp.com"],
           ["Instagram", "https://instagram.com/nataraja_collective"],
         ],
@@ -73,6 +103,9 @@ const T = {
     worlds: [
       {
         name: "Mainstage",
+        bpm: "145–180",
+        tempo: 155,
+        wave: "fast",
         mood: "Énergie, puissance, transe",
         styles: [
           ["Psytrance", "Des basses puissantes et des mélodies immersives pour faire monter l’énergie du dancefloor."],
@@ -82,18 +115,24 @@ const T = {
       },
       {
         name: "Alternative",
+        bpm: "125–145",
+        tempo: 135,
+        wave: "syncopated",
         mood: "Groove, exploration, liberté",
         styles: [
           ["Psytechno", "La rencontre entre la pulsation hypnotique de la techno et les textures psychédéliques."],
           ["Bush Prog", "Une progressive aux grooves souples et aux sonorités chaleureuses, pensée pour le mouvement."],
           ["Electro groove & funk", "Des rythmes syncopés et des basses rebondissantes aux accents électro et funk."],
+          ["Psygressive", "Des progressions psychédéliques qui développent le groove avec fluidité et subtilité."],
         ],
       },
       {
         name: "Chill",
+        bpm: "60–125",
+        tempo: 100,
+        wave: "slow",
         mood: "Profondeur, nuances, évasion",
         styles: [
-          ["Psygressive", "Des progressions psychédéliques qui développent le groove avec fluidité et subtilité."],
           ["Psybass", "Des basses profondes et des textures psychédéliques dans des tempos plus posés."],
           ["Psydub", "Des échos, des basses rondes et des paysages sonores inspirés du dub."],
           ["Psybreak", "Des rythmiques breakées et des variations qui jouent entre groove et expérimentation."],
@@ -103,11 +142,10 @@ const T = {
     ],
     bookTitle: "Booking & collaborations",
     bookRows: [
-      ["Format", "DJ sets adaptés aux festivals en plein air, scènes forestières, clubs underground et espaces chill-out."],
+      ["Format", "DJ sets adaptés aux événements et festivals en plein air, clubs underground et espaces chill-out."],
       ["Public", "Amateurs de musique électronique psychédélique, de cultures alternatives et d’expériences immersives."],
       ["Objectif", "Collaborations avec des collectifs et présence sur les scènes électroniques en France et à l’international."],
       ["Durée", "1h30 à 3h, sets longs possibles"],
-      ["Technique", "[Ex : CDJ / contrôleur, rider disponible sur demande]"],
     ],
     contactTitle: "Contact & Lien",
     placeholderMail: "Contact à renseigner",
@@ -116,7 +154,15 @@ const T = {
   },
   en: {
     tagline: "Beyond psychedelia and groove",
-    nav: ["World", "Origin", "Biography", "Sound", "Booking", "Contact"],
+    bookingButton: "Booking",
+    navigationLabel: "Navigation",
+    menuOpenLabel: "Open menu",
+    menuCloseLabel: "Close menu",
+    heroGenresLabel: "Music genres",
+    emblemAlt: "VALANA emblem",
+    originImageAlt: "Luminous spiral in a nebula",
+    bioImageAlt: "VALANA performing",
+    nav: ["World", "Origin", "Biography", "Sound", "Label", "Booking", "Contact"],
     originTitle: "Origin",
     origin: [
       "Valana (वलन) has its roots in Sanskrit, the sacred and ancient language of India.",
@@ -156,7 +202,7 @@ const T = {
         links: [
           ["Website", "https://nataraja.fun"],
           ["Artists", "https://nataraja.fun/artistes"],
-          ["Facebook", "https://www.facebook.com/NatarajaOfficial"],
+          ["Facebook", "https://www.facebook.com/profile.php?id=61571059611305"],
           ["Bandcamp", "https://nataraja.bandcamp.com"],
           ["Instagram", "https://instagram.com/nataraja_collective"],
         ],
@@ -166,6 +212,9 @@ const T = {
     worlds: [
       {
         name: "Mainstage",
+        bpm: "145–180",
+        tempo: 155,
+        wave: "fast",
         mood: "Energy, power, trance",
         styles: [
           ["Psytrance", "Powerful basslines and immersive melodies that build energy on the dancefloor."],
@@ -175,18 +224,24 @@ const T = {
       },
       {
         name: "Alternative",
+        bpm: "125–145",
+        tempo: 135,
+        wave: "syncopated",
         mood: "Groove, exploration, freedom",
         styles: [
           ["Psytechno", "The meeting point of techno's hypnotic pulse and psychedelic textures."],
           ["Bush Prog", "Progressive sounds with fluid grooves and warm textures, made for movement."],
           ["Electro groove & funk", "Syncopated rhythms and bouncing basslines with electro and funk influences."],
+          ["Psygressive", "Psychedelic progressions that build groove with fluidity and subtlety."],
         ],
       },
       {
         name: "Chill",
+        bpm: "60–125",
+        tempo: 100,
+        wave: "slow",
         mood: "Depth, nuance, escape",
         styles: [
-          ["Psygressive", "Psychedelic progressions that build groove with fluidity and subtlety."],
           ["Psybass", "Deep bass and psychedelic textures at more laid-back tempos."],
           ["Psydub", "Echoes, rounded basslines and soundscapes inspired by dub."],
           ["Psybreak", "Broken rhythms and shifting patterns between groove and experimentation."],
@@ -199,8 +254,7 @@ const T = {
       ["Format", "DJ sets for open-air festivals, forest stages, underground clubs and chill-out spaces."],
       ["Audience", "Fans of psychedelic electronic music, alternative cultures and immersive experiences."],
       ["Goal", "Collaborations with collectives and a presence on electronic stages in France and abroad."],
-      ["Set length", "[e.g. 1h30 to 3h, extended sets available]"],
-      ["Technical", "[e.g. CDJ / controller, rider on request]"],
+      ["Set length", "1.5 to 3 hours; extended sets available"],
     ],
     contactTitle: "Links & contact",
     placeholderMail: "Contact to be added",
@@ -209,10 +263,11 @@ const T = {
   },
 };
 
-const ANCHORS = ["univers", "origine", "biographie", "sons", "booking", "contact"];
+const ANCHORS = ["univers", "origine", "biographie", "sons", "labels", "booking", "contact"];
 
 export default function App() {
   const [lang, setLang] = useState("fr");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = T[lang];
 
   const links = [
@@ -232,11 +287,23 @@ export default function App() {
           </span>
           <span>VALANA</span>
         </a>
-        <nav aria-label="Navigation">
+        <nav id="primary-navigation" className={mobileMenuOpen ? "is-open" : ""} aria-label={t.navigationLabel}>
           {t.nav.map((label, i) => (
-            <a key={label} href={`#${ANCHORS[i]}`}>{label}</a>
+            <a key={label} href={`#${ANCHORS[i]}`} onClick={() => setMobileMenuOpen(false)}>{label}</a>
           ))}
         </nav>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? t.menuCloseLabel : t.menuOpenLabel}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
         <div className="bar-tools">
           <button className={lang === "fr" ? "on" : ""} onClick={() => setLang("fr")} aria-pressed={lang === "fr"}>FR</button>
           <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")} aria-pressed={lang === "en"}>EN</button>
@@ -255,7 +322,7 @@ export default function App() {
             <div className="hero-art">
               <img
                 src={imageUrl(INFO.photoUrl || "/logo-90-opacity.png")}
-                alt="Emblème VALANA"
+                alt={t.emblemAlt}
               />
             </div>
             <div className="hero-text">
@@ -263,7 +330,13 @@ export default function App() {
               <p className="hero-tag">{t.tagline}</p>
               {INFO.location && <p className="hero-loc">{INFO.location}</p>}
             </div>
-            <p className="hero-genres" aria-label="Genres musicaux">
+            {INFO.email && (
+              <a className="hero-booking" href={`mailto:${INFO.email}`}>
+                <span>{t.bookingButton}</span>
+                <span>{INFO.email}</span>
+              </a>
+            )}
+            <p className="hero-genres" aria-label={t.heroGenresLabel}>
               Psytrance · Twilight · Forest · Psytechno · Bush Prog · Electro groove &amp; funk · Psygressive · Psybass · psydub · Psybreak · Psychill
             </p>
           </div>
@@ -272,17 +345,101 @@ export default function App() {
 
         <section className="row" id="origine">
           <h2>{t.originTitle}</h2>
-          <div className="prose">
-            {t.origin.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          <div className="origin-content">
+            <div className="prose">
+              {t.origin.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+            <figure className="origin-visual">
+              <img className="origin-photo" src={publicAsset("/origin-photo.jpeg")} alt={t.originImageAlt} />
+              <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
+                  <linearGradient id="portal-orange-gradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ffd18a" />
+                    <stop offset="48%" stopColor="#f4773b" />
+                    <stop offset="100%" stopColor="#75429a" />
+                  </linearGradient>
+                  <linearGradient id="portal-metal-gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#dce6df" />
+                    <stop offset="28%" stopColor="#45656a" />
+                    <stop offset="54%" stopColor="#132c37" />
+                    <stop offset="78%" stopColor="#aebbb5" />
+                    <stop offset="100%" stopColor="#263c46" />
+                  </linearGradient>
+                  <g id="portal-tooth">
+                    <path d="M200 2 219 26 209 22 200 37 191 22 181 26Z" />
+                    <path d="M200 9 211 24 200 20 189 24Z" />
+                    <path d="M200 25v7" />
+                  </g>
+                </defs>
+                <polygon className="ornament-bezel" points="200,1 301,28 372,99 399,200 372,301 301,372 200,399 99,372 28,301 1,200 28,99 99,28" />
+                <polygon className="ornament-orbit" points="200,6 297,32 368,103 394,200 368,297 297,368 200,394 103,368 32,297 6,200 32,103 103,32" />
+                <polygon className="ornament-guide" points="200,16 292,41 359,108 384,200 359,292 292,359 200,384 108,359 41,292 16,200 41,108 108,41" />
+                {Array.from({ length: 36 }, (_, index) => (
+                  <path
+                    key={index}
+                    className={`ornament-tick${index % 4 === 0 ? " ornament-tick-major" : ""}`}
+                    d={index % 4 === 0 ? "M200 14v9" : "M200 17v5"}
+                    transform={`rotate(${index * 10} 200 200)`}
+                  />
+                ))}
+                <text className="ornament-inscription">
+                  <textPath href="#origin-inscription-path" textLength="1218" lengthAdjust="spacing">
+                    वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧
+                  </textPath>
+                </text>
+                {Array.from({ length: 8 }, (_, index) => (
+                  <use
+                    key={index}
+                    className={`ornament-tooth${index % 2 !== 0 ? " ornament-tooth-orange" : ""}`}
+                    href="#portal-tooth"
+                    transform={`rotate(${index * 45} 200 200)`}
+                  />
+                ))}
+                <g className="ornament-sigil" transform="translate(200 14)">
+                  <path d="M0 -12 11 0 0 12 -11 0Z M0 -25V-16 M0 16V25" />
+                  <circle r="3" />
+                </g>
+                <g className="ornament-sigil" transform="translate(386 200) rotate(90)">
+                  <path d="M0 -12 11 0 0 12 -11 0Z M0 -25V-16 M0 16V25" />
+                  <circle r="3" />
+                </g>
+                <g className="ornament-sigil" transform="translate(200 386) rotate(180)">
+                  <path d="M0 -12 11 0 0 12 -11 0Z M0 -25V-16 M0 16V25" />
+                  <circle r="3" />
+                </g>
+                <g className="ornament-sigil" transform="translate(14 200) rotate(270)">
+                  <path d="M0 -12 11 0 0 12 -11 0Z M0 -25V-16 M0 16V25" />
+                  <circle r="3" />
+                </g>
+                <g className="ornament-star" transform="translate(68 68)">
+                  <path d="M0 -7V7 M-7 0H7" /><circle r="2" />
+                </g>
+                <g className="ornament-star" transform="translate(332 68)">
+                  <path d="M0 -7V7 M-7 0H7" /><circle r="2" />
+                </g>
+                <g className="ornament-star" transform="translate(332 332)">
+                  <path d="M0 -7V7 M-7 0H7" /><circle r="2" />
+                </g>
+                <g className="ornament-star" transform="translate(68 332)">
+                  <path d="M0 -7V7 M-7 0H7" /><circle r="2" />
+                </g>
+              </svg>
+            </figure>
           </div>
         </section>
 
         <section className="row" id="biographie">
           <h2>{t.bioTitle}</h2>
-          <div className="prose">
-            {t.bio.map((p, i) => (
-              <p key={i} className={p.startsWith("[") ? "todo" : ""}>{p}</p>
-            ))}
+          <div className="bio-content">
+            <div className="bio-photo-frame">
+              <img className="bio-photo" src={publicAsset("/bio-photo.png")} alt={t.bioImageAlt} />
+            </div>
+            <div className="prose">
+              {t.bio.map((p, i) => (
+                <p key={i} className={p.startsWith("[") ? "todo" : ""}>{p}</p>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -293,7 +450,10 @@ export default function App() {
             <div className="worlds">
               {t.worlds.map((w, wi) => (
                 <article key={w.name} className={`world w${wi}`}>
-                  <h3>{w.name}</h3>
+                  <div className="world-heading">
+                    <h3>{w.name}</h3>
+                    <span className="world-bpm">{w.bpm} BPM</span>
+                  </div>
                   <p className="mood">{w.mood}</p>
                   {w.styles.map(([name, desc]) => (
                     <div key={name} className="style">
@@ -301,13 +461,38 @@ export default function App() {
                       <p>{desc}</p>
                     </div>
                   ))}
+                  <svg
+                    className={`world-wave world-wave-${w.wave}`}
+                    viewBox="0 0 400 48"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    style={{ "--beat-duration": `${240 / w.tempo}s` }}
+                  >
+                    <line className="world-wave-baseline" x1="0" y1="24" x2="400" y2="24" />
+                    {Array.from({ length: WAVE_BAR_COUNT }, (_, index) => {
+                      const height = getWaveBarHeight(w.wave, index);
+                      const step = 400 / WAVE_BAR_COUNT;
+                      return (
+                        <rect
+                          key={index}
+                          className="world-wave-bar"
+                          x={index * step + step * 0.25}
+                          y={24 - height / 2}
+                          width={step * 0.5}
+                          height={height}
+                          rx={step * 0.25}
+                          style={{ animationDelay: `${-index * 0.025}s` }}
+                        />
+                      );
+                    })}
+                  </svg>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="row">
+        <section className="row" id="labels">
           <h2>{t.collectivesTitle}</h2>
           <div className="prose">
             {t.collectives.map((collective) => (
@@ -328,15 +513,24 @@ export default function App() {
         </section>
 
         <section className="row" id="booking">
-          <h2>{t.bookTitle}</h2>
-          <dl className="book">
-            {t.bookRows.map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd className={v.startsWith("[") ? "todo" : ""}>{v}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="booking-layout">
+            <div>
+              <h2>{t.bookTitle}</h2>
+              <dl className="book">
+                {t.bookRows.map(([k, v]) => (
+                  <div key={k}>
+                    <dt>{k}</dt>
+                    <dd className={v.startsWith("[") ? "todo" : ""}>{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+            {INFO.email && (
+              <a className="booking-cta" href={`mailto:${INFO.email}`}>
+                <span>{t.bookingButton}</span>
+              </a>
+            )}
+          </div>
         </section>
 
         <section className="row contact" id="contact">
@@ -353,6 +547,11 @@ export default function App() {
                   <li key={name}><a href={url} target="_blank" rel="noreferrer">{name}</a></li>
                 ))}
               </ul>
+            )}
+            {INFO.email && (
+              <a className="booking-cta contact-booking" href={`mailto:${INFO.email}`}>
+                <span>{t.bookingButton}</span>
+              </a>
             )}
             <button className="print" onClick={() => window.print()}>{t.print}</button>
           </div>
