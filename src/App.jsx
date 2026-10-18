@@ -433,7 +433,18 @@ export default function App() {
           <h2>{t.bioTitle}</h2>
           <div className="bio-content">
             <div className="bio-photo-frame">
-              <img className="bio-photo" src={publicAsset("/bio-photo.png")} alt={t.bioImageAlt} />
+              <div className="bio-photo-image">
+                <img className="bio-photo" src={publicAsset("/bio-photo.png")} alt={t.bioImageAlt} />
+              </div>
+              <svg className="bio-photo-ornaments" viewBox="0 0 400 600" preserveAspectRatio="none" aria-hidden="true">
+                <g className="bio-wave-group bio-wave-group-bottom">
+                  <path className="bio-wave-echo" d="M-18 472 C0 472 0 505 18 505 S36 485 54 485 72 530 90 530 108 497 126 497 144 516 162 516 180 492 198 492" />
+                  <path className="bio-wave-main" d="M-22 494 C-7 494 -6 525 9 525 S25 481 40 481 56 548 71 548 87 503 102 503 118 534 133 534 149 489 164 489 180 522 195 522 211 505 226 505" />
+                  <path className="bio-wave-glint" d="M-18 505 C-7 505 -7 517 4 517 S19 496 30 496 45 531 56 531 71 509 82 509 97 524 108 524 123 500 134 500 149 519 160 519 175 508 190 508" />
+                  <circle className="bio-wave-node" cx="71" cy="548" r="2.6" />
+                  <circle className="bio-wave-node bio-wave-node-soft" cx="164" cy="489" r="1.8" />
+                </g>
+              </svg>
             </div>
             <div className="prose">
               {t.bio.map((p, i) => (
