@@ -40,7 +40,6 @@ a { color: inherit; }
 }
 .bar-name img {
   width: 2.4rem; height: 2.4rem; object-fit: cover; border-radius: 50%;
-  mix-blend-mode: screen;
 }
 .bar nav { display: flex; gap: 1.4rem; font-size: 0.9rem; }
 .bar nav a { text-decoration: none; color: var(--muted); }
@@ -83,9 +82,8 @@ a { color: inherit; }
 .hero-loc { margin-top: 0.6rem; color: var(--muted); }
 .hero-art { display: grid; place-items: center; margin-bottom: 1.25rem; }
 .hero-art img {
-  display: block; width: clamp(4.5rem, 9vw, 7rem); aspect-ratio: 1;
+  display: block; width: clamp(6rem, 12vw, 9.3rem); aspect-ratio: 1;
   border-radius: 50%; object-fit: cover;
-  mix-blend-mode: screen;
 }
 .hero-genres {
   margin-top: clamp(3.5rem, 10vh, 6.5rem);
