@@ -264,7 +264,7 @@ a { color: inherit; }
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start; gap: 1.5rem;
 }
-.world { position: relative; overflow: hidden; padding: 1.8rem 1.8rem 4.5rem; border-radius: 4px 28px 4px 28px; }
+.world { position: relative; overflow: hidden; padding: 1.2rem 1.8rem 4.5rem; border-radius: 4px 28px 4px 28px; }
 .w0 { background: linear-gradient(160deg, #0f2a20, #1a1236); }
 .w1 { background: linear-gradient(160deg, #3a1747, #6a2a4a 60%, #8a4a3a); }
 .w2 { background: linear-gradient(160deg, #173047, #1c5860 60%, #4b4a68); }
@@ -392,10 +392,57 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   *, *::before, *::after {
     box-shadow: none !important; text-shadow: none !important; filter: none !important;
   }
-  .bar, .print, .horizon { display: none; }
+  .bar, .print, .horizon, .booking-cta { display: none !important; }
   :root { --night: #fff; --bone: #111; --muted: #444; --line: #ccc; }
   body { background: #fff; color: #111; }
-  .hero { min-height: auto; padding-bottom: 2rem; }
+  .hero { min-height: auto; padding: 1rem 1.5rem; }
+  .hero-art { width: 4rem; margin-bottom: 0.5rem; }
+  .hero h1 { font-size: 4rem; }
+  .hero-tag { margin-top: 0.4rem; }
+  .hero-genres { margin-top: 1rem; }
+  .row#origine {
+    gap: 1rem; padding-block: 1rem;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .row#origine .origin-content {
+    grid-template-columns: minmax(0, 1.5fr) minmax(9rem, 0.8fr);
+    gap: 1rem;
+  }
+  .row#origine .origin-visual { width: 8rem; padding: 0.35rem; }
+  .row#origine .origin-content .prose p + p { margin-top: 0.5rem; }
+  #biographie {
+    break-before: page; page-break-before: always;
+    gap: 1rem; padding: 1rem 1.5rem;
+    break-after: page; page-break-after: always;
+  }
+  #biographie h2 { margin-bottom: 0.5rem; }
+  #biographie .bio-content {
+    grid-template-columns: minmax(0, 1.5fr) minmax(11rem, 0.8fr);
+    grid-template-areas:
+      "intro intro"
+      "second photo"
+      "third photo";
+    align-items: start; gap: 0.75rem 1.5rem; width: 100%;
+  }
+  #biographie .bio-photo-frame {
+    grid-area: photo; grid-row: 2 / 4;
+    width: min(100%, 14rem); justify-self: stretch;
+  }
+  #biographie .prose { display: contents; max-width: none; }
+  #biographie .prose p {
+    margin: 0; break-inside: avoid; page-break-inside: avoid;
+  }
+  #biographie .prose p:nth-child(1) { grid-area: intro; }
+  #biographie .prose p:nth-child(2) { grid-area: second; }
+  #biographie .prose p:nth-child(3) { grid-area: third; }
+  .booking-contact-print-group {
+    break-before: page; page-break-before: always;
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  #booking, #contact {
+    gap: 1rem; padding-block: 1rem;
+    break-inside: avoid; page-break-inside: avoid;
+  }
   .world { background: #f3f0f7 !important; }
   .row h2 { position: static; }
 }

@@ -523,6 +523,7 @@ export default function App() {
           </div>
         </section>
 
+        <div className="booking-contact-print-group">
         <section className="row" id="booking">
           <div className="booking-layout">
             <div>
@@ -567,6 +568,7 @@ export default function App() {
             <button className="print" onClick={() => window.print()}>{t.print}</button>
           </div>
         </section>
+        </div>
       </main>
 
     </>
