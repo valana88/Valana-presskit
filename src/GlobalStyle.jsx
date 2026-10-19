@@ -121,6 +121,21 @@ button, a { -webkit-tap-highlight-color: transparent; }
   from { opacity: 0.3; }
   to { opacity: 0.45; }
 }
+/* Lueur diffuse autour des rideaux, comme dans les vidéos où tout le ciel verdit */
+.hero-aurora::before {
+  position: absolute; inset: 0;
+  content: "";
+  background:
+    radial-gradient(ellipse 45% 26% at 25% 52%, rgba(90, 235, 150, 0.22), transparent 72%),
+    radial-gradient(ellipse 40% 24% at 72% 46%, rgba(90, 225, 160, 0.2), transparent 72%),
+    radial-gradient(ellipse 70% 30% at 50% 32%, rgba(170, 110, 170, 0.08), transparent 75%);
+  filter: blur(20px);
+  animation: aurora-airglow 13s ease-in-out infinite alternate;
+}
+@keyframes aurora-airglow {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
 .aurora-band {
   position: absolute;
   top: 0; left: -6%;
@@ -129,10 +144,33 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform-origin: 50% 80%;
   will-change: transform;
 }
+/* Rideaux dispersés : chacun occupe une portion du ciel, s'estompe sur les côtés
+   et apparaît puis s'éteint à son propre rythme */
+.aurora-band-patch {
+  top: var(--band-top); left: var(--band-left);
+  width: var(--band-width); height: var(--band-height);
+  filter: blur(2.5px);
+  opacity: 0;
+  mask-image: linear-gradient(to right, transparent, #000 28%, #000 72%, transparent);
+  animation: aurora-appear var(--appear-duration) ease-in-out var(--appear-delay) infinite;
+}
+@keyframes aurora-appear {
+  0% { opacity: 0; }
+  22% { opacity: var(--appear-peak); }
+  42% { opacity: calc(var(--appear-peak) * 0.6); }
+  60% { opacity: calc(var(--appear-peak) * 0.9); }
+  82%, 100% { opacity: 0; }
+}
 .aurora-band-main {
   filter: blur(1.5px);
   opacity: 0.72;
   animation: aurora-breathe-main 11s ease-in-out infinite alternate;
+  /* Trouées douces et irrégulières : plusieurs rideaux de longueurs inégales plutôt qu'un bandeau */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%, #000 7%, #000 21%, rgba(0, 0, 0, 0.2) 29%, #000 37%, #000 49%,
+    rgba(0, 0, 0, 0.35) 55%, #000 61%, #000 70%, rgba(0, 0, 0, 0.1) 79%, #000 87%, #000 94%, transparent 100%
+  );
 }
 .aurora-band-far {
   filter: blur(4px);
@@ -335,9 +373,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
    lueur froide reprise des aurores */
 .hero-art {
   position: relative;
-  display: grid; place-items: center; margin-bottom: clamp(1.1rem, 2.2vw, 1.7rem);
-  /* ≈ 1,75 × la hauteur des capitales du titre (font-size clamp(3.2rem, 10vw, 7.5rem)) */
-  width: clamp(5rem, 12.6vw, 9.5rem); aspect-ratio: 1;
+  display: grid; place-items: center; margin-bottom: clamp(0.9rem, 1.8vw, 1.4rem);
+  /* ≈ 1,35 × la hauteur des capitales du titre (font-size clamp(3.2rem, 10vw, 7.5rem)) */
+  width: clamp(4.2rem, 9.7vw, 7.3rem); aspect-ratio: 1;
 }
 .hero-art::before {
   position: absolute; inset: -18%; z-index: -1;
@@ -624,7 +662,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: waveform-pulse var(--beat-duration, 0.6s) ease-in-out infinite;
 }
 @keyframes waveform-pulse {
-  0%, 100% { transform: scaleY(0.72); opacity: 0.62; }
+  0%, 100% { transform: scaleY(var(--pulse-floor, 0.72)); opacity: 0.62; }
   50% { transform: scaleY(1); opacity: 1; }
 }
 .world-wave-line {
@@ -720,7 +758,8 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
 /* Mobile */
 @media (max-width: 800px) {
   .hero-starfield span:nth-child(n + 10) { display: none; }
-  .aurora-band { left: -70%; width: 240%; }
+  .aurora-band-main, .aurora-band-far { left: -70%; width: 240%; }
+  .aurora-band-patch { left: calc(var(--band-left) * 2.4 - 70%); width: calc(var(--band-width) * 2.4); }
   .floating-actions {
     right: clamp(1rem, 4vw, 3rem);
     left: clamp(1rem, 4vw, 3rem);
@@ -821,7 +860,8 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     transition-duration: 0.01ms !important;
   }
   .hero-starfield span { animation: none; opacity: 0.65; }
-  .aurora-band, .hero-aurora-glow, .hero-art img { animation: none; }
+  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img { animation: none; }
+  .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
   .hero-booking, .floating-booking { animation: none; }
   .floating-actions { animation: none; }
 }
