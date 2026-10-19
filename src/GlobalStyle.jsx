@@ -356,7 +356,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
   animation: booking-cta-shimmer 3.4s ease-in-out infinite;
 }
-.floating-actions .floating-booking:hover { background: var(--bone); border-color: var(--bone); }
+.floating-actions .floating-booking:hover { border-color: var(--bone); }
 .floating-actions .floating-pdf { grid-column: 1; grid-row: 1; justify-self: start; }
 .floating-actions .floating-booking { grid-column: 2; grid-row: 1; justify-self: center; }
 .floating-actions .floating-listen { grid-column: 3; grid-row: 1; justify-self: end; }
@@ -429,6 +429,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-top: 1px solid var(--line);
 }
 .row h2 { font: 700 26px/1.2 var(--display); text-align: center; }
+/* Puce en onde devant chaque titre de section : palette des aurores, amplitude qui s'éteint */
+.row h2::before {
+  display: inline-block; vertical-align: -0.08em;
+  width: 1.85em; height: 0.78em; margin-right: 0.55em;
+  content: "";
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 20'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%2364ee94'/%3E%3Cstop offset='.4' stop-color='%2369d7af'/%3E%3Cstop offset='.72' stop-color='%23a078e6'/%3E%3Cstop offset='1' stop-color='%23cd5ab9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3 12 C6 12 7 15 10 15 S15 9 19 9 25 16 29 16 34 7 39 7 43 13 46 12' fill='none' stroke='url%28%23g%29' stroke-opacity='.45' stroke-width='1.1' stroke-linecap='round'/%3E%3Cpath d='M2 10 C5 10 6 2 10 2 S15 18 19 18 24 4 28 4 32 15 36 15 39.5 7.5 42 7.5 45 10 46 10' fill='none' stroke='url%28%23g%29' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 4px rgba(100, 238, 148, 0.45)) drop-shadow(0 0 7px rgba(160, 120, 230, 0.3));
+  transform-origin: left center;
+  animation: title-wave-breathe 4.4s ease-in-out infinite alternate;
+}
+@keyframes title-wave-breathe {
+  from { transform: scaleY(0.82); opacity: 0.85; }
+  to { transform: scaleY(1.08); opacity: 1; }
+}
 .row#origine h2 { width: min(100%, 70rem); margin-inline: auto; text-align: left; }
 .prose { max-width: 62ch; margin-inline: auto; }
 .prose p + p { margin-top: 1rem; }
@@ -446,6 +460,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   /* Anneau en métal brossé : joints de plaques, reflets d'une lumière haut-gauche, biseaux */
   background:
+    /* Reflets de l'aurore sur le métal : vert d'un côté, violet de l'autre */
+    conic-gradient(
+      from 20deg,
+      rgba(100, 238, 148, 0.16), transparent 14%, transparent 34%, rgba(160, 120, 230, 0.18) 48%,
+      rgba(205, 90, 185, 0.1) 56%, transparent 68%, transparent 84%, rgba(100, 238, 148, 0.16)
+    ),
     repeating-conic-gradient(from 5deg, rgba(2, 10, 14, 0.7) 0deg 0.45deg, rgba(220, 240, 234, 0.18) 0.45deg 0.8deg, transparent 0.8deg 15deg),
     radial-gradient(circle, transparent 88%, rgba(0, 0, 0, 0.5) 90.5%, rgba(255, 255, 255, 0.12) 92%, transparent 95%, rgba(0, 0, 0, 0.45) 100%),
     conic-gradient(
@@ -454,14 +474,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
       #26353b 186deg, #4a5e62 218deg, #c3d3cf 258deg, #f4fbf8 292deg, #cad8d4 310deg, #7d9190 336deg, #8fa3a1 360deg
     );
   box-shadow:
-    0 0 1.5rem rgba(63, 208, 192, 0.2), 0 1.5rem 4rem rgba(0, 0, 0, 0.55),
+    0 0 1.4rem rgba(100, 238, 148, 0.16), 0 0 2.6rem rgba(160, 120, 230, 0.16), 0 1.5rem 4rem rgba(0, 0, 0, 0.55),
     inset 0 1px 1px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.8),
     inset 0 0 0 0.2rem rgba(6, 18, 24, 0.55), inset 0 0 0.7rem 0.35rem rgba(4, 15, 21, 0.7);
 }
 .origin-visual::before {
   content: ""; position: absolute; z-index: -1; inset: -0.75rem;
-  border: 1px solid rgba(63, 208, 192, 0.64); border-radius: 50%;
-  box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.2), inset 0 0 0.6rem rgba(63, 208, 192, 0.14), 0 0 0 0.2rem rgba(7, 25, 32, 0.9), 0 0 0 0.26rem rgba(174, 196, 189, 0.7);
+  border: 1px solid transparent; border-radius: 50%;
+  /* Liseré extérieur aux couleurs des aurores */
+  background: conic-gradient(from 200deg, #64ee94, #69d7af, #87a5d7, #a078e6, #cd5ab9, #a078e6, #69d7af, #64ee94) border-box;
+  mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
+  opacity: 0.75;
 }
 .origin-photo {
   display: block; width: 100%; height: 100%; object-fit: cover;
@@ -473,8 +496,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .origin-horizon {
   position: absolute; inset: 0.72rem; z-index: 0;
   border-radius: 50%; overflow: hidden; pointer-events: none;
-  background: radial-gradient(circle, transparent 58%, rgba(90, 230, 215, 0.14) 80%, rgba(170, 255, 242, 0.55) 95%, rgba(4, 14, 18, 0.85) 100%);
-  box-shadow: inset 0 0.35rem 0.9rem rgba(0, 0, 0, 0.55), inset 0 0 0.35rem rgba(140, 255, 238, 0.7);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 35%, transparent 70%, rgba(200, 180, 255, 0.06)),
+    radial-gradient(circle, transparent 58%, rgba(100, 220, 170, 0.1) 80%, rgba(4, 14, 18, 0.85) 100%);
+  box-shadow: inset 0 0.35rem 0.9rem rgba(0, 0, 0, 0.55), inset 0 0 0.3rem rgba(160, 255, 200, 0.45);
 }
 .origin-horizon::before,
 .origin-horizon::after {
@@ -482,12 +507,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mix-blend-mode: screen;
 }
 .origin-horizon::before {
-  background: repeating-radial-gradient(circle, rgba(170, 255, 240, 0.08) 0 1.5px, transparent 2.5px 13px);
+  background: repeating-radial-gradient(circle, rgba(180, 255, 215, 0.08) 0 1.5px, transparent 2.5px 13px);
   mask-image: radial-gradient(circle, transparent 18%, #000 55%, transparent 92%);
   animation: horizon-ripple 7s ease-in-out infinite;
 }
+/* Anneau de plasma au contact du métal : vert, turquoise, violet, magenta, qui tourne lentement */
 .origin-horizon::after {
-  background: conic-gradient(from 0deg, transparent 0 18%, rgba(255, 255, 255, 0.1) 24%, transparent 31% 66%, rgba(150, 255, 235, 0.08) 73%, transparent 80%);
+  background: conic-gradient(
+    from 0deg,
+    rgba(100, 238, 148, 0.75), rgba(105, 215, 175, 0.55) 18%, rgba(135, 165, 215, 0.5) 36%,
+    rgba(160, 120, 230, 0.75) 52%, rgba(205, 90, 185, 0.6) 64%, rgba(160, 120, 230, 0.5) 78%, rgba(100, 238, 148, 0.75)
+  );
+  mask-image: radial-gradient(circle closest-side, transparent 88%, rgba(0, 0, 0, 0.85) 97%, rgba(0, 0, 0, 0.6) 100%);
   animation: horizon-sheen 38s linear infinite;
 }
 @keyframes horizon-ripple {
@@ -504,30 +535,36 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: relative; isolation: isolate;
   width: min(100%, 25rem); aspect-ratio: 0.72;
   justify-self: center;
-  border: 5px solid transparent;
+  border: solid transparent;
+  border-width: 2px 4px 2px 3px; /* même finesse que l'encadré Booking */
   border-radius: 1rem 4rem 1rem 4rem;
-  --photo-frame-gradient: linear-gradient(135deg, #d5fff8 0%, #55e5d1 24%, #167d82 60%, #4acdbd 82%, #b8fff3 100%);
+  /* Encadrés Biographie et Booking : palette des aurores (vert → turquoise → violet → magenta) */
+  --photo-frame-gradient: linear-gradient(
+    135deg, #d6ffe2 0%, #64ee94 16%, #69d7af 32%, #1d5f52 48%, #87a5d7 62%, #a078e6 76%, #cd5ab9 88%, #ecd2ff 100%
+  );
   background:
     linear-gradient(var(--night), var(--night)) padding-box,
     var(--photo-frame-gradient) border-box;
-  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.36), 0 0 1.2rem rgba(63, 208, 192, 0.16);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.4), 0 0 1.4rem rgba(100, 238, 148, 0.14), 0 0 2.6rem rgba(160, 120, 230, 0.12);
 }
 .bio-photo-frame::before {
   position: absolute; z-index: -1; inset: -0.55rem;
-  border: 1px solid rgba(63, 208, 192, 0.48);
+  border: 1px solid transparent;
   border-radius: 1.2rem 4.2rem 1.2rem 4.2rem;
+  background: linear-gradient(135deg, rgba(100, 238, 148, 0.5), rgba(135, 165, 215, 0.4), rgba(160, 120, 230, 0.5)) border-box;
+  mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
   content: ""; pointer-events: none;
 }
 .bio-photo-frame::after {
   position: absolute; z-index: 3; top: 0.55rem; right: 2rem;
   width: 2.5rem; height: 2px; border-radius: 99px;
-  background: linear-gradient(90deg, rgba(63, 208, 192, 0.4), #c1fff2);
-  box-shadow: 0 0 0.65rem rgba(63, 208, 192, 0.55);
+  background: linear-gradient(90deg, rgba(160, 120, 230, 0.5), #64ee94 60%, #d6ffe2);
+  box-shadow: 0 0 0.65rem rgba(100, 238, 148, 0.55);
   content: ""; pointer-events: none;
 }
 .bio-photo-image {
-  position: absolute; inset: 5px; overflow: hidden;
-  border-radius: 0.78rem 3.68rem 0.78rem 3.68rem;
+  position: absolute; inset: 2px 4px 2px 3px; overflow: hidden;
+  border-radius: 0.85rem 3.8rem 0.85rem 3.8rem;
 }
 .bio-photo {
   display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
@@ -538,20 +575,22 @@ button, a { -webkit-tap-highlight-color: transparent; }
   overflow: visible; pointer-events: none;
 }
 .bio-wave-group { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+/* Ondes sur les photos : dégradé vert → turquoise → violet → magenta des aurores */
+.shared-gradients { position: absolute; width: 0; height: 0; overflow: hidden; }
 .bio-wave-main {
-  stroke: #3fd0c0; stroke-width: 2.4; vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 5px rgba(63, 208, 192, 0.8));
+  stroke: url(#aurora-wave-gradient); stroke-width: 2.4; vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px rgba(100, 238, 148, 0.65)) drop-shadow(0 0 9px rgba(160, 120, 230, 0.4));
 }
 .bio-wave-echo {
-  stroke: rgba(63, 208, 192, 0.38); stroke-width: 1;
+  stroke: url(#aurora-wave-gradient); stroke-opacity: 0.42; stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
 .bio-wave-glint {
-  stroke: #c1fff2; stroke-width: 0.9; opacity: 0.82;
+  stroke: url(#aurora-wave-glint-gradient); stroke-width: 0.9; opacity: 0.85;
   vector-effect: non-scaling-stroke;
 }
-.bio-wave-node { fill: #c1fff2; stroke: var(--turq); stroke-width: 1; }
-.bio-wave-node-soft { opacity: 0.72; }
+.bio-wave-node { fill: #d6ffe2; stroke: #64ee94; stroke-width: 1; }
+.bio-wave-node-soft { fill: #ecd2ff; stroke: #a078e6; opacity: 0.72; }
 .bio-content .prose { width: 100%; }
 .origin-ornaments {
   position: absolute; z-index: 1; inset: -1rem; width: calc(100% + 2rem); height: calc(100% + 2rem);
@@ -562,24 +601,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .ornament-bezel { stroke: url(#portal-metal-gradient); stroke-width: 4; filter: url(#portal-relief); }
 .ornament-tooth, .ornament-sigil { filter: url(#portal-relief); }
-.ornament-orbit { stroke: rgba(63, 208, 192, 0.7); stroke-width: 0.8; stroke-dasharray: 1 4; }
+.ornament-orbit { stroke: rgba(100, 238, 148, 0.6); stroke-width: 0.8; stroke-dasharray: 1 4; }
 .ornament-guide { stroke: rgba(195, 217, 209, 0.62); stroke-width: 0.9; stroke-dasharray: 16 3 1 3; }
 .ornament-tick { fill: none; stroke: rgba(239, 233, 220, 0.55); stroke-width: 0.65; vector-effect: non-scaling-stroke; }
-.ornament-tick-major { stroke: var(--turq); stroke-width: 1; }
+.ornament-tick-major { stroke: #87e8b0; stroke-width: 1; }
+.ornament-tick-major:nth-of-type(8n + 1) { stroke: #b99af0; }
 .ornament-tooth { fill: url(#portal-metal-gradient); stroke: #d4eee4; stroke-width: 1.1; }
-.ornament-tooth path + path { fill: var(--turq); stroke: none; }
+/* Chevrons : gemme verte (aurore basse) ou violette (aurore haute), qui s'allument en décalé */
+.ornament-tooth path + path { fill: #64ee94; stroke: none; animation: chevron-glow-green 5.6s ease-in-out infinite; }
+.ornament-tooth:nth-of-type(4n + 3) path + path { animation-delay: -2.1s; }
 .ornament-tooth path:last-child { fill: none; stroke: rgba(229, 242, 233, 0.8); stroke-width: 1; }
-.ornament-tooth-orange { fill: url(#portal-orange-gradient); stroke: #ffd294; }
-/* Chevrons enclenchés : la lueur orange pulse, en décalé */
-.ornament-tooth-orange path + path { animation: chevron-glow 4.8s ease-in-out infinite; }
-.ornament-tooth-orange:nth-of-type(4n + 2) path + path { animation-delay: -1.2s; }
-.ornament-tooth-orange:nth-of-type(4n) path + path { animation-delay: -2.8s; }
-@keyframes chevron-glow {
-  0%, 100% { filter: drop-shadow(0 0 1px rgba(255, 150, 70, 0.5)); opacity: 0.85; }
-  50% { filter: drop-shadow(0 0 4px rgba(255, 170, 90, 0.95)) brightness(1.25); opacity: 1; }
+.ornament-tooth-violet { fill: url(#portal-violet-gradient); stroke: #e4cfff; }
+.ornament-tooth-violet path + path { fill: #b98cf5; animation: chevron-glow-violet 4.8s ease-in-out infinite; }
+.ornament-tooth-violet:nth-of-type(4n + 2) path + path { animation-delay: -1.2s; }
+.ornament-tooth-violet:nth-of-type(4n) path + path { animation-delay: -2.8s; }
+.ornament-tooth-violet path:last-child { fill: none; stroke: rgba(236, 210, 255, 0.9); }
+@keyframes chevron-glow-green {
+  0%, 100% { filter: drop-shadow(0 0 1px rgba(100, 238, 148, 0.45)); opacity: 0.8; }
+  50% { filter: drop-shadow(0 0 4px rgba(120, 255, 170, 0.9)) brightness(1.2); opacity: 1; }
 }
-.ornament-tooth-orange path + path { fill: #f36b2d; }
-.ornament-tooth-orange path:last-child { fill: none; stroke: rgba(255, 220, 185, 0.9); }
+@keyframes chevron-glow-violet {
+  0%, 100% { filter: drop-shadow(0 0 1px rgba(160, 120, 230, 0.5)); opacity: 0.85; }
+  50% { filter: drop-shadow(0 0 4px rgba(190, 140, 255, 0.95)) brightness(1.25); opacity: 1; }
+}
 .ornament-inscription {
   /* Gravé dans le métal : ombre au-dessus, reflet en dessous */
   fill: rgba(214, 230, 224, 0.78); font: 500 15px/1 system-ui, sans-serif;
@@ -589,16 +633,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: inscription-rotation 90s linear infinite;
 }
 @keyframes inscription-rotation { to { transform: rotate(360deg); } }
-.ornament-sigil { stroke: #b9efdf; stroke-width: 1.2; }
-.ornament-sigil circle { fill: var(--turq); stroke: var(--bone); stroke-width: 0.8; }
+.ornament-sigil { stroke: #c8f5d8; stroke-width: 1.2; }
+.ornament-sigil circle { fill: #64ee94; stroke: var(--bone); stroke-width: 0.8; }
+.ornament-sigil:nth-of-type(2n) circle { fill: #a078e6; }
 .ornament-star { stroke: rgba(239, 233, 220, 0.78); stroke-width: 0.8; }
-.ornament-star circle { fill: var(--turq); stroke: none; }
+.ornament-star circle { fill: #a078e6; stroke: none; }
 .origin-visual::after {
   content: ""; position: absolute; top: 0.08rem; left: 50%;
   width: 1.35rem; height: 1.65rem; transform: translateX(-50%);
   clip-path: polygon(50% 0, 100% 42%, 50% 100%, 0 42%);
-  background: linear-gradient(180deg, #e6ffed, var(--turq) 52%, #277e81);
-  filter: drop-shadow(0 0 0.45rem var(--turq));
+  background: linear-gradient(180deg, #e6ffed, #64ee94 50%, #1d5f52);
+  filter: drop-shadow(0 0 0.45rem rgba(100, 238, 148, 0.9));
 }
 .collective + .collective { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .collective-title {
@@ -679,19 +724,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .booking-layout h2 { margin-bottom: 2rem; text-align: left; }
 .booking-cta {
+  --booking-ease: 650ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative; isolation: isolate; overflow: hidden;
   display: grid; gap: 0.15rem; justify-items: center;
   padding: 0.7rem 1.4rem; border: 1px solid var(--turq); border-radius: 99px;
   background: rgba(8, 19, 15, 0.9); text-decoration: none;
   font: 700 0.9rem/1.4 var(--display); letter-spacing: 0.08em;
   color: var(--bone); box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
   transition:
-    transform var(--hover-ease), background-color var(--hover-ease), color var(--hover-ease),
-    border-color var(--hover-ease), box-shadow var(--hover-ease), scale var(--hover-ease);
+    color 520ms ease 60ms, border-color var(--booking-ease),
+    box-shadow var(--booking-ease), scale var(--booking-ease);
 }
+/* Survol : une lumière crème se diffuse depuis le centre jusqu'à remplir le bouton */
+.booking-cta::before {
+  position: absolute; inset: 0; z-index: -1;
+  border-radius: inherit; content: "";
+  background: radial-gradient(ellipse closest-side, var(--bone) 0 62%, rgba(239, 233, 220, 0) 100%) center / 40% 70% no-repeat;
+  opacity: 0;
+  transition: opacity var(--booking-ease), background-size var(--booking-ease);
+}
+.booking-cta:hover::before { opacity: 1; background-size: 260% 520%; }
 .booking-cta span + span { font: 400 0.72rem/1.4 var(--body); letter-spacing: 0; }
 .booking-cta:hover {
-  scale: var(--hover-scale);
-  background: var(--bone);
+  scale: 1.04;
   border-color: var(--bone);
   color: var(--night);
   box-shadow: 0 0.5rem 1.4rem rgba(0, 0, 0, 0.28), 0 0 1.4rem rgba(239, 233, 220, 0.25);
@@ -702,12 +757,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .book dd { margin: 0; }
 .booking-visual {
   justify-self: end; aspect-ratio: 1;
-  border-width: 2px 4px 2px 3px; border-radius: 1.2rem 4.4rem 1.2rem 4.4rem;
-  --photo-frame-gradient: linear-gradient(135deg, #d5fff8 0%, #55e5d1 20%, #167d82 48%, #6b3fa0 74%, #4acdbd 88%, #b8fff3 100%);
-  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.4), 0 0 1.5rem rgba(63, 208, 192, 0.16);
+  border-radius: 1.2rem 4.4rem 1.2rem 4.4rem;
 }
 .booking-visual::before { inset: -0.65rem; border-radius: 1.5rem 4.7rem 1.5rem 4.7rem; }
-.booking-visual .bio-photo-image { inset: 2px 4px 2px 3px; border-radius: 0.95rem 4rem 0.95rem 4rem; }
+.booking-visual .bio-photo-image { border-radius: 0.95rem 4rem 0.95rem 4rem; }
 .booking-visual img {
   display: block; width: 100%; height: 100%; object-fit: cover;
 }
@@ -860,7 +913,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     transition-duration: 0.01ms !important;
   }
   .hero-starfield span { animation: none; opacity: 0.65; }
-  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img { animation: none; }
+  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img, .row h2::before { animation: none; }
   .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
   .hero-booking, .floating-booking { animation: none; }
   .floating-actions { animation: none; }

@@ -6,8 +6,8 @@ const imageUrl = (path) =>
   path.startsWith("/") ? publicAsset(path) : path;
 const WAVE_BAR_COUNT = 72;
 // Logique commune aux trois univers : tempo = centre de la fourchette de BPM,
-// une pulsation tous les 2 temps, une longueur d'onde par carte, amplitude liée au BPM.
-const WAVE_BEATS_PER_PULSE = 2;
+// une pulsation par mesure (4 temps), une longueur d'onde par carte, amplitude liée au BPM.
+const WAVE_BEATS_PER_PULSE = 4;
 
 const getWaveBarHeight = (wave, index) => {
   const position = index / (WAVE_BAR_COUNT - 1);
@@ -617,6 +617,23 @@ export default function App() {
       </header>
 
       <main id="top">
+        {/* Dégradés partagés par les ondes posées sur les photos : palette des aurores */}
+        <svg className="shared-gradients" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="aurora-wave-gradient" gradientUnits="userSpaceOnUse" x1="-22" y1="0" x2="226" y2="0">
+              <stop offset="0%" stopColor="#64ee94" />
+              <stop offset="32%" stopColor="#69d7af" />
+              <stop offset="58%" stopColor="#87a5d7" />
+              <stop offset="80%" stopColor="#a078e6" />
+              <stop offset="100%" stopColor="#cd5ab9" />
+            </linearGradient>
+            <linearGradient id="aurora-wave-glint-gradient" gradientUnits="userSpaceOnUse" x1="-18" y1="0" x2="190" y2="0">
+              <stop offset="0%" stopColor="#d6ffe2" />
+              <stop offset="55%" stopColor="#d4e4ff" />
+              <stop offset="100%" stopColor="#ecd2ff" />
+            </linearGradient>
+          </defs>
+        </svg>
         <section
           className="hero"
           id="univers"
@@ -707,17 +724,18 @@ export default function App() {
               <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
                 <defs>
                   <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
-                  <linearGradient id="portal-orange-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#ffd18a" />
-                    <stop offset="48%" stopColor="#f4773b" />
-                    <stop offset="100%" stopColor="#75429a" />
+                  {/* Chevrons violets : verre teinté, clair en haut, magenta profond en bas */}
+                  <linearGradient id="portal-violet-gradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ecd2ff" />
+                    <stop offset="45%" stopColor="#a078e6" />
+                    <stop offset="100%" stopColor="#5b2a7e" />
                   </linearGradient>
                   <linearGradient id="portal-metal-gradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#dce6df" />
-                    <stop offset="28%" stopColor="#45656a" />
-                    <stop offset="54%" stopColor="#132c37" />
-                    <stop offset="78%" stopColor="#aebbb5" />
-                    <stop offset="100%" stopColor="#263c46" />
+                    <stop offset="0%" stopColor="#e2f2e8" />
+                    <stop offset="28%" stopColor="#4a6466" />
+                    <stop offset="54%" stopColor="#16283a" />
+                    <stop offset="78%" stopColor="#b9b6cf" />
+                    <stop offset="100%" stopColor="#2b3548" />
                   </linearGradient>
                   {/* Relief métallique : éclairage spéculaire rasant + ombre portée sur l'anneau */}
                   <filter id="portal-relief" x="-20%" y="-20%" width="140%" height="140%">
@@ -773,7 +791,7 @@ export default function App() {
                 {Array.from({ length: 8 }, (_, index) => (
                   <use
                     key={index}
-                    className={`ornament-tooth${index % 2 !== 0 ? " ornament-tooth-orange" : ""}`}
+                    className={`ornament-tooth${index % 2 !== 0 ? " ornament-tooth-violet" : ""}`}
                     href="#portal-tooth"
                     transform={`rotate(${index * 45} 200 200)`}
                   />
