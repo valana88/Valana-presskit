@@ -27,6 +27,149 @@ const getWaveBarHeight = (wave, index) => {
   return 3 + envelope * (2 + swell * 12 + grain * 3);
 };
 
+/* Aurore : une courbe ondulée extrudée vers le haut en rideau, texturée de rayons.
+   La courbe se déforme sur place (morphing SVG) : les plis se forment et se défont sans défiler. */
+const AURORA_WIDTH = 1200;
+const AURORA_FRAMES = 24;
+const AURORA_COLORS = [
+  [190, 255, 210], [110, 235, 165], [90, 220, 170], [80, 200, 190],
+  [90, 170, 210], [125, 130, 220], [165, 110, 210], [190, 100, 190],
+];
+
+const auroraColorAt = (t) => {
+  const scaled = t * (AURORA_COLORS.length - 1);
+  const index = Math.min(Math.floor(scaled), AURORA_COLORS.length - 2);
+  const mix = scaled - index;
+  const [a, b] = [AURORA_COLORS[index], AURORA_COLORS[index + 1]];
+  return a.map((value, channel) => Math.round(value + (b[channel] - value) * mix));
+};
+
+// Ondes stationnaires : chaque pli se creuse et se relâche sur place, sans glisser latéralement.
+// [amplitude, nombre d'ondes, phase, rythme (entier pour boucler), décalage, part fixe]
+// Les "ripples" ajoutent des plis serrés dont l'amplitude enfle et retombe localement.
+const auroraWavePath = ({ base, waves, ripples }, frame) => {
+  const time = (2 * Math.PI * frame) / AURORA_FRAMES;
+  const points = [];
+  for (let x = -120; x <= AURORA_WIDTH + 120; x += 12) {
+    const u = (2 * Math.PI * x) / AURORA_WIDTH;
+    let y = base;
+    for (const [amplitude, harmonic, phase, rate, offset, steady] of waves) {
+      const pulse = steady + (1 - steady) * Math.cos(rate * time + offset);
+      const lean = 0.18 * Math.sin(rate * time + offset * 1.3);
+      y += amplitude * pulse * Math.sin(harmonic * u + phase + lean);
+    }
+    for (const [amplitude, harmonic, phase, rate, offset, spread] of ripples) {
+      const envelope = Math.max(0, Math.sin(spread * u + offset) * Math.cos(rate * time + offset));
+      y += amplitude * envelope * envelope * Math.sin(harmonic * u + phase + 0.6 * Math.sin(rate * time));
+    }
+    points.push(`${x},${y.toFixed(1)}`);
+  }
+  return `M${points.join(" L")}`;
+};
+
+const AURORA_BANDS = [
+  {
+    id: "aurora-band-main",
+    seed: 4,
+    layers: 46,
+    step: 6,
+    duration: 42,
+    wave: {
+      base: 395,
+      waves: [
+        [46, 1.1, 0.4, 1, 0, 0.55],
+        [30, 2.3, 2.1, 2, 1.8, 0.2],
+        [16, 3.6, 4.2, 3, 3.6, 0],
+        [7, 5.2, 1, 2, 0.7, 0],
+      ],
+      ripples: [
+        [22, 9, 0.3, 1, 0.4, 1.5],
+        [16, 13, 2.2, 2, 2.6, 2.5],
+      ],
+    },
+  },
+  {
+    id: "aurora-band-far",
+    seed: 11,
+    layers: 30,
+    step: 6,
+    duration: 56,
+    wave: {
+      base: 270,
+      waves: [
+        [32, 0.9, 2.8, 1, 2.4, 0.6],
+        [24, 2.1, 0.6, 2, 0.3, 0.2],
+        [11, 3.7, 1.3, 3, 4.8, 0],
+      ],
+      ripples: [[16, 8, 1.1, 1, 3.1, 1.8]],
+    },
+  },
+];
+
+function AuroraBand({ id, seed, layers, step, duration, wave }) {
+  const frames = Array.from({ length: AURORA_FRAMES + 1 }, (_, frame) => auroraWavePath(wave, frame));
+
+  return (
+    <svg className={`aurora-band ${id}`} viewBox={`0 0 ${AURORA_WIDTH} 600`} preserveAspectRatio="none">
+      <defs>
+        <path id={`${id}-curve`} d={frames[0]}>
+          <animate attributeName="d" dur={`${duration}s`} repeatCount="indefinite" values={frames.join(";")} />
+        </path>
+        <filter id={`${id}-rays`} filterUnits="userSpaceOnUse" x="-150" y="-100" width={AURORA_WIDTH + 300} height="800">
+          <feTurbulence type="fractalNoise" baseFrequency="0.045 0.0025" numOctaves="3" seed={seed} result="noise" />
+          <feColorMatrix
+            in="noise"
+            type="matrix"
+            values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  3 0 0 0 -0.85"
+            result="rays"
+          />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3 14" result="curtain" />
+          <feComposite in="curtain" in2="rays" operator="arithmetic" k1="1.1" k2="0.3" k3="0" k4="0" result="rayed" />
+          {/* Grandes plages d'intensité : la bande se fragmente au lieu de former un bandeau uniforme */}
+          <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.005" numOctaves="2" seed={seed + 7} result="patchNoise" />
+          {/* Pulsations : les plages lumineuses montent et descendent le long du rideau */}
+          <feOffset in="patchNoise" dy="0" result="patchPulse">
+            <animate
+              attributeName="dy"
+              dur={`${duration * 0.6}s`}
+              repeatCount="indefinite"
+              values="-60;40;-20;60;-60"
+              calcMode="spline"
+              keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1"
+            />
+          </feOffset>
+          <feColorMatrix
+            in="patchPulse"
+            type="matrix"
+            values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  2.6 0 0 0 -0.55"
+            result="patches"
+          />
+          <feComposite in="rayed" in2="patches" operator="arithmetic" k1="1.25" k2="0.15" k3="0" k4="0" />
+        </filter>
+      </defs>
+      <g filter={`url(#${id}-rays)`} fill="none" strokeLinecap="round">
+        {Array.from({ length: layers }, (_, layer) => {
+          const t = layer / (layers - 1);
+          const [r, g, b] = auroraColorAt(t);
+          // La base monte progressivement en intensité : pas de lisière marquée
+          const rise = Math.min(1, t / 0.22);
+          const opacity = 0.95 * rise * rise * (3 - 2 * rise) * Math.pow(1 - t, 1.3) + 0.03;
+          return (
+            <use
+              key={layer}
+              href={`#${id}-curve`}
+              transform={`translate(0 ${-layer * step})`}
+              stroke={`rgb(${r} ${g} ${b})`}
+              strokeOpacity={opacity.toFixed(3)}
+              strokeWidth={step + 2}
+            />
+          );
+        })}
+      </g>
+    </svg>
+  );
+}
+
 /* ------------------------------------------------------------------
    À REMPLIR : toutes les infos réelles de VALANA sont ici.
    Laisse une chaîne vide "" pour masquer une ligne.
@@ -46,6 +189,9 @@ const T = {
   fr: {
     tagline: "au delà de la psychédélique et du groove",
     bookingButton: "Booking",
+    listenButton: "Écouter",
+    pdfButton: "PDF",
+    quickActionsLabel: "Liens rapides",
     navigationLabel: "Navigation",
     menuOpenLabel: "Ouvrir le menu",
     menuCloseLabel: "Fermer le menu",
@@ -153,12 +299,14 @@ const T = {
     placeholderMail: "Contact à renseigner",
     contactQrCaption: "Scanner pour choisir entre Booking et SoundCloud",
     contactQrAlt: "QR code vers les liens Booking et SoundCloud de VALANA",
-    print: "Imprimer / PDF",
     links: "Écoute",
   },
   en: {
     tagline: "Beyond psychedelia and groove",
     bookingButton: "Booking",
+    listenButton: "Listen",
+    pdfButton: "PDF",
+    quickActionsLabel: "Quick links",
     navigationLabel: "Navigation",
     menuOpenLabel: "Open menu",
     menuCloseLabel: "Close menu",
@@ -266,7 +414,6 @@ const T = {
     placeholderMail: "Contact to be added",
     contactQrCaption: "Scan to choose between Booking and SoundCloud",
     contactQrAlt: "QR code to VALANA's Booking and SoundCloud links",
-    print: "Print / PDF",
     links: "Listen",
   },
 };
@@ -276,7 +423,7 @@ const ANCHORS = ["univers", "origine", "biographie", "sons", "labels", "booking"
 export default function App() {
   const [lang, setLang] = useState("fr");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showFloatingBooking, setShowFloatingBooking] = useState(false);
+  const [showFloatingActions, setShowFloatingActions] = useState(false);
   const t = T[lang];
 
   useEffect(() => {
@@ -295,11 +442,11 @@ export default function App() {
   }, [mobileMenuOpen]);
 
   useEffect(() => {
-    const updateFloatingBooking = () => setShowFloatingBooking(window.scrollY > 180);
+    const updateFloatingActions = () => setShowFloatingActions(window.scrollY > 180);
 
-    updateFloatingBooking();
-    window.addEventListener("scroll", updateFloatingBooking, { passive: true });
-    return () => window.removeEventListener("scroll", updateFloatingBooking);
+    updateFloatingActions();
+    window.addEventListener("scroll", updateFloatingActions, { passive: true });
+    return () => window.removeEventListener("scroll", updateFloatingActions);
   }, []);
 
   const links = [
@@ -348,8 +495,14 @@ export default function App() {
           id="univers"
           style={{
             "--hero-background-image": `url("${publicAsset("/hero-background.jpeg")}")`,
+            "--hero-sky-mask": `url("${publicAsset("/hero-sky-mask.png")}")`,
+            "--hero-glow-mask": `url("${publicAsset("/hero-glow-mask.png")}")`,
           }}
         >
+          <div className="hero-aurora" aria-hidden="true">
+            {AURORA_BANDS.map((band) => <AuroraBand key={band.id} {...band} />)}
+          </div>
+          <div className="hero-aurora-glow" aria-hidden="true" />
           <div className="hero-starfield" aria-hidden="true">
             {Array.from({ length: 21 }, (_, index) => {
               const column = index % 7;
@@ -367,7 +520,7 @@ export default function App() {
                     left: `${((column + 0.5 + horizontalJitter) / 7) * 100}%`,
                     top: `${((row + 0.5 + verticalJitter) / 3) * 100}%`,
                     "--star-delay": `${-((index * 17 + index * index * 3) % 70) / 10}s`,
-                    "--star-duration": `${1.9 + (index % 7) * 0.6}s`,
+                    "--star-duration": `${(1.6 + ((index % 8) * 4.4) / 7).toFixed(2)}s`,
                   }}
                 />
               );
@@ -378,14 +531,14 @@ export default function App() {
                 left: "86%",
                 top: "88%",
                 "--star-delay": "-3.4s",
-                "--star-duration": "3.2s",
+                "--star-duration": "4.2s",
               }}
             />
           </div>
           <div className="hero-content">
             <div className="hero-art">
               <img
-                src={imageUrl(INFO.photoUrl || "/logo-90-opacity.png")}
+                src={imageUrl(INFO.photoUrl || "/hero-emblem.png")}
                 alt={t.emblemAlt}
                 decoding="async"
               />
@@ -423,6 +576,7 @@ export default function App() {
                 loading="lazy"
                 decoding="async"
               />
+              <div className="origin-horizon" aria-hidden="true" />
               <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
                 <defs>
                   <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
@@ -438,6 +592,35 @@ export default function App() {
                     <stop offset="78%" stopColor="#aebbb5" />
                     <stop offset="100%" stopColor="#263c46" />
                   </linearGradient>
+                  {/* Relief métallique : éclairage spéculaire rasant + ombre portée sur l'anneau */}
+                  <filter id="portal-relief" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="1.1" result="bump" />
+                    <feSpecularLighting
+                      in="bump"
+                      surfaceScale="3.2"
+                      specularConstant="0.95"
+                      specularExponent="24"
+                      lightingColor="#eafff8"
+                      result="shine"
+                    >
+                      <feDistantLight azimuth="235" elevation="46" />
+                    </feSpecularLighting>
+                    <feComposite in="shine" in2="SourceAlpha" operator="in" result="shineIn" />
+                    <feComposite in="SourceGraphic" in2="shineIn" operator="arithmetic" k1="0" k2="1" k3="0.75" k4="0" result="lit" />
+                    <feDropShadow in="lit" dx="0" dy="1.6" stdDeviation="1.6" floodColor="#020a0e" floodOpacity="0.75" />
+                  </filter>
+                  {/* Horizon des événements : la photo ondule très légèrement */}
+                  <filter id="portal-ripple" x="0" y="0" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.011 0.013" numOctaves="2" seed="3" result="flow">
+                      <animate
+                        attributeName="baseFrequency"
+                        dur="16s"
+                        repeatCount="indefinite"
+                        values="0.011 0.013;0.014 0.010;0.010 0.014;0.011 0.013"
+                      />
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="flow" scale="6" xChannelSelector="R" yChannelSelector="G" />
+                  </filter>
                   <g id="portal-tooth">
                     <path d="M200 2 219 26 209 22 200 37 191 22 181 26Z" />
                     <path d="M200 9 211 24 200 20 189 24Z" />
@@ -703,16 +886,46 @@ export default function App() {
                 <figcaption>{t.contactQrCaption}</figcaption>
               </figure>
             )}
-            <button className="print" onClick={() => window.print()}>{t.print}</button>
           </div>
         </section>
         </div>
       </main>
 
-      {INFO.email && showFloatingBooking && (
-        <a className="booking-cta floating-booking" href={`mailto:${INFO.email}`}>
-          <span>{t.bookingButton}</span>
-        </a>
+      {showFloatingActions && (
+        <nav className="floating-actions" aria-label={t.quickActionsLabel}>
+          {INFO.email && (
+            <a className="booking-cta floating-booking" href={`mailto:${INFO.email}`}>
+              <span>{t.bookingButton}</span>
+            </a>
+          )}
+          {INFO.soundcloud && (
+            <a className="floating-action floating-listen" href={INFO.soundcloud} target="_blank" rel="noreferrer">
+              <svg className="listen-notes" viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="listen-notes-gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#ffffff" />
+                    <stop offset="1" stopColor="#8ff0e0" />
+                  </linearGradient>
+                </defs>
+                <g fill="url(#listen-notes-gradient)">
+                  <path d="M8.1 5.6 19.9 2.4v3.1L8.1 8.7Z" />
+                  <rect x="8.1" y="6.4" width="1.7" height="11.4" rx="0.8" />
+                  <rect x="18.2" y="3.4" width="1.7" height="12.4" rx="0.8" />
+                  <ellipse cx="6.5" cy="17.7" rx="3.2" ry="2.35" transform="rotate(-22 6.5 17.7)" />
+                  <ellipse cx="16.6" cy="15.7" rx="3.2" ry="2.35" transform="rotate(-22 16.6 15.7)" />
+                </g>
+                <path className="listen-notes-sparkle" d="M3.2 4.2v2.6M1.9 5.5h2.6M22 18.6v2M21 19.6h2" />
+              </svg>
+              <span>{t.listenButton}</span>
+            </a>
+          )}
+          <button className="floating-action floating-pdf" type="button" onClick={() => window.print()}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 3.75h8l4 4v12.5H6zM14 3.75v4h4M8.5 14h7M8.5 17h7" />
+            </svg>
+            <span>{t.pdfButton}</span>
+          </button>
+        </nav>
       )}
     </>
   );

@@ -14,6 +14,11 @@ const GlobalStyle = createGlobalStyle`
   --turq-line: rgba(63, 208, 192, 0.34);
   --glass: rgba(8, 19, 15, 0.82);
   --display: "Syne", system-ui, sans-serif;
+  --hover-ease: 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  --hover-fill: rgba(63, 208, 192, 0.14);
+  --hover-border: rgba(140, 240, 222, 0.85);
+  --hover-glow: 0 0 1.4rem rgba(63, 208, 192, 0.3);
+  --hover-scale: 1.05;
   --body: Verdana, sans-serif;
 }
 
@@ -54,7 +59,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform: scale(1.33);
 }
 .bar nav { display: flex; gap: 1.4rem; font-size: 0.9rem; }
-.bar nav a { text-decoration: none; color: var(--muted); transition: color 180ms ease; }
+.bar nav a { text-decoration: none; color: var(--muted); transition: color var(--hover-ease); }
 .bar nav a:hover { color: var(--bone); }
 .menu-toggle { display: none; }
 .bar-tools { display: flex; gap: 0.3rem; }
@@ -62,8 +67,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font: 700 0.8rem var(--display); color: var(--muted);
   background: none; border: 1px solid var(--line); border-radius: 99px;
   min-height: 2.4rem; padding: 0.25rem 0.7rem; cursor: pointer;
-  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  transition: color var(--hover-ease), background-color var(--hover-ease), border-color var(--hover-ease), scale var(--hover-ease);
 }
+.bar-tools button:hover { scale: var(--hover-scale); }
+.bar-tools button:not(.on):hover { color: var(--bone); border-color: var(--turq-line); background: rgba(63, 208, 192, 0.08); }
 .bar-tools button.on { color: var(--night); background: var(--bone); border-color: var(--bone); }
 
 /* Hero */
@@ -73,11 +80,76 @@ button, a { -webkit-tap-highlight-color: transparent; }
   display: flex; align-items: center; justify-content: center;
   padding: 3rem clamp(1rem, 4vw, 3rem) 6rem;
   background:
-    linear-gradient(180deg, rgba(8, 19, 15, 0.34), rgba(8, 19, 15, 0.12) 48%, rgba(8, 19, 15, 0.62)),
+    linear-gradient(180deg, rgba(8, 19, 15, 0.14), rgba(8, 19, 15, 0) 42%, rgba(8, 19, 15, 0.58)),
     var(--hero-background-image) center / cover no-repeat;
 }
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  /* Le masque du ciel reprend le cadrage du fond (center / cover) : rien sur les montagnes ni les arbres */
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 11%),
+    var(--hero-sky-mask);
+  mask-size: 100% 100%, cover;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+}
+/* Lumière de l'aurore sur les crêtes et la cime des arbres : fond le ciel et le relief ensemble */
+.hero-aurora-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse 38% 40% at 18% 55%, rgba(110, 230, 175, 0.55), transparent 75%),
+    radial-gradient(ellipse 34% 36% at 82% 52%, rgba(95, 215, 190, 0.5), transparent 75%),
+    linear-gradient(rgba(100, 200, 190, 0.22), rgba(100, 200, 190, 0.22));
+  mask-image: var(--hero-glow-mask);
+  mask-size: cover;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  opacity: 0.4;
+  animation: aurora-glow-breathe 11s ease-in-out infinite alternate;
+}
+@keyframes aurora-glow-breathe {
+  from { opacity: 0.3; }
+  to { opacity: 0.45; }
+}
+.aurora-band {
+  position: absolute;
+  top: 0; left: -6%;
+  width: 112%; height: 78%;
+  overflow: visible;
+  transform-origin: 50% 80%;
+  will-change: transform;
+}
+.aurora-band-main {
+  filter: blur(1.5px);
+  opacity: 0.72;
+  animation: aurora-breathe-main 11s ease-in-out infinite alternate;
+}
+.aurora-band-far {
+  filter: blur(4px);
+  opacity: 0.38;
+  animation: aurora-breathe-far 15s ease-in-out infinite alternate;
+}
+@keyframes aurora-breathe-main {
+  from { transform: scaleY(0.95) skewX(-2deg); opacity: 0.62; }
+  50% { opacity: 0.8; }
+  to { transform: scaleY(1.05) skewX(2deg); opacity: 0.7; }
+}
+@keyframes aurora-breathe-far {
+  from { transform: scaleY(1.04) skewX(1.5deg); opacity: 0.3; }
+  to { transform: scaleY(0.96) skewX(-1.5deg); opacity: 0.45; }
+}
 .hero-starfield {
-  position: absolute; inset: 0 0 48%; z-index: 0;
+  position: absolute; inset: 0 0 48%; z-index: 1;
   overflow: hidden; pointer-events: none;
 }
 .hero-starfield span {
@@ -110,30 +182,53 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 @keyframes star-twinkle {
   0%, 100% {
-    opacity: 0.48; transform: scale(0.9);
+    opacity: 0.5; transform: scale(0.5);
     box-shadow: 0 0 4px 1px rgba(201, 235, 255, 0.58), 0 0 8px 1.5px rgba(136, 194, 255, 0.2);
   }
   50% {
-    opacity: 0.9; transform: scale(1.22);
+    opacity: 0.8; transform: scale(1);
     box-shadow: 0 0 7px 1.5px rgba(221, 243, 255, 0.86), 0 0 15px 3.5px rgba(136, 194, 255, 0.4);
   }
 }
 .hero-content {
-  position: relative; z-index: 1;
+  position: relative; z-index: 2;
   display: flex; flex-direction: column; align-items: center;
   width: min(100%, 60rem); text-align: center;
+}
+/* Voile sombre très doux derrière le titre pour le détacher des aurores */
+.hero-content::before {
+  position: absolute; z-index: -1;
+  inset: 12% -12% 28%;
+  content: "";
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(8, 12, 24, 0.42), rgba(8, 12, 24, 0.18) 55%, transparent 75%);
+  filter: blur(20px);
+  pointer-events: none;
 }
 .hero h1 {
   font: 400 clamp(3.2rem, 10vw, 7.5rem)/0.95 "Julius Sans One", var(--display);
   letter-spacing: 0.2em; padding-left: 0.2em;
-  color: var(--bone); text-shadow: 0 2px 24px rgba(8, 19, 15, 0.75);
+  color: #fbf7ee;
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 0.6),
+    0 2px 6px rgba(8, 12, 24, 0.85),
+    0 4px 28px rgba(8, 12, 24, 0.75),
+    0 0 60px rgba(8, 12, 24, 0.55);
   animation:
     rise 1.6s cubic-bezier(.2,.7,.2,1) both,
     cosmic-title-shimmer 7s ease-in-out 1.6s infinite;
 }
 @keyframes cosmic-title-shimmer {
-  0%, 68%, 100% { text-shadow: 0 2px 24px rgba(8, 19, 15, 0.75), 0 0 10px rgba(136, 194, 255, 0.12); }
-  74%, 80% { text-shadow: 0 2px 24px rgba(8, 19, 15, 0.75), 0 0 9px rgba(229, 247, 255, 0.42), 0 0 24px rgba(136, 194, 255, 0.3); }
+  0%, 68%, 100% {
+    text-shadow:
+      0 0 1px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(8, 12, 24, 0.85),
+      0 4px 28px rgba(8, 12, 24, 0.75), 0 0 60px rgba(8, 12, 24, 0.55), 0 0 10px rgba(136, 194, 255, 0.12);
+  }
+  74%, 80% {
+    text-shadow:
+      0 0 1px rgba(255, 255, 255, 0.7), 0 2px 6px rgba(8, 12, 24, 0.85),
+      0 4px 28px rgba(8, 12, 24, 0.75), 0 0 60px rgba(8, 12, 24, 0.55),
+      0 0 9px rgba(229, 247, 255, 0.5), 0 0 24px rgba(136, 194, 255, 0.35);
+  }
 }
 .hero-tag {
   margin-top: 1rem; font: 600 clamp(0.7rem, 1.5vw, 0.95rem)/1.5 var(--display);
@@ -142,25 +237,137 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: rise 1.6s 0.25s cubic-bezier(.2,.7,.2,1) both;
 }
 .hero-booking { margin-top: 1.5rem; }
-.floating-booking {
-  position: fixed; left: 50%; transform: translateX(-50%);
-  bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 9; margin: 0;
-  animation: floating-booking-in 180ms ease-out both;
+.floating-actions {
+  position: fixed;
+  right: clamp(0.75rem, 3vw, 2rem);
+  left: clamp(0.75rem, 3vw, 2rem);
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 9;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  animation: floating-actions-in 220ms ease-out both;
 }
-.floating-booking:hover { transform: translate(-50%, -2px); }
-@keyframes floating-booking-in {
-  from { opacity: 0; transform: translate(-50%, 0.5rem); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+.hero-booking {
+  position: relative;
+  isolation: isolate;
+  animation: booking-cta-shimmer 3.4s ease-in-out infinite;
+}
+.floating-actions .floating-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  gap: 0.55rem;
+  min-height: 2.8rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(63, 208, 192, 0.72);
+  border-radius: 99px;
+  background: rgba(8, 19, 15, 0.94);
+  color: var(--bone);
+  font: 700 0.84rem/1.2 var(--display);
+  text-decoration: none;
+  box-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.34), 0 0 1rem rgba(63, 208, 192, 0.14);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition:
+    transform var(--hover-ease), background-color var(--hover-ease), color var(--hover-ease),
+    border-color var(--hover-ease), box-shadow var(--hover-ease), scale var(--hover-ease);
+}
+.floating-actions .floating-action:hover {
+  scale: var(--hover-scale);
+  background: rgba(18, 50, 45, 0.95);
+  border-color: var(--hover-border);
+  box-shadow: 0 0.6rem 1.7rem rgba(0, 0, 0, 0.4), var(--hover-glow);
+}
+.floating-actions .floating-action:focus-visible { outline-offset: 4px; }
+.floating-actions .floating-action .soundcloud-logo { width: 1.25rem; height: 1rem; fill: currentColor; }
+.floating-actions .listen-notes {
+  flex: 0 0 auto; width: 1.2rem; height: 1.2rem; overflow: visible;
+  transform-origin: 40% 80%;
+  transition: rotate var(--hover-ease);
+}
+.listen-notes-sparkle {
+  fill: none; stroke: #c9fff5; stroke-width: 1; stroke-linecap: round;
+  opacity: 0.75;
+  transition: opacity var(--hover-ease);
+}
+.floating-actions .floating-listen:hover .listen-notes { rotate: -8deg; }
+.floating-actions .floating-listen:hover .listen-notes-sparkle { opacity: 1; }
+.floating-actions .floating-action .soundcloud-wave { stroke: var(--night); }
+.floating-actions .floating-action:hover .soundcloud-wave { stroke: var(--night); }
+.floating-actions .floating-pdf svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.floating-actions .floating-booking {
+  position: relative;
+  isolation: isolate;
+  width: 248px;
+  min-width: 0;
+  margin: 0;
+  border: 1px solid var(--turq);
+  border-radius: 99px;
+  background: rgba(8, 19, 15, 0.94);
+  box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
+  animation: booking-cta-shimmer 3.4s ease-in-out infinite;
+}
+.floating-actions .floating-booking:hover { background: var(--bone); border-color: var(--bone); }
+.floating-actions .floating-pdf { grid-column: 1; grid-row: 1; justify-self: start; }
+.floating-actions .floating-booking { grid-column: 2; grid-row: 1; justify-self: center; }
+.floating-actions .floating-listen { grid-column: 3; grid-row: 1; justify-self: end; }
+@keyframes booking-cta-shimmer {
+  0%, 100% { box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18), 0 0 0 rgba(136, 194, 255, 0); }
+  50% { box-shadow: 0 0 1.5rem rgba(63, 208, 192, 0.34), 0 0 1.1rem rgba(136, 194, 255, 0.24); }
+}
+@keyframes floating-actions-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .hero-loc { margin-top: 0.6rem; color: var(--muted); }
+/* Emblème en traits seuls, posé dans le ciel : halo sombre discret pour la lisibilité,
+   lueur froide reprise des aurores */
 .hero-art {
-  display: grid; place-items: center; margin-bottom: 1.25rem;
-  width: clamp(5.4rem, 10.8vw, 8.37rem); aspect-ratio: 1;
-  overflow: hidden; border-radius: 50%;
+  position: relative;
+  display: grid; place-items: center; margin-bottom: clamp(1.1rem, 2.2vw, 1.7rem);
+  /* ≈ 1,75 × la hauteur des capitales du titre (font-size clamp(3.2rem, 10vw, 7.5rem)) */
+  width: clamp(5rem, 12.6vw, 9.5rem); aspect-ratio: 1;
+}
+.hero-art::before {
+  position: absolute; inset: -18%; z-index: -1;
+  content: "";
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(8, 12, 24, 0.55) 0 44%, rgba(8, 12, 24, 0.22) 60%, transparent 72%);
+  filter: blur(6px);
 }
 .hero-art img {
-  display: block; width: 100%; height: 100%; object-fit: cover;
-  transform: scale(1.33);
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  opacity: 1;
+  filter:
+    drop-shadow(0 1px 3px rgba(8, 12, 24, 0.9))
+    drop-shadow(0 0 5px rgba(220, 255, 240, 0.6))
+    drop-shadow(0 0 18px rgba(110, 225, 190, 0.22));
+  animation: emblem-glow 11s ease-in-out infinite alternate;
+}
+@keyframes emblem-glow {
+  from {
+    filter:
+      drop-shadow(0 1px 3px rgba(8, 12, 24, 0.9))
+      drop-shadow(0 0 4px rgba(220, 255, 240, 0.5))
+      drop-shadow(0 0 14px rgba(110, 225, 190, 0.16));
+  }
+  to {
+    filter:
+      drop-shadow(0 1px 3px rgba(8, 12, 24, 0.9))
+      drop-shadow(0 0 6px rgba(220, 255, 240, 0.7))
+      drop-shadow(0 0 22px rgba(130, 200, 235, 0.28));
+  }
 }
 .hero-genres {
   margin-top: clamp(3.5rem, 10vh, 6.5rem);
@@ -199,10 +406,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
   justify-self: center; padding: 0.72rem;
   border: 2px solid #c7d0cb;
   border-radius: 50%;
+  /* Anneau en métal brossé : joints de plaques, reflets d'une lumière haut-gauche, biseaux */
   background:
-    repeating-conic-gradient(from 0deg, rgba(220, 235, 229, 0.82) 0deg 0.2deg, transparent 0.2deg 44.5deg, rgba(3, 13, 24, 0.96) 44.5deg 45deg),
-    conic-gradient(from 0deg, #d5dfd9 0deg 2deg, #344b52 2deg 5deg, #0c2631 5deg 17deg, #31616a 17deg 20deg, #18263e 20deg 35deg, #57436f 35deg 39deg, #172c38 39deg 42deg, #b5c5bd 42deg 45deg, #344b52 45deg 47deg, #0c2631 47deg 60deg, #31616a 60deg 63deg, #18263e 63deg 80deg, #57436f 80deg 84deg, #172c38 84deg 87deg, #d5dfd9 87deg 90deg);
-  box-shadow: 0 0 1.5rem rgba(63, 208, 192, 0.22), 0 1.5rem 4rem rgba(0, 0, 0, 0.5), inset 0 0 0 0.18rem rgba(6, 18, 24, 0.9), inset 0 0 0 0.34rem rgba(193, 215, 207, 0.54), inset 0 0 0.7rem 0.4rem rgba(4, 15, 21, 0.82);
+    repeating-conic-gradient(from 5deg, rgba(2, 10, 14, 0.7) 0deg 0.45deg, rgba(220, 240, 234, 0.18) 0.45deg 0.8deg, transparent 0.8deg 15deg),
+    radial-gradient(circle, transparent 88%, rgba(0, 0, 0, 0.5) 90.5%, rgba(255, 255, 255, 0.12) 92%, transparent 95%, rgba(0, 0, 0, 0.45) 100%),
+    conic-gradient(
+      from 0deg,
+      #8fa3a1 0deg, #4a5e62 26deg, #2a3a40 58deg, #5c7173 96deg, #b9cbc7 126deg, #4b5f63 150deg,
+      #26353b 186deg, #4a5e62 218deg, #c3d3cf 258deg, #f4fbf8 292deg, #cad8d4 310deg, #7d9190 336deg, #8fa3a1 360deg
+    );
+  box-shadow:
+    0 0 1.5rem rgba(63, 208, 192, 0.2), 0 1.5rem 4rem rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 0.2rem rgba(6, 18, 24, 0.55), inset 0 0 0.7rem 0.35rem rgba(4, 15, 21, 0.7);
 }
 .origin-visual::before {
   content: ""; position: absolute; z-index: -1; inset: -0.75rem;
@@ -212,7 +428,35 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .origin-photo {
   display: block; width: 100%; height: 100%; object-fit: cover;
   border: 2px solid rgba(5, 18, 22, 0.9); border-radius: 50%;
+  filter: url(#portal-ripple) saturate(1.08);
 }
+/* Horizon des événements : liseré de plasma au contact de l'anneau, ombre de l'anneau,
+   ondes concentriques et reflet tournant */
+.origin-horizon {
+  position: absolute; inset: 0.72rem; z-index: 0;
+  border-radius: 50%; overflow: hidden; pointer-events: none;
+  background: radial-gradient(circle, transparent 58%, rgba(90, 230, 215, 0.14) 80%, rgba(170, 255, 242, 0.55) 95%, rgba(4, 14, 18, 0.85) 100%);
+  box-shadow: inset 0 0.35rem 0.9rem rgba(0, 0, 0, 0.55), inset 0 0 0.35rem rgba(140, 255, 238, 0.7);
+}
+.origin-horizon::before,
+.origin-horizon::after {
+  position: absolute; inset: 0; content: ""; border-radius: 50%;
+  mix-blend-mode: screen;
+}
+.origin-horizon::before {
+  background: repeating-radial-gradient(circle, rgba(170, 255, 240, 0.08) 0 1.5px, transparent 2.5px 13px);
+  mask-image: radial-gradient(circle, transparent 18%, #000 55%, transparent 92%);
+  animation: horizon-ripple 7s ease-in-out infinite;
+}
+.origin-horizon::after {
+  background: conic-gradient(from 0deg, transparent 0 18%, rgba(255, 255, 255, 0.1) 24%, transparent 31% 66%, rgba(150, 255, 235, 0.08) 73%, transparent 80%);
+  animation: horizon-sheen 38s linear infinite;
+}
+@keyframes horizon-ripple {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.09); opacity: 1; }
+}
+@keyframes horizon-sheen { to { transform: rotate(360deg); } }
 .bio-content {
   display: grid; grid-template-columns: minmax(20rem, 1fr) minmax(0, 1.5fr);
   align-items: center; gap: clamp(2rem, 5vw, 5rem);
@@ -278,7 +522,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .ornament-bezel, .ornament-orbit, .ornament-guide, .ornament-sigil, .ornament-star, .ornament-tooth {
   fill: none; vector-effect: non-scaling-stroke;
 }
-.ornament-bezel { stroke: url(#portal-metal-gradient); stroke-width: 4; }
+.ornament-bezel { stroke: url(#portal-metal-gradient); stroke-width: 4; filter: url(#portal-relief); }
+.ornament-tooth, .ornament-sigil { filter: url(#portal-relief); }
 .ornament-orbit { stroke: rgba(63, 208, 192, 0.7); stroke-width: 0.8; stroke-dasharray: 1 4; }
 .ornament-guide { stroke: rgba(195, 217, 209, 0.62); stroke-width: 0.9; stroke-dasharray: 16 3 1 3; }
 .ornament-tick { fill: none; stroke: rgba(239, 233, 220, 0.55); stroke-width: 0.65; vector-effect: non-scaling-stroke; }
@@ -287,10 +532,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .ornament-tooth path + path { fill: var(--turq); stroke: none; }
 .ornament-tooth path:last-child { fill: none; stroke: rgba(229, 242, 233, 0.8); stroke-width: 1; }
 .ornament-tooth-orange { fill: url(#portal-orange-gradient); stroke: #ffd294; }
+/* Chevrons enclenchés : la lueur orange pulse, en décalé */
+.ornament-tooth-orange path + path { animation: chevron-glow 4.8s ease-in-out infinite; }
+.ornament-tooth-orange:nth-of-type(4n + 2) path + path { animation-delay: -1.2s; }
+.ornament-tooth-orange:nth-of-type(4n) path + path { animation-delay: -2.8s; }
+@keyframes chevron-glow {
+  0%, 100% { filter: drop-shadow(0 0 1px rgba(255, 150, 70, 0.5)); opacity: 0.85; }
+  50% { filter: drop-shadow(0 0 4px rgba(255, 170, 90, 0.95)) brightness(1.25); opacity: 1; }
+}
 .ornament-tooth-orange path + path { fill: #f36b2d; }
 .ornament-tooth-orange path:last-child { fill: none; stroke: rgba(255, 220, 185, 0.9); }
 .ornament-inscription {
-  fill: rgba(239, 233, 220, 0.81); font: 500 15px/1 system-ui, sans-serif;
+  /* Gravé dans le métal : ombre au-dessus, reflet en dessous */
+  fill: rgba(214, 230, 224, 0.78); font: 500 15px/1 system-ui, sans-serif;
+  filter: drop-shadow(0 -0.6px 0 rgba(0, 0, 0, 0.85)) drop-shadow(0 0.6px 0 rgba(255, 255, 255, 0.22));
   letter-spacing: 1px; text-anchor: start;
   transform-box: view-box; transform-origin: center;
   animation: inscription-rotation 90s linear infinite;
@@ -391,23 +646,30 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background: rgba(8, 19, 15, 0.9); text-decoration: none;
   font: 700 0.9rem/1.4 var(--display); letter-spacing: 0.08em;
   color: var(--bone); box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
-  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:
+    transform var(--hover-ease), background-color var(--hover-ease), color var(--hover-ease),
+    border-color var(--hover-ease), box-shadow var(--hover-ease), scale var(--hover-ease);
 }
 .booking-cta span + span { font: 400 0.72rem/1.4 var(--body); letter-spacing: 0; }
-.booking-cta:hover { transform: translateY(-2px); background: var(--bone); color: var(--night); }
-.floating-booking.booking-cta:hover { transform: translate(-50%, -2px); }
+.booking-cta:hover {
+  scale: var(--hover-scale);
+  background: var(--bone);
+  border-color: var(--bone);
+  color: var(--night);
+  box-shadow: 0 0.5rem 1.4rem rgba(0, 0, 0, 0.28), 0 0 1.4rem rgba(239, 233, 220, 0.25);
+}
 .book { max-width: 64ch; margin-inline: auto; width: 100%; }
 .book > div { display: grid; grid-template-columns: 8rem 1fr; gap: 1.5rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
 .book dt { font: 700 1rem var(--display); color: var(--turq); }
 .book dd { margin: 0; }
 .booking-visual {
   justify-self: end; aspect-ratio: 1;
-  border-width: 5px; border-radius: 1.2rem 4.4rem 1.2rem 4.4rem;
+  border-width: 2px 4px 2px 3px; border-radius: 1.2rem 4.4rem 1.2rem 4.4rem;
   --photo-frame-gradient: linear-gradient(135deg, #d5fff8 0%, #55e5d1 20%, #167d82 48%, #6b3fa0 74%, #4acdbd 88%, #b8fff3 100%);
   box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.4), 0 0 1.5rem rgba(63, 208, 192, 0.16);
 }
 .booking-visual::before { inset: -0.65rem; border-radius: 1.5rem 4.7rem 1.5rem 4.7rem; }
-.booking-visual .bio-photo-image { inset: 5px; border-radius: 0.95rem 4rem 0.95rem 4rem; }
+.booking-visual .bio-photo-image { inset: 2px 4px 2px 3px; border-radius: 0.95rem 4rem 0.95rem 4rem; }
 .booking-visual img {
   display: block; width: 100%; height: 100%; object-fit: cover;
 }
@@ -425,7 +687,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .links a {
   display: inline-block; padding: 0.4rem 1rem; border: 1px solid var(--line);
   border-radius: 99px; text-decoration: none; font-family: var(--display); font-size: 0.9rem;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:
+    border-color var(--hover-ease), background-color var(--hover-ease), color var(--hover-ease),
+    box-shadow var(--hover-ease), scale var(--hover-ease);
 }
 .link-screen-label { display: inline-flex; align-items: center; gap: 0.45rem; }
 .soundcloud-logo { width: 1.25rem; height: 1rem; fill: #fff; }
@@ -434,9 +698,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .link-print-label { display: none; }
 .contact-print-marker { display: none; }
-.links a:hover { border-color: var(--bone); background: var(--bone); color: var(--night); }
+.links a:hover { scale: var(--hover-scale); border-color: var(--hover-border); background: var(--hover-fill); box-shadow: var(--hover-glow); }
 .contact-print-qr { display: none; }
-.print { margin: 2.5rem auto 0; display: block; font: 600 0.9rem var(--display); color: var(--muted); background: none; border: 0; cursor: pointer; text-decoration: underline; }
 
 footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top: 1px solid var(--line); font-size: 0.95rem; }
 
@@ -446,6 +709,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     justify-self: center; width: min(100%, 18rem);
     padding: 1rem 2rem; font-size: 1.1rem;
   }
+  .hero-booking { width: 248px; min-width: 248px; }
   .contact .mail { font-size: 20px; }
 }
 
@@ -455,6 +719,52 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
 
 /* Mobile */
 @media (max-width: 800px) {
+  .hero-starfield span:nth-child(n + 10) { display: none; }
+  .aurora-band { left: -70%; width: 240%; }
+  .floating-actions {
+    right: clamp(1rem, 4vw, 3rem);
+    left: clamp(1rem, 4vw, 3rem);
+    bottom: max(0.65rem, env(safe-area-inset-bottom));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+  .floating-actions .floating-action {
+    gap: 0.25rem;
+    min-width: 0;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.2rem;
+    font-size: 0.66rem;
+    white-space: nowrap;
+  }
+  .floating-actions .floating-pdf,
+  .floating-actions .floating-listen {
+    width: 100%;
+    min-height: 2.5rem;
+  }
+  .floating-actions .floating-action .soundcloud-logo {
+    width: 1rem;
+    height: 0.8rem;
+    flex: 0 0 auto;
+  }
+  .floating-actions .listen-notes { width: 1rem; height: 1rem; }
+  .floating-actions .floating-pdf svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex: 0 0 auto;
+  }
+  .floating-actions .floating-pdf { grid-column: 1; grid-row: 1; }
+  .floating-actions .floating-booking { grid-column: 2; grid-row: 1; }
+  .floating-actions .floating-listen { grid-column: 3; grid-row: 1; }
+  .floating-actions .floating-booking {
+    justify-self: stretch;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.8rem;
+    padding: 0.65rem 0.4rem;
+    font-size: 0.84rem;
+    letter-spacing: 0.06em;
+  }
   .bar { position: sticky; }
   .bar nav {
     position: absolute; top: calc(100% + 1px); right: 0; left: 0;
@@ -500,6 +810,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   .book > div { grid-template-columns: 1fr; gap: 0.2rem; }
   .booking-layout { grid-template-columns: 1fr; gap: 2rem; }
   .booking-cta { justify-self: center; min-width: min(80%, 18rem); padding: 1rem 2rem; font-size: 1.1rem; }
+  .hero-booking { width: 174px; min-width: 174px; }
   .booking-visual { justify-self: center; width: min(100%, 22rem); }
 }
 
@@ -510,6 +821,9 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     transition-duration: 0.01ms !important;
   }
   .hero-starfield span { animation: none; opacity: 0.65; }
+  .aurora-band, .hero-aurora-glow, .hero-art img { animation: none; }
+  .hero-booking, .floating-booking { animation: none; }
+  .floating-actions { animation: none; }
 }
 
 @keyframes mobile-menu-in {
@@ -527,7 +841,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   *, *::before, *::after {
     box-shadow: none !important; text-shadow: none !important; filter: none !important;
   }
-  .bar, .print, .horizon, .hero-starfield, .booking-cta, .floating-booking { display: none !important; }
+  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .booking-cta, .floating-actions { display: none !important; }
   :root {
     --night: #fff;
     --bone: #13231e;
