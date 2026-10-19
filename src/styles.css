@@ -359,7 +359,10 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   .bar nav.is-open { display: flex; }
   .bar nav a { padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
   .bar nav a:last-child { border-bottom: 0; }
+  .bar-tools { order: 2; margin-left: auto; }
   .menu-toggle {
+    order: 3;
+    margin-left: -0.7rem;
     display: grid; place-content: center; gap: 4px;
     width: 2.4rem; height: 2.4rem; padding: 0;
     color: var(--bone); background: none; border: 1px solid var(--line);
