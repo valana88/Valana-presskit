@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const publicAsset = (path) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
@@ -53,6 +53,7 @@ const T = {
     emblemAlt: "Emblème VALANA",
     originImageAlt: "Spirale lumineuse dans une nébuleuse",
     bioImageAlt: "VALANA en performance",
+    bookingImageAlt: "Mandala psychédélique lumineux",
     nav: ["Univers", "Origine", "Biographie", "Sons", "Label", "Booking", "Contact"],
     originTitle: "Origine",
     origin: [
@@ -105,6 +106,7 @@ const T = {
         name: "Mainstage",
         bpm: "145–180",
         tempo: 155,
+        waveSpeed: 1.08,
         wave: "fast",
         mood: "Énergie, puissance, transe",
         styles: [
@@ -149,6 +151,8 @@ const T = {
     ],
     contactTitle: "Contact & Lien",
     placeholderMail: "Contact à renseigner",
+    contactQrCaption: "Scanner pour choisir entre Booking et SoundCloud",
+    contactQrAlt: "QR code vers les liens Booking et SoundCloud de VALANA",
     print: "Imprimer / PDF",
     links: "Écoute",
   },
@@ -162,6 +166,7 @@ const T = {
     emblemAlt: "VALANA emblem",
     originImageAlt: "Luminous spiral in a nebula",
     bioImageAlt: "VALANA performing",
+    bookingImageAlt: "Luminous psychedelic mandala",
     nav: ["World", "Origin", "Biography", "Sound", "Label", "Booking", "Contact"],
     originTitle: "Origin",
     origin: [
@@ -214,6 +219,7 @@ const T = {
         name: "Mainstage",
         bpm: "145–180",
         tempo: 155,
+        waveSpeed: 1.08,
         wave: "fast",
         mood: "Energy, power, trance",
         styles: [
@@ -258,6 +264,8 @@ const T = {
     ],
     contactTitle: "Links & contact",
     placeholderMail: "Contact to be added",
+    contactQrCaption: "Scan to choose between Booking and SoundCloud",
+    contactQrAlt: "QR code to VALANA's Booking and SoundCloud links",
     print: "Print / PDF",
     links: "Listen",
   },
@@ -268,7 +276,31 @@ const ANCHORS = ["univers", "origine", "biographie", "sons", "labels", "booking"
 export default function App() {
   const [lang, setLang] = useState("fr");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showFloatingBooking, setShowFloatingBooking] = useState(false);
   const t = T[lang];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const updateFloatingBooking = () => setShowFloatingBooking(window.scrollY > 180);
+
+    updateFloatingBooking();
+    window.addEventListener("scroll", updateFloatingBooking, { passive: true });
+    return () => window.removeEventListener("scroll", updateFloatingBooking);
+  }, []);
 
   const links = [
     ["SoundCloud", INFO.soundcloud],
@@ -318,11 +350,44 @@ export default function App() {
             "--hero-background-image": `url("${publicAsset("/hero-background.jpeg")}")`,
           }}
         >
+          <div className="hero-starfield" aria-hidden="true">
+            {Array.from({ length: 21 }, (_, index) => {
+              const column = index % 7;
+              const row = Math.floor(index / 7);
+              const horizontalJitter = (row % 2 ? 0.14 : -0.14) + Math.sin(index * 2.3) * 0.08;
+              const verticalJitter = Math.sin(index * 1.7) * 0.16;
+
+              if (column >= 5 && row >= 1) return null;
+
+              return (
+                <span
+                  key={index}
+                  className={[0, 3, 5, 8, 10, 17].includes(index) ? "hero-star-cross" : undefined}
+                  style={{
+                    left: `${((column + 0.5 + horizontalJitter) / 7) * 100}%`,
+                    top: `${((row + 0.5 + verticalJitter) / 3) * 100}%`,
+                    "--star-delay": `${-((index * 17 + index * index * 3) % 70) / 10}s`,
+                    "--star-duration": `${1.9 + (index % 7) * 0.6}s`,
+                  }}
+                />
+              );
+            })}
+            <span
+              className="hero-star-feature"
+              style={{
+                left: "86%",
+                top: "88%",
+                "--star-delay": "-3.4s",
+                "--star-duration": "3.2s",
+              }}
+            />
+          </div>
           <div className="hero-content">
             <div className="hero-art">
               <img
                 src={imageUrl(INFO.photoUrl || "/logo-90-opacity.png")}
                 alt={t.emblemAlt}
+                decoding="async"
               />
             </div>
             <div className="hero-text">
@@ -331,13 +396,14 @@ export default function App() {
               {INFO.location && <p className="hero-loc">{INFO.location}</p>}
             </div>
             {INFO.email && (
-              <a className="hero-booking" href={`mailto:${INFO.email}`}>
+              <a className="booking-cta hero-booking" href={`mailto:${INFO.email}`}>
                 <span>{t.bookingButton}</span>
-                <span>{INFO.email}</span>
               </a>
             )}
             <p className="hero-genres" aria-label={t.heroGenresLabel}>
-              Psytrance · Twilight · Forest · Psytechno · Bush Prog · Electro groove &amp; funk · Psygressive · Psybass · psydub · Psybreak · Psychill
+              Psytrance · Twilight · Forest · Psytechno · Bush Prog · Electro groove &amp; funk
+              <br />
+              Psygressive · Psybass · psydub · Psybreak · Psychill
             </p>
           </div>
           <div className="horizon" aria-hidden="true" />
@@ -350,7 +416,13 @@ export default function App() {
               {t.origin.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <figure className="origin-visual">
-              <img className="origin-photo" src={publicAsset("/origin-photo.jpeg")} alt={t.originImageAlt} />
+              <img
+                className="origin-photo"
+                src={publicAsset("/origin-photo.jpeg")}
+                alt={t.originImageAlt}
+                loading="lazy"
+                decoding="async"
+              />
               <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
                 <defs>
                   <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
@@ -434,7 +506,12 @@ export default function App() {
           <div className="bio-content">
             <div className="bio-photo-frame">
               <div className="bio-photo-image">
-                <img className="bio-photo" src={publicAsset("/bio-photo.png")} alt={t.bioImageAlt} />
+                <img
+                  className="bio-photo"
+                  src={publicAsset("/bio-photo.jpg")}
+                  alt={t.bioImageAlt}
+                  decoding="async"
+                />
               </div>
               <svg className="bio-photo-ornaments" viewBox="0 0 400 600" preserveAspectRatio="none" aria-hidden="true">
                 <g className="bio-wave-group bio-wave-group-bottom">
@@ -477,7 +554,7 @@ export default function App() {
                     viewBox="0 0 400 48"
                     preserveAspectRatio="none"
                     aria-hidden="true"
-                    style={{ "--beat-duration": `${240 / w.tempo}s` }}
+                    style={{ "--beat-duration": `${240 / (w.tempo * (w.waveSpeed ?? 1))}s` }}
                   >
                     <line className="world-wave-baseline" x1="0" y1="24" x2="400" y2="24" />
                     {Array.from({ length: WAVE_BAR_COUNT }, (_, index) => {
@@ -509,7 +586,22 @@ export default function App() {
             {t.collectives.map((collective) => (
               <article className="collective" key={collective.name}>
                 <h3 className="collective-title">
-                  <img src={publicAsset(collective.logo)} alt="" aria-hidden="true" />
+                  {collective.name === "Nataraja" && (
+                    <img
+                      className="collective-logo-print"
+                      src={publicAsset("/nataraja-logo-black.svg")}
+                      alt=""
+                      aria-hidden="true"
+                      decoding="async"
+                    />
+                  )}
+                  <img
+                    className="collective-logo-screen"
+                    src={publicAsset(collective.logo)}
+                    alt=""
+                    aria-hidden="true"
+                    decoding="async"
+                  />
                   <span>{collective.name}</span>
                 </h3>
                 {collective.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -537,11 +629,25 @@ export default function App() {
                 ))}
               </dl>
             </div>
-            {INFO.email && (
-              <a className="booking-cta" href={`mailto:${INFO.email}`}>
-                <span>{t.bookingButton}</span>
-              </a>
-            )}
+            <figure className="bio-photo-frame booking-visual">
+              <div className="bio-photo-image">
+                <img
+                  src={publicAsset("/booking-visual.jpg")}
+                  alt={t.bookingImageAlt}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <svg className="booking-visual-ornaments" viewBox="0 0 400 600" preserveAspectRatio="none" aria-hidden="true">
+                <g className="bio-wave-group">
+                  <path className="bio-wave-echo" d="M-18 472 C0 472 0 505 18 505 S36 485 54 485 72 530 90 530 108 497 126 497 144 516 162 516 180 492 198 492" />
+                  <path className="bio-wave-main" d="M-22 494 C-7 494 -6 525 9 525 S25 481 40 481 56 548 71 548 87 503 102 503 118 534 133 534 149 489 164 489 180 522 195 522 211 505 226 505" />
+                  <path className="bio-wave-glint" d="M-18 505 C-7 505 -7 517 4 517 S19 496 30 496 45 531 56 531 71 509 82 509 97 524 108 524 123 500 134 500 149 519 160 519 175 508 190 508" />
+                  <circle className="bio-wave-node" cx="71" cy="548" r="2.6" />
+                  <circle className="bio-wave-node bio-wave-node-soft" cx="164" cy="489" r="1.8" />
+                </g>
+              </svg>
+            </figure>
           </div>
         </section>
 
@@ -549,21 +655,53 @@ export default function App() {
           <h2>{t.contactTitle}</h2>
           <div>
             {INFO.email ? (
-              <a className="mail" href={`mailto:${INFO.email}`}>{INFO.email}</a>
+              <a className="mail" href={`mailto:${INFO.email}`}>
+                <span className="contact-print-marker contact-email-marker" aria-hidden="true">@</span>
+                {INFO.email}
+              </a>
             ) : (
               <p className="todo">{t.placeholderMail}</p>
             )}
             {links.length > 0 && (
               <ul className="links" aria-label={t.links}>
                 {links.map(([name, url]) => (
-                  <li key={name}><a href={url} target="_blank" rel="noreferrer">{name}</a></li>
+                  <li key={name} className={name === "SoundCloud" ? "soundcloud-contact" : undefined}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={name === "SoundCloud" ? "link-address" : undefined}
+                    >
+                      <span className="link-screen-label">
+                        {name === "SoundCloud" && (
+                          <svg className="soundcloud-logo" viewBox="0 0 32 24" aria-hidden="true">
+                            <path d="M7 19.5h19a4.5 4.5 0 0 0 .5-9A10.5 10.5 0 0 0 6.4 9.1 5.3 5.3 0 0 0 7 19.5Z" />
+                            <path className="soundcloud-wave" d="M9 15V8m4 9V4m4 12V2m4 13V5m4 10V9" />
+                          </svg>
+                        )}
+                        {name}
+                      </span>
+                      {name === "SoundCloud" && (
+                        <>
+                          <span className="contact-print-marker contact-soundcloud-marker" aria-hidden="true">
+                            <svg viewBox="0 0 32 24">
+                              <path d="M7 19.5h19a4.5 4.5 0 0 0 .5-9A10.5 10.5 0 0 0 6.4 9.1 5.3 5.3 0 0 0 7 19.5Z" />
+                              <path d="M9 15V8m4 9V4m4 12V2m4 13V5m4 10V9" />
+                            </svg>
+                          </span>
+                          <span className="link-print-label">{url}</span>
+                        </>
+                      )}
+                    </a>
+                  </li>
                 ))}
               </ul>
             )}
-            {INFO.email && (
-              <a className="booking-cta contact-booking" href={`mailto:${INFO.email}`}>
-                <span>{t.bookingButton}</span>
-              </a>
+            {INFO.email && INFO.soundcloud && (
+              <figure className="contact-print-qr">
+                <img src={publicAsset("/contact-qr.png")} alt={t.contactQrAlt} />
+                <figcaption>{t.contactQrCaption}</figcaption>
+              </figure>
             )}
             <button className="print" onClick={() => window.print()}>{t.print}</button>
           </div>
@@ -571,6 +709,11 @@ export default function App() {
         </div>
       </main>
 
+      {INFO.email && showFloatingBooking && (
+        <a className="booking-cta floating-booking" href={`mailto:${INFO.email}`}>
+          <span>{t.bookingButton}</span>
+        </a>
+      )}
     </>
   );
 }
