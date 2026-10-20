@@ -159,7 +159,8 @@ const T = {
         wave: "syncopated",
         mood: "Des grooves libres et hybrides, entre techno, prog et funk psychédélique",
         styles: [
-          ["Psytechno", "La rencontre entre la pulsation hypnotique de la techno et les textures psychédéliques."],
+          ["Psytech", "La rencontre entre la pulsation hypnotique de la techno et les textures psychédéliques."],
+          ["Bushtech", "Une techno organique et tribale, aux percussions boisées et aux basses roulantes."],
           ["Bush Prog", "Une progressive aux grooves souples et aux sonorités chaleureuses, pensée pour le mouvement."],
           ["Electro groove & funk", "Des rythmes syncopés et des basses rebondissantes aux accents électro et funk."],
           ["Psygressive", "Des progressions psychédéliques qui développent le groove avec fluidité et subtilité."],
@@ -176,6 +177,7 @@ const T = {
           ["Psydub", "Des échos, des basses rondes et des paysages sonores inspirés du dub."],
           ["Psybreak", "Des rythmiques breakées et des variations qui jouent entre groove et expérimentation."],
           ["Psychill", "Des atmosphères amples et apaisées pour ralentir, respirer et voyager."],
+          ["Ambient", "Des nappes sonores contemplatives, sans rythme imposé, pour s’immerger et lâcher prise."],
         ],
       },
     ],
@@ -199,6 +201,10 @@ const T = {
     },
     placeholderMail: "Contact à renseigner",
     contactQrCaption: "Scanner pour choisir entre Booking et SoundCloud",
+    pressKit: "Dossier presse",
+    pressKitDownload: "Télécharger",
+    pressKitIntro: "Tout pour présenter VALANA : press kit en PDF, photos HD, logos et affiches d’évènements.",
+    pressKitDetail: "Press kit PDF, photos HD, logo, affiches · ZIP 10 Mo",
     contactQrAlt: "QR code vers les liens Booking et SoundCloud de VALANA",
     links: "Écoute",
   },
@@ -314,7 +320,8 @@ const T = {
         wave: "syncopated",
         mood: "Free, hybrid grooves between techno, prog and psychedelic funk",
         styles: [
-          ["Psytechno", "The meeting point of techno's hypnotic pulse and psychedelic textures."],
+          ["Psytech", "The meeting point of techno's hypnotic pulse and psychedelic textures."],
+          ["Bushtech", "Organic, tribal techno with woody percussion and rolling bass."],
           ["Bush Prog", "Progressive sounds with fluid grooves and warm textures, made for movement."],
           ["Electro groove & funk", "Syncopated rhythms and bouncing basslines with electro and funk influences."],
           ["Psygressive", "Psychedelic progressions that build groove with fluidity and subtlety."],
@@ -331,6 +338,7 @@ const T = {
           ["Psydub", "Echoes, rounded basslines and soundscapes inspired by dub."],
           ["Psybreak", "Broken rhythms and shifting patterns between groove and experimentation."],
           ["Psychill", "Expansive, calming atmospheres to slow down, breathe and drift."],
+          ["Ambient", "Contemplative soundscapes with no set rhythm, to sink in and let go."],
         ],
       },
     ],
@@ -354,6 +362,10 @@ const T = {
     },
     placeholderMail: "Contact to be added",
     contactQrCaption: "Scan to choose between Booking and SoundCloud",
+    pressKit: "Press kit",
+    pressKitDownload: "Download",
+    pressKitIntro: "Everything you need to present VALANA: PDF press kit, HD photos, logos and event posters.",
+    pressKitDetail: "PDF press kit, HD photos, logo, posters · ZIP 10 MB",
     contactQrAlt: "QR code to VALANA's Booking and SoundCloud links",
     links: "Listen",
   },
@@ -385,6 +397,9 @@ const HERO_GENRES = [
   ["Electro groove & funk", "Ethno orientale", "Psygressive"],
   ["Psybass", "psydub", "Psybreak", "Psychill", "Ambient"],
 ];
+
+// Dossier presse téléchargeable : press kit PDF + photos HD, logo, visuels, affiches
+const PRESS_KIT_PATH = "/press/VALANA_dossier-presse.zip";
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
 const EVENTS_PREVIEW_COUNT = 6;
@@ -1160,6 +1175,21 @@ export default function App() {
               </figure>
             )}
           </div>
+        </section>
+
+        <section className="row press" id="presse">
+          <h2>{t.pressKit}</h2>
+          <p className="press-intro">{t.pressKitIntro}</p>
+          <a className="press-kit-link press-screen" href={publicAsset(PRESS_KIT_PATH)} download>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14" />
+            </svg>
+            <span>
+              <strong>{t.pressKitDownload}</strong>
+              <small>{t.pressKitDetail}</small>
+            </span>
+          </a>
+          <p className="press-print">{t.pressKit} : valana88.github.io/Valana-presskit{PRESS_KIT_PATH}</p>
         </section>
         </div>
       </main>

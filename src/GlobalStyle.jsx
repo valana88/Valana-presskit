@@ -936,12 +936,51 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 70%; height: 70%; overflow: visible; pointer-events: none;
 }
 
+/* Dossier presse : bouton secondaire sous le tableau Booking, même liseré aurore que les autres boutons */
+.press-kit-link {
+  display: inline-flex; align-items: center; gap: 0.85rem;
+  margin-top: 1.8rem; padding: 0.7rem 1.5rem 0.7rem 0.75rem;
+  text-align: left;
+  border: 1px solid transparent; border-radius: 99px;
+  background:
+    linear-gradient(var(--btn-fill), var(--btn-fill)) padding-box,
+    linear-gradient(rgba(8, 19, 15, 0.45), rgba(8, 19, 15, 0.45)) border-box,
+    var(--btn-border) border-box;
+  color: var(--bone); text-decoration: none;
+  transition: scale var(--hover-ease), background var(--hover-ease), box-shadow var(--hover-ease);
+}
+/* Icône dans une pastille ronde au dégradé aurore */
+.press-kit-link svg {
+  flex: 0 0 auto; box-sizing: content-box; width: 1.15rem; height: 1.15rem; padding: 0.55rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(100, 238, 148, 0.22), rgba(160, 120, 230, 0.22));
+  box-shadow: inset 0 0 0 1px rgba(180, 230, 220, 0.25);
+  fill: none; stroke: #c9fbe0; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  transition: translate var(--hover-ease);
+}
+.press-kit-link:hover svg { translate: 0 2px; }
+.press-kit-link span { display: grid; gap: 0.1rem; }
+.press-kit-link strong { font: 700 0.95rem/1.2 var(--display); letter-spacing: 0.06em; }
+.press-kit-link small { color: var(--muted); font-size: 0.78rem; }
+.press-kit-link:hover {
+  scale: var(--hover-scale);
+  background:
+    linear-gradient(rgba(16, 38, 34, 0.95), rgba(16, 38, 34, 0.95)) padding-box,
+    var(--btn-border) border-box;
+  box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
+}
+/* Section Dossier presse : titre comme les autres sections, texte et bouton centrés */
+.row.press { justify-items: center; text-align: center; }
+.press-intro { max-width: 46ch; color: var(--muted); margin-top: -0.5rem; }
+.press .press-kit-link { margin-top: 0; }
+.press-print { display: none; }
+
 /* Contact */
 .mail { font: 700 clamp(1.2rem, 3vw, 2rem) var(--display); text-decoration: none; border-bottom: 2px solid var(--magenta); }
 .contact .mail { font-size: clamp(1rem, 2.2vw, 1.25rem); }
 .contact > div { text-align: center; }
 /* Espace sous l'adresse pour que la barre flottante (Booking) ne recouvre pas la fin de page */
-.row.contact { padding-bottom: calc(5rem + 5.5rem + env(safe-area-inset-bottom, 0px)); }
+.row.press { padding-bottom: calc(5rem + 5.5rem + env(safe-area-inset-bottom, 0px)); }
 .links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
 .contact .links { justify-content: center; }
 .links a {
@@ -1250,10 +1289,12 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   }
   #biographie .prose p + p { margin-top: 3mm; }
   #sons {
+    display: block;
     break-before: page; page-break-before: always;
-    gap: 5mm; padding: 0;
-    break-inside: avoid; page-break-inside: avoid;
+    break-inside: auto; page-break-inside: auto;
+    padding: 0;
   }
+  #sons > * + * { margin-top: 5mm; }
   #sons .lead {
     max-width: none; margin: 0 0 5mm;
     font-size: 14pt; line-height: 1.3; color: #41564d;
@@ -1262,7 +1303,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: 4mm;
   }
   #sons .world {
-    padding: 5mm 4mm; overflow: hidden;
+    padding: 4mm 3.5mm; overflow: hidden;
     border: 1px solid #b9cec5; border-top: 2mm solid #398f7d;
     border-radius: 3mm 3mm 1mm 3mm; background: #eff6f2 !important;
     break-inside: avoid; page-break-inside: avoid;
@@ -1275,10 +1316,10 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     display: block; margin-top: 1mm; color: #41564d;
     font-size: 8.5pt; letter-spacing: 0.03em;
   }
-  #sons .mood { margin: 1.5mm 0 3mm; font-size: 10.5pt; color: #41564d; }
-  #sons .style + .style { margin-top: 2.5mm; padding-top: 2mm; border-color: #cbd5cf; }
-  #sons .style h4 { margin-bottom: 0.5mm; font-size: 11.5pt; }
-  #sons .style p { font-size: 11.5pt; line-height: 1.4; }
+  #sons .mood { margin: 1.5mm 0 2.5mm; font-size: 10pt; color: #41564d; }
+  #sons .style + .style { margin-top: 2mm; padding-top: 1.5mm; border-color: #cbd5cf; }
+  #sons .style h4 { margin-bottom: 0.5mm; font-size: 10.5pt; }
+  #sons .style p { font-size: 10.5pt; line-height: 1.35; }
   #sons .world-wave { display: none; }
   #labels {
     break-before: page; page-break-before: always;
@@ -1349,7 +1390,11 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   }
   .contact .links { justify-content: center; }
   .contact .contact-print-links { display: flex; }
-  .row.contact { padding-bottom: 6mm; }
+  /* Impression : la section se réduit à une ligne, pour que Booking et Contact restent sur la même page */
+  .press-screen, #presse h2, .press-intro { display: none !important; }
+  #presse { display: block; padding: 3mm 0 0; text-align: center; }
+  .press-print { display: block; color: #153b32; font-size: 10pt; }
+  .row.press { padding-bottom: 0; }
   .contact-form { display: none !important; }
   .contact .links > li { display: grid; justify-items: center; gap: 2mm; }
   .contact .links a {
