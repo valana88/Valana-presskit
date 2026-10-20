@@ -1016,9 +1016,8 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     padding: 1rem 2rem; font-size: 1.1rem;
   }
   .hero-booking { width: 248px; min-width: 248px; }
-  /* Booking fixe : même taille que celui du landing ; PDF et Écouter s'alignent sur sa hauteur */
+  /* Booking fixe : même taille que celui du landing ; PDF et Écouter gardent leur taille compacte */
   .floating-actions .floating-booking { width: 248px; padding: 1rem 2rem; font-size: 1.1rem; }
-  .floating-actions .floating-action { min-height: 3.69rem; padding-inline: 1.4rem; }
   .contact .mail { font-size: 20px; }
 }
 

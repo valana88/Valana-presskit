@@ -61,7 +61,7 @@ const T = {
     originImageAlt: "Spirale lumineuse dans une nébuleuse",
     bioImageAlt: "VALANA en performance",
     bookingImageAlt: "Mandala psychédélique lumineux",
-    nav: ["Univers", "Origine", "Biographie", "Sons", "Évènements", "Label", "Booking", "Contact"],
+    nav: ["Origine", "Biographie", "Label", "Styles", "Évènements", "Booking", "Contact"],
     originTitle: "Origine",
     origin: [
       "VALANA (वलन) puise ses racines dans le sanskrit, langue sacrée et ancestrale de l’Inde.",
@@ -216,7 +216,7 @@ const T = {
     originImageAlt: "Luminous spiral in a nebula",
     bioImageAlt: "VALANA performing",
     bookingImageAlt: "Luminous psychedelic mandala",
-    nav: ["World", "Origin", "Biography", "Sound", "Events", "Label", "Booking", "Contact"],
+    nav: ["Origin", "Biography", "Label", "Styles", "Events", "Booking", "Contact"],
     originTitle: "Origin",
     origin: [
       "Valana (वलन) has its roots in Sanskrit, the sacred and ancient language of India.",
@@ -407,7 +407,7 @@ const EVENT_IMAGES = [
   { src: "/events/natafest-25-backstage.jpg", focus: "8% 50%" },
 ];
 
-const ANCHORS = ["univers", "origine", "biographie", "sons", "evenements", "labels", "booking", "contact"];
+const ANCHORS = ["origine", "biographie", "labels", "sons", "evenements", "booking", "contact"];
 
 export default function App() {
   const [lang, setLang] = useState("fr");
