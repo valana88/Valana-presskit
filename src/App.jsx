@@ -886,6 +886,41 @@ export default function App() {
           </div>
         </section>
 
+        <section className="row" id="labels">
+          <h2>{t.collectivesTitle}</h2>
+          <div className="prose">
+            {t.collectives.map((collective) => (
+              <article className="collective" key={collective.name}>
+                <h3 className="collective-title">
+                  {collective.name === "Nataraja" && (
+                    <img
+                      className="collective-logo-print"
+                      src={publicAsset("/nataraja-logo-black.svg")}
+                      alt=""
+                      aria-hidden="true"
+                      decoding="async"
+                    />
+                  )}
+                  <img
+                    className="collective-logo-screen"
+                    src={publicAsset(collective.logo)}
+                    alt=""
+                    aria-hidden="true"
+                    decoding="async"
+                  />
+                  <span>{collective.name}</span>
+                </h3>
+                {collective.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                <ul className="links collective-links" aria-label={`${collective.name} — ${t.collectiveLinksLabel}`}>
+                  {collective.links.map(([label, url]) => (
+                    <li key={url}><a href={url} target="_blank" rel="noreferrer">{label}</a></li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="row" id="sons">
           <h2>{t.soundTitle}</h2>
           <div>
@@ -995,41 +1030,6 @@ export default function App() {
               {showAllEvents ? t.eventsLess : t.eventsMore}
             </button>
           )}
-        </section>
-
-        <section className="row" id="labels">
-          <h2>{t.collectivesTitle}</h2>
-          <div className="prose">
-            {t.collectives.map((collective) => (
-              <article className="collective" key={collective.name}>
-                <h3 className="collective-title">
-                  {collective.name === "Nataraja" && (
-                    <img
-                      className="collective-logo-print"
-                      src={publicAsset("/nataraja-logo-black.svg")}
-                      alt=""
-                      aria-hidden="true"
-                      decoding="async"
-                    />
-                  )}
-                  <img
-                    className="collective-logo-screen"
-                    src={publicAsset(collective.logo)}
-                    alt=""
-                    aria-hidden="true"
-                    decoding="async"
-                  />
-                  <span>{collective.name}</span>
-                </h3>
-                {collective.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                <ul className="links collective-links" aria-label={`${collective.name} — ${t.collectiveLinksLabel}`}>
-                  {collective.links.map(([label, url]) => (
-                    <li key={url}><a href={url} target="_blank" rel="noreferrer">{label}</a></li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
         </section>
 
         <div className="booking-contact-print-group">
