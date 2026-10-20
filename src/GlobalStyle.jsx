@@ -801,6 +801,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   margin-top: 0.2rem; color: var(--muted);
   font: 600 0.75rem var(--display); letter-spacing: 0.12em; text-transform: uppercase;
 }
+.event-group-images { display: none; }
 .event-venues { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; padding: 0; list-style: none; }
 .event-venues li {
   padding: 0.3rem 0.8rem; border: 1px solid var(--turq-line); border-radius: 99px;
@@ -1629,6 +1630,27 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   .booking-contact-print-group #contact > div { flex: 1; display: flex; flex-direction: column; align-items: center; }
   .contact-print-qr { margin-block: auto; }
   .site-footer { height: 14mm; padding: 0 !important; display: grid; place-items: center; }
+
+  /* Évènements : chaque région illustrée par ses affiches */
+  .events { gap: 6mm; margin-top: 3mm; }
+  .event-group {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 6mm;
+    align-items: center; padding: 7mm 7mm 7mm 8mm;
+  }
+  .event-group > :not(.event-group-images) { grid-column: 1; }
+  .event-group h3 { font-size: 24pt; }
+  .event-venues li { font-size: 13pt; padding: 1.8mm 4.5mm; }
+  .event-group-images {
+    display: flex; gap: 3mm; grid-column: 2; grid-row: 1 / span 3;
+  }
+  .event-group-images img {
+    display: block; width: 36mm; height: 54mm; object-fit: cover;
+    border-radius: 2mm; border: 0.4mm solid rgba(160, 120, 230, 0.6);
+  }
+
+  /* Identité musicale : Chill compte 6 styles, texte resserré pour tenir sur la page */
+  #sons .style p { font-size: 10.8pt; line-height: 1.4; }
+  #sons .style + .style { margin-top: 2.6mm; padding-top: 2.2mm; }
 }
 `;
 

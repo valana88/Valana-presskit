@@ -209,6 +209,62 @@ const ContactStyle = createGlobalStyle`
 
   footer { margin-top: 28px; color: #a9b7ae; font-size: 0.8rem; }
 
+  /* Logo, boutons au style du press kit (Syne, liseré aurore) et lien vers le site */
+  .emblem {
+    display: block; width: 72px; height: 72px; margin: 0 auto 18px;
+    opacity: 0.92;
+    filter: drop-shadow(0 0 6px rgba(215, 232, 255, 0.35)) drop-shadow(0 0 16px rgba(170, 200, 255, 0.18));
+  }
+  nav a {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(rgba(8, 19, 15, 0.92), rgba(8, 19, 15, 0.92)) padding-box,
+      linear-gradient(rgba(8, 19, 15, 0.45), rgba(8, 19, 15, 0.45)) border-box,
+      linear-gradient(100deg, #64ee94, #69d7af 30%, #87a5d7 58%, #a078e6 80%, #cd5ab9) border-box;
+    font: 700 1.02rem/1.2 "Syne", Arial, sans-serif; letter-spacing: 0.06em;
+  }
+  nav a.primary {
+    background:
+      linear-gradient(rgba(8, 19, 15, 0.92), rgba(8, 19, 15, 0.92)) padding-box,
+      linear-gradient(100deg, #64ee94, #69d7af 30%, #87a5d7 58%, #a078e6 80%, #cd5ab9) border-box;
+    box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.16), 0 0 1.6rem rgba(160, 120, 230, 0.14);
+  }
+  nav a:hover, nav a:focus-visible {
+    background:
+      linear-gradient(rgba(16, 38, 34, 0.95), rgba(16, 38, 34, 0.95)) padding-box,
+      linear-gradient(100deg, #64ee94, #69d7af 30%, #87a5d7 58%, #a078e6 80%, #cd5ab9) border-box;
+    box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
+  }
+  a.site-link {
+    display: inline-block; min-height: 0; margin-top: 22px; padding: 6px 4px;
+    border: 0; border-radius: 0; background: none;
+    color: #a9b7ae; font: 700 0.85rem "Syne", Arial, sans-serif; letter-spacing: 0.06em;
+    text-decoration: underline; text-underline-offset: 0.3em; text-decoration-color: rgba(160, 120, 230, 0.6);
+  }
+  a.site-link:hover, a.site-link:focus-visible { scale: 1; background: none; box-shadow: none; color: #efe9dc; }
+
+  /* Mobile : page scannée depuis un téléphone — carte pleine largeur, gros boutons au pouce */
+  @media (max-width: 560px) {
+    body {
+      padding:
+        max(20px, env(safe-area-inset-top)) 16px
+        max(20px, env(safe-area-inset-bottom));
+    }
+    main { width: 100%; padding: 34px 22px 26px; border-radius: 8px 30px; }
+    .emblem { width: 64px; height: 64px; margin-bottom: 14px; }
+    .mark { font-size: clamp(2.3rem, 13vw, 3.2rem); }
+    .intro { margin: 12px 0 26px; font-size: 0.95rem; }
+    nav { gap: 12px; }
+    nav a { min-height: 58px; padding-inline: 14px; font-size: 0.95rem; letter-spacing: 0.03em; white-space: nowrap; }
+  }
+  /* Très petits écrans (iPhone SE…) : le libellé SoundCloud tient toujours sur une ligne */
+  @media (max-width: 350px) {
+    main { padding-inline: 16px; }
+    nav a { gap: 8px; padding-inline: 10px; font-size: 0.86rem; letter-spacing: 0.02em; }
+    .soundcloud-logo { width: 22px; height: 17px; }
+    .intro { font-size: 0.88rem; }
+  }
+
   @media (max-width: 800px) {
     .contact-starfield span:nth-child(n + 10) { display: none; }
   }

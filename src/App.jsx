@@ -98,7 +98,7 @@ const T = {
       { year: "2019", date: "9 mars 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
       { year: "2022", date: "7–10 juillet 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Bourgogne" },
       { year: "2023", date: "19 juin 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
-      { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up · Medhra vs Valana" },
+      { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up" },
       { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
       { year: "2024", date: "31 octobre 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
       { year: "2025", date: "10–13 juillet 2025", title: "Nataraja Psychedelic Gathering", detail: "Line-up du festival" },
@@ -141,7 +141,7 @@ const T = {
     collectiveLinksLabel: "Liens",
     worlds: [
       {
-        name: "Mainstage",
+        name: "Main",
         bpm: "145–180",
         tempo: 162,
         wave: "fast",
@@ -178,6 +178,7 @@ const T = {
           ["Psybreak", "Des rythmiques breakées et des variations qui jouent entre groove et expérimentation."],
           ["Psychill", "Des atmosphères amples et apaisées pour ralentir, respirer et voyager."],
           ["Ambient", "Des nappes sonores contemplatives, sans rythme imposé, pour s’immerger et lâcher prise."],
+          ["Ethno orientale", "Des mélodies et instruments d’Orient mêlés aux textures électroniques, pour un voyage hypnotique."],
         ],
       },
     ],
@@ -260,7 +261,7 @@ const T = {
       { year: "2019", date: "9 March 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
       { year: "2022", date: "7–10 July 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Burgundy" },
       { year: "2023", date: "19 June 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
-      { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up · Medhra vs Valana" },
+      { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up" },
       { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
       { year: "2024", date: "31 October 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
       { year: "2025", date: "10–13 July 2025", title: "Nataraja Psychedelic Gathering", detail: "Festival line-up" },
@@ -303,7 +304,7 @@ const T = {
     collectiveLinksLabel: "Links",
     worlds: [
       {
-        name: "Mainstage",
+        name: "Main",
         bpm: "145–180",
         tempo: 162,
         wave: "fast",
@@ -340,6 +341,7 @@ const T = {
           ["Psybreak", "Broken rhythms and shifting patterns between groove and experimentation."],
           ["Psychill", "Expansive, calming atmospheres to slow down, breathe and drift."],
           ["Ambient", "Contemplative soundscapes with no set rhythm, to sink in and let go."],
+          ["Oriental ethno", "Eastern melodies and instruments blended with electronic textures, for a hypnotic journey."],
         ],
       },
     ],
@@ -424,6 +426,13 @@ const HERO_GENRES = [
 
 // Dossier presse téléchargeable : press kit PDF + photos HD, logo, visuels, affiches
 const PRESS_KIT_PATH = "/press/VALANA_dossier-presse.zip";
+
+// Affiches illustrant chaque région dans le PDF (même ordre que eventGroups : Festival, Paris, Côte d'Azur)
+const EVENT_REGION_IMAGES = [
+  ["/events/natafest-26-mainstage.jpg", "/events/natafest-25.jpg", "/events/natafest-24-lineup.jpg"],
+  ["/events/natanoct-symbiosis-26.jpg", "/events/unisson-freedom.jpg"],
+  ["/events/bp-hallow-24.jpg", "/events/green-23.jpg"],
+];
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
 const EVENTS_PREVIEW_COUNT = 6;
@@ -1025,13 +1034,19 @@ export default function App() {
           <h2>{t.eventsTitle}</h2>
           <p className="events-intro">{t.eventsIntro}</p>
           <div className="events">
-            {t.eventGroups.map((group) => (
+            {t.eventGroups.map((group, index) => (
               <article className="event-group" key={group.region}>
                 <h3>{group.region}</h3>
                 <p className="event-place">{group.place}</p>
                 <ul className="event-venues">
                   {group.venues.map((venue) => <li key={venue}>{venue}</li>)}
                 </ul>
+                {/* Affiches de la région : affichées dans le PDF uniquement */}
+                <div className="event-group-images" aria-hidden="true">
+                  {EVENT_REGION_IMAGES[index].map((image) => (
+                    <img key={image} src={publicAsset(image)} alt="" loading="lazy" decoding="async" />
+                  ))}
+                </div>
               </article>
             ))}
           </div>

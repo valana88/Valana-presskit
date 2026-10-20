@@ -15,12 +15,14 @@ export default function Contact() {
         booking: "Booking",
         listen: "SoundCloud · Listen",
         linksLabel: "VALANA links",
+        site: "Full press kit",
       }
     : {
         intro: "Psytrance, groove, alternative et chill",
         booking: "Booking",
         listen: "SoundCloud · Écouter",
         linksLabel: "Liens VALANA",
+        site: "Press kit complet",
       };
 
   useEffect(() => {
@@ -92,10 +94,11 @@ export default function Contact() {
         </div>
       </div>
       <main>
+        <img className="emblem" src={`${import.meta.env.BASE_URL}hero-emblem.png`} alt="" />
         <h1 className="mark">VALANA</h1>
         <p className="intro">{copy.intro}</p>
         <nav aria-label={copy.linksLabel}>
-          <a href="mailto:valana.booking@gmail.com">
+          <a className="primary" href="mailto:valana.booking@gmail.com">
             <span>{copy.booking}</span>
           </a>
           <a href="https://soundcloud.com/valana-psyche" target="_blank" rel="noreferrer">
@@ -106,6 +109,9 @@ export default function Contact() {
             <span>{copy.listen}</span>
           </a>
         </nav>
+        <a className="site-link" href={`${import.meta.env.BASE_URL}${language === "en" ? "?lang=en" : ""}`}>
+          {copy.site} →
+        </a>
       </main>
     </>
   );
