@@ -32,6 +32,11 @@ body {
   line-height: 1.65;
 }
 a { color: inherit; }
+/* Images protégées : ni glisser-déposer, ni sélection, ni menu d'enregistrement sur mobile */
+img {
+  -webkit-user-drag: none; user-select: none;
+  -webkit-touch-callout: none;
+}
 :focus-visible { outline: 2px solid var(--turq); outline-offset: 3px; }
 button, a { -webkit-tap-highlight-color: transparent; }
 
@@ -61,6 +66,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .bar nav { display: flex; gap: 1.4rem; font-size: 0.9rem; }
 .bar nav a { text-decoration: none; color: var(--muted); transition: color var(--hover-ease); }
 .bar nav a:hover { color: var(--bone); }
+/* 8 liens : on resserre la navigation sur les écrans moyens pour éviter le débordement */
+@media (min-width: 801px) and (max-width: 1100px) {
+  .bar nav { gap: 0.85rem; font-size: 0.8rem; }
+  .bar-name { font-size: 1.05rem; letter-spacing: 0.14em; }
+  .bar-name-icon { flex-basis: 2rem; width: 2rem; height: 2rem; }
+}
 .menu-toggle { display: none; }
 .bar-tools { display: flex; gap: 0.3rem; }
 .bar-tools button {
@@ -98,6 +109,35 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mask-position: center;
   mask-repeat: no-repeat;
   mask-composite: intersect;
+}
+/* Lac : copie ondulée de l'image limitée à l'eau, cadrée comme le fond (center / cover) */
+.hero-lake {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  mask-image: var(--hero-lake-mask);
+  mask-size: cover; mask-position: center; mask-repeat: no-repeat;
+}
+.hero-lake-water {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 19, 15, 0.14), rgba(8, 19, 15, 0) 42%, rgba(8, 19, 15, 0.58)),
+    var(--hero-background-image) center / cover no-repeat;
+  filter: url(#lake-ripple);
+}
+/* Reflets : fines lignes de lumière horizontales qui ondulent et scintillent */
+.hero-lake-glints {
+  position: absolute; inset: 0;
+  mix-blend-mode: screen;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0 5px, rgba(255, 214, 170, 0.16) 6px, transparent 7px 11px, rgba(200, 180, 255, 0.1) 12px, transparent 13px 17px
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 15%, rgba(0, 0, 0, 0.4) 40%, #000 60%, rgba(0, 0, 0, 0.5) 80%, transparent);
+  filter: url(#lake-ripple) blur(0.4px);
+  animation: lake-glints 7s ease-in-out infinite alternate;
+}
+@keyframes lake-glints {
+  from { opacity: 0.45; background-position: 0 0; }
+  to { opacity: 0.9; background-position: 0 9px; }
 }
 /* Lumière de l'aurore sur les crêtes et la cime des arbres : fond le ciel et le relief ensemble */
 .hero-aurora-glow {
@@ -190,7 +230,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: absolute; inset: 0 0 48%; z-index: 1;
   overflow: hidden; pointer-events: none;
 }
-.hero-starfield span {
+.hero-starfield span,
+.origin-stars span {
   position: absolute; width: 3px; height: 3px; border-radius: 50%;
   background: radial-gradient(circle, #fff 0 28%, rgba(211, 240, 255, 0.94) 52%, transparent 80%);
   opacity: 0.58;
@@ -206,16 +247,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
   box-shadow: 0 0 6px 1.5px rgba(239, 250, 255, 0.86), 0 0 14px 3px rgba(136, 194, 255, 0.4);
 }
 .hero-starfield .hero-star-cross::before,
-.hero-starfield .hero-star-cross::after {
+.hero-starfield .hero-star-cross::after,
+.origin-stars .hero-star-cross::before,
+.origin-stars .hero-star-cross::after {
   position: absolute; top: 50%; left: 50%;
   display: block; border-radius: 50%; content: "";
   background: linear-gradient(90deg, transparent, rgba(229, 247, 255, 0.92), transparent);
   filter: drop-shadow(0 0 4px rgba(201, 235, 255, 0.8));
 }
-.hero-starfield .hero-star-cross::before {
+.hero-starfield .hero-star-cross::before,
+.origin-stars .hero-star-cross::before {
   width: 13px; height: 1px; transform: translate(-50%, -50%);
 }
-.hero-starfield .hero-star-cross::after {
+.hero-starfield .hero-star-cross::after,
+.origin-stars .hero-star-cross::after {
   width: 1px; height: 13px; transform: translate(-50%, -50%);
 }
 @keyframes star-twinkle {
@@ -460,6 +505,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   /* Anneau en métal brossé : joints de plaques, reflets d'une lumière haut-gauche, biseaux */
   background:
+    /* Reflet de lumière qui glisse lentement sur le métal */
+    conic-gradient(
+      from var(--gate-glint),
+      transparent 0deg, rgba(255, 255, 255, 0.28) 7deg, transparent 16deg,
+      transparent 176deg, rgba(255, 255, 255, 0.12) 184deg, transparent 194deg
+    ),
     /* Reflets de l'aurore sur le métal : vert d'un côté, violet de l'autre */
     conic-gradient(
       from 20deg,
@@ -486,6 +537,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
   opacity: 0.75;
 }
+@property --gate-glint { syntax: "<angle>"; inherits: false; initial-value: 300deg; }
+.origin-visual { animation: gate-glint 26s linear infinite; }
+@keyframes gate-glint { to { --gate-glint: 660deg; } }
+.origin-stars {
+  position: absolute; inset: 0.72rem; z-index: 0;
+  border-radius: 50%; overflow: hidden; pointer-events: none;
+}
 .origin-photo {
   display: block; width: 100%; height: 100%; object-fit: cover;
   border: 2px solid rgba(5, 18, 22, 0.9); border-radius: 50%;
@@ -498,8 +556,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%; overflow: hidden; pointer-events: none;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 35%, transparent 70%, rgba(200, 180, 255, 0.06)),
-    radial-gradient(circle, transparent 58%, rgba(100, 220, 170, 0.1) 80%, rgba(4, 14, 18, 0.85) 100%);
-  box-shadow: inset 0 0.35rem 0.9rem rgba(0, 0, 0, 0.55), inset 0 0 0.3rem rgba(160, 255, 200, 0.45);
+    radial-gradient(circle, transparent 58%, rgba(100, 220, 170, 0.04) 80%, rgba(4, 14, 18, 0.85) 100%);
+  box-shadow: inset 0 0.35rem 0.9rem rgba(0, 0, 0, 0.6), inset 0 0 0.25rem rgba(200, 255, 225, 0.22);
 }
 .origin-horizon::before,
 .origin-horizon::after {
@@ -507,7 +565,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mix-blend-mode: screen;
 }
 .origin-horizon::before {
-  background: repeating-radial-gradient(circle, rgba(180, 255, 215, 0.08) 0 1.5px, transparent 2.5px 13px);
+  background: repeating-radial-gradient(circle, rgba(220, 240, 235, 0.05) 0 1.5px, transparent 2.5px 13px);
   mask-image: radial-gradient(circle, transparent 18%, #000 55%, transparent 92%);
   animation: horizon-ripple 7s ease-in-out infinite;
 }
@@ -515,10 +573,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .origin-horizon::after {
   background: conic-gradient(
     from 0deg,
-    rgba(100, 238, 148, 0.75), rgba(105, 215, 175, 0.55) 18%, rgba(135, 165, 215, 0.5) 36%,
-    rgba(160, 120, 230, 0.75) 52%, rgba(205, 90, 185, 0.6) 64%, rgba(160, 120, 230, 0.5) 78%, rgba(100, 238, 148, 0.75)
+    rgba(100, 238, 148, 0.32), rgba(105, 215, 175, 0.2) 18%, rgba(135, 165, 215, 0.18) 36%,
+    rgba(160, 120, 230, 0.3) 52%, rgba(205, 90, 185, 0.22) 64%, rgba(160, 120, 230, 0.18) 78%, rgba(100, 238, 148, 0.32)
   );
-  mask-image: radial-gradient(circle closest-side, transparent 88%, rgba(0, 0, 0, 0.85) 97%, rgba(0, 0, 0, 0.6) 100%);
+  mask-image: radial-gradient(circle closest-side, transparent 91%, rgba(0, 0, 0, 0.85) 98%, rgba(0, 0, 0, 0.6) 100%);
   animation: horizon-sheen 38s linear infinite;
 }
 @keyframes horizon-ripple {
@@ -600,29 +658,25 @@ button, a { -webkit-tap-highlight-color: transparent; }
   fill: none; vector-effect: non-scaling-stroke;
 }
 .ornament-bezel { stroke: url(#portal-metal-gradient); stroke-width: 4; filter: url(#portal-relief); }
-.ornament-tooth, .ornament-sigil { filter: url(#portal-relief); }
+.ornament-sigil { filter: url(#portal-relief); }
 .ornament-orbit { stroke: rgba(100, 238, 148, 0.6); stroke-width: 0.8; stroke-dasharray: 1 4; }
 .ornament-guide { stroke: rgba(195, 217, 209, 0.62); stroke-width: 0.9; stroke-dasharray: 16 3 1 3; }
 .ornament-tick { fill: none; stroke: rgba(239, 233, 220, 0.55); stroke-width: 0.65; vector-effect: non-scaling-stroke; }
 .ornament-tick-major { stroke: #87e8b0; stroke-width: 1; }
 .ornament-tick-major:nth-of-type(8n + 1) { stroke: #b99af0; }
-.ornament-tooth { fill: url(#portal-metal-gradient); stroke: #d4eee4; stroke-width: 1.1; }
-/* Chevrons : gemme verte (aurore basse) ou violette (aurore haute), qui s'allument en décalé */
-.ornament-tooth path + path { fill: #64ee94; stroke: none; animation: chevron-glow-green 5.6s ease-in-out infinite; }
-.ornament-tooth:nth-of-type(4n + 3) path + path { animation-delay: -2.1s; }
-.ornament-tooth path:last-child { fill: none; stroke: rgba(229, 242, 233, 0.8); stroke-width: 1; }
-.ornament-tooth-violet { fill: url(#portal-violet-gradient); stroke: #e4cfff; }
-.ornament-tooth-violet path + path { fill: #b98cf5; animation: chevron-glow-violet 4.8s ease-in-out infinite; }
-.ornament-tooth-violet:nth-of-type(4n + 2) path + path { animation-delay: -1.2s; }
-.ornament-tooth-violet:nth-of-type(4n) path + path { animation-delay: -2.8s; }
-.ornament-tooth-violet path:last-child { fill: none; stroke: rgba(236, 210, 255, 0.9); }
-@keyframes chevron-glow-green {
-  0%, 100% { filter: drop-shadow(0 0 1px rgba(100, 238, 148, 0.45)); opacity: 0.8; }
-  50% { filter: drop-shadow(0 0 4px rgba(120, 255, 170, 0.9)) brightness(1.2); opacity: 1; }
+/* Chevrons : sans animation ni noir, un sur deux turquoise, un sur deux violacé */
+.ornament-tooth {
+  --gem-fill: url(#portal-chevron-turq-gem);
+  --gem-edge: rgba(230, 255, 250, 0.6);
+  --gem-line: rgba(255, 255, 255, 0.8);
+  fill: url(#portal-chevron-turq); stroke: #c9fbf2; stroke-width: 1;
+  filter: drop-shadow(0 0 3px rgba(127, 230, 212, 0.55));
 }
-@keyframes chevron-glow-violet {
-  0%, 100% { filter: drop-shadow(0 0 1px rgba(160, 120, 230, 0.5)); opacity: 0.85; }
-  50% { filter: drop-shadow(0 0 4px rgba(190, 140, 255, 0.95)) brightness(1.25); opacity: 1; }
+.ornament-tooth-violet {
+  --gem-fill: url(#portal-chevron-violet-gem);
+  --gem-edge: rgba(243, 232, 255, 0.6);
+  fill: url(#portal-chevron-violet); stroke: #e9dcff;
+  filter: drop-shadow(0 0 3px rgba(184, 150, 239, 0.6));
 }
 .ornament-inscription {
   /* Gravé dans le métal : ombre au-dessus, reflet en dessous */
@@ -716,6 +770,102 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .world-wave-line-back { stroke: rgba(239, 233, 220, 0.42); stroke-width: 1; }
 
+/* Évènements */
+.events-intro { text-align: center; font-style: italic; color: var(--muted); margin-top: -0.75rem; }
+.events {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
+  width: min(100%, 70rem); margin-inline: auto;
+}
+.event-group {
+  position: relative; padding: 1.4rem 1.6rem 1.6rem;
+  border: 1px solid rgba(239, 233, 220, 0.12); border-radius: 4px 28px 4px 28px;
+  background: linear-gradient(160deg, rgba(100, 238, 148, 0.05), transparent 45%, rgba(160, 120, 230, 0.07));
+}
+.event-group::before {
+  position: absolute; top: 0; left: 1.6rem; right: 1.6rem; height: 2px;
+  content: ""; border-radius: 99px;
+  background: linear-gradient(90deg, #64ee94, #69d7af, #a078e6, #cd5ab9);
+  opacity: 0.8;
+}
+.event-group h3 { font: 800 1.3rem/1.2 var(--display); }
+.event-place {
+  margin-top: 0.2rem; color: var(--muted);
+  font: 600 0.75rem var(--display); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.event-venues { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; padding: 0; list-style: none; }
+.event-venues li {
+  padding: 0.3rem 0.8rem; border: 1px solid var(--turq-line); border-radius: 99px;
+  font: 600 0.85rem var(--display);
+}
+/* Frise chronologique : image entière sur un fond flouté de la même image, sans recadrage */
+.event-timeline {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
+  width: min(100%, 70rem); margin: 1rem auto 0; padding: 0; list-style: none;
+}
+.event-card {
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid rgba(239, 233, 220, 0.12); border-radius: 4px 22px 4px 22px;
+  background: rgba(8, 19, 15, 0.6);
+  transition: border-color var(--hover-ease), box-shadow var(--hover-ease);
+}
+.event-card:hover {
+  border-color: rgba(140, 240, 222, 0.5);
+  box-shadow: 0 0 1.2rem rgba(100, 238, 148, 0.12), 0 0 2rem rgba(160, 120, 230, 0.1);
+}
+.event-media {
+  position: relative; isolation: isolate; display: block; overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+.event-media::before {
+  position: absolute; inset: -10%; z-index: -1; content: "";
+  background: var(--event-image) center / cover no-repeat;
+  filter: blur(18px) brightness(0.55) saturate(1.2);
+}
+.event-media img {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  transition: scale var(--hover-ease);
+}
+.event-card:hover .event-media img { scale: 1.03; }
+/* Photos en paysage : recadrées en portrait autour du sujet (object-position par image) */
+.event-media-cropped img { object-fit: cover; }
+.event-info { position: relative; padding: 1rem 1.2rem 1.2rem; }
+.event-info::before {
+  position: absolute; top: 0; left: 1.2rem; right: 1.2rem; height: 2px;
+  content: ""; border-radius: 99px;
+  background: linear-gradient(90deg, #64ee94, #69d7af, #a078e6, #cd5ab9); opacity: 0.7;
+}
+.event-year {
+  display: inline-block; margin-bottom: 0.35rem;
+  font: 800 0.8rem var(--display); letter-spacing: 0.14em;
+  background: linear-gradient(90deg, #64ee94, #a078e6); -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.event-info h3 { font: 700 1.05rem/1.25 var(--display); }
+.event-date { margin-top: 0.25rem; color: var(--bone); font-size: 0.9rem; }
+.event-detail { margin-top: 0.15rem; color: var(--muted); font-size: 0.85rem; }
+.events-toggle {
+  justify-self: center;
+  padding: 0.6rem 1.6rem; border: 1px solid var(--turq-line); border-radius: 99px;
+  background: rgba(8, 19, 15, 0.6); color: var(--bone); cursor: pointer;
+  font: 700 0.9rem var(--display); letter-spacing: 0.06em;
+  transition:
+    border-color var(--hover-ease), background-color var(--hover-ease),
+    box-shadow var(--hover-ease), scale var(--hover-ease);
+}
+.events-toggle:hover {
+  scale: var(--hover-scale); border-color: var(--hover-border);
+  background: var(--hover-fill); box-shadow: var(--hover-glow);
+}
+@media (max-width: 1000px) {
+  .event-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+  .events { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .event-timeline { grid-template-columns: 1fr; }
+}
+
 /* Booking */
 .booking-layout {
   display: grid; grid-template-columns: minmax(0, 1fr) auto;
@@ -791,6 +941,52 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .contact-print-marker { display: none; }
 .links a:hover { scale: var(--hover-scale); border-color: var(--hover-border); background: var(--hover-fill); box-shadow: var(--hover-glow); }
 .contact-print-qr { display: none; }
+/* Le bouton SoundCloud n'apparaît plus à l'écran, seulement dans le PDF imprimé */
+.contact .contact-print-links { display: none; }
+/* Formulaire de contact */
+.contact-form {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.2rem;
+  width: min(100%, 40rem); margin: 2.2rem auto 0; text-align: left;
+}
+.contact-form label { display: grid; gap: 0.4rem; }
+.contact-form label > span {
+  color: var(--muted); font: 600 0.75rem var(--display); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.contact-form-wide { grid-column: 1 / -1; }
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1px solid rgba(239, 233, 220, 0.16); border-radius: 0.8rem;
+  background: rgba(8, 19, 15, 0.7); color: var(--bone);
+  font: 400 1rem/1.5 var(--body);
+  transition: border-color var(--hover-ease), box-shadow var(--hover-ease);
+}
+.contact-form textarea { resize: vertical; min-height: 8rem; }
+.contact-form select { appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.25rem) 50%, calc(100% - 0.95rem) 50%;
+  background-size: 0.32rem 0.32rem; background-repeat: no-repeat;
+}
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  outline: none; border-color: var(--hover-border); box-shadow: var(--hover-glow);
+}
+.contact-form-footer {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.contact-form-note { color: var(--muted); font-size: 0.85rem; max-width: 26rem; }
+.contact-form .booking-cta {
+  cursor: pointer; font-size: 0.95rem;
+  width: auto; min-width: 11rem; margin-left: auto; padding: 0.75rem 2rem;
+}
+@media (max-width: 560px) {
+  .contact-form { grid-template-columns: 1fr; }
+  .contact-form-footer { justify-content: center; text-align: center; }
+  .contact-form .booking-cta { margin-left: 0; }
+}
 
 footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top: 1px solid var(--line); font-size: 0.95rem; }
 
@@ -912,8 +1108,9 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .hero-starfield span { animation: none; opacity: 0.65; }
-  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img, .row h2::before { animation: none; }
+  .hero-starfield span, .origin-stars span { animation: none; opacity: 0.65; }
+  .origin-visual { animation: none; }
+  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img, .row h2::before, .hero-lake-glints { animation: none; }
   .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
   .hero-booking, .floating-booking { animation: none; }
   .floating-actions { animation: none; }
@@ -934,7 +1131,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   *, *::before, *::after {
     box-shadow: none !important; text-shadow: none !important; filter: none !important;
   }
-  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .booking-cta, .floating-actions { display: none !important; }
+  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .hero-lake, .event-timeline, .events-toggle, .booking-cta, .floating-actions { display: none !important; }
   :root {
     --night: #fff;
     --bone: #13231e;
@@ -990,14 +1187,16 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   }
   .row#origine .origin-visual::before,
   .row#origine .origin-visual::after,
-  .row#origine .origin-ornaments { display: none !important; }
+  .row#origine .origin-ornaments,
+  .row#origine .origin-horizon,
+  .row#origine .origin-stars { display: none !important; }
   .row#origine .origin-photo {
     border: 0; border-radius: 3mm; object-fit: cover;
   }
   .row#origine .origin-content .prose p + p { margin-top: 3mm; }
   .prose { max-width: none; }
   .prose p + p { margin-top: 3mm; }
-  #univers, #origine, #biographie, #sons, #labels, #booking, #contact {
+  #univers, #origine, #biographie, #sons, #evenements, #labels, #booking, #contact {
     break-inside: avoid; page-break-inside: avoid;
   }
   #biographie {
@@ -1125,6 +1324,8 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     font: 700 0.72em/1 var(--display); vertical-align: 0.08em;
   }
   .contact .links { justify-content: center; }
+  .contact .contact-print-links { display: flex; }
+  .contact-form { display: none !important; }
   .contact .links > li { display: grid; justify-items: center; gap: 2mm; }
   .contact .links a {
     padding: 1.5mm 3mm; border-color: #9fb7ac;

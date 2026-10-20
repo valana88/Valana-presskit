@@ -329,7 +329,7 @@ const T = {
     originImageAlt: "Spirale lumineuse dans une nébuleuse",
     bioImageAlt: "VALANA en performance",
     bookingImageAlt: "Mandala psychédélique lumineux",
-    nav: ["Univers", "Origine", "Biographie", "Sons", "Label", "Booking", "Contact"],
+    nav: ["Univers", "Origine", "Biographie", "Sons", "Évènements", "Label", "Booking", "Contact"],
     originTitle: "Origine",
     origin: [
       "VALANA (वलन) puise ses racines dans le sanskrit, langue sacrée et ancestrale de l’Inde.",
@@ -345,6 +345,33 @@ const T = {
     soundTitle: "Identité musicale",
     soundIntro:
       "Des styles variés, des univers musicaux éclectiques !",
+    eventsTitle: "Évènements",
+    eventsIntro: "Festivals, clubs et soirées où VALANA a joué.",
+    eventGroups: [
+      { region: "Festival", place: "Bourgogne", venues: ["Nataraja Festival"] },
+      {
+        region: "Paris & alentours",
+        place: "Île-de-France",
+        venues: ["Unisson", "Nexus", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
+      },
+      { region: "Côte d’Azur", place: "Antibes · Nice", venues: ["Green Garden", "Bioscenose", "L’Antre"] },
+    ],
+    eventsMore: "Voir plus",
+    eventsLess: "Voir moins",
+    eventTimeline: [
+      { year: "2019", date: "9 mars 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
+      { year: "2022", date: "7–10 juillet 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Bourgogne" },
+      { year: "2023", date: "19 juin 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
+      { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up · Medhra vs Valana" },
+      { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
+      { year: "2024", date: "31 octobre 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
+      { year: "2025", date: "10–13 juillet 2025", title: "Nataraja Psychedelic Gathering", detail: "Line-up du festival" },
+      { year: "2026", date: "9 mai 2026", title: "Symbiosis Journey · Part II", detail: "Nataraja × NOCT" },
+      { year: "2026", date: "16–19 juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Spécial 10 ans · line-up Chillout" },
+      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
+      { year: "2026", date: "16–19 juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Spécial 10 ans · line-up Mainstage" },
+      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
+    ],
     collectivesTitle: "Labels & collectifs",
     collectives: [
       {
@@ -423,7 +450,17 @@ const T = {
       ["Objectif", "Collaborations avec des collectifs et présence sur les scènes électroniques en France et à l’international."],
       ["Durée", "1h30 à 3h, sets longs possibles"],
     ],
-    contactTitle: "Contact & Lien",
+    contactTitle: "Contact",
+    contactForm: {
+      name: "Nom",
+      email: "E-mail",
+      subject: "Objet",
+      subjects: ["Booking", "Collaboration", "Presse", "Autre"],
+      message: "Message",
+      submit: "Envoyer",
+      note: "L’envoi ouvre votre messagerie avec le message prêt à partir.",
+      sent: "Votre messagerie s’est ouverte : il ne reste plus qu’à envoyer le message.",
+    },
     placeholderMail: "Contact à renseigner",
     contactQrCaption: "Scanner pour choisir entre Booking et SoundCloud",
     contactQrAlt: "QR code vers les liens Booking et SoundCloud de VALANA",
@@ -443,7 +480,7 @@ const T = {
     originImageAlt: "Luminous spiral in a nebula",
     bioImageAlt: "VALANA performing",
     bookingImageAlt: "Luminous psychedelic mandala",
-    nav: ["World", "Origin", "Biography", "Sound", "Label", "Booking", "Contact"],
+    nav: ["World", "Origin", "Biography", "Sound", "Events", "Label", "Booking", "Contact"],
     originTitle: "Origin",
     origin: [
       "Valana (वलन) has its roots in Sanskrit, the sacred and ancient language of India.",
@@ -459,6 +496,33 @@ const T = {
     soundTitle: "Musical identity",
     soundIntro:
       "A wide range of styles across eclectic musical spectrums",
+    eventsTitle: "Events",
+    eventsIntro: "Festivals, clubs and parties where VALANA has played.",
+    eventGroups: [
+      { region: "Festival", place: "Burgundy", venues: ["Nataraja Festival"] },
+      {
+        region: "Paris & surroundings",
+        place: "Île-de-France",
+        venues: ["Unisson", "Nexus", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
+      },
+      { region: "Côte d’Azur", place: "Antibes · Nice", venues: ["Green Garden", "Bioscenose", "L’Antre"] },
+    ],
+    eventsMore: "Show more",
+    eventsLess: "Show less",
+    eventTimeline: [
+      { year: "2019", date: "9 March 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
+      { year: "2022", date: "7–10 July 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Burgundy" },
+      { year: "2023", date: "19 June 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
+      { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up · Medhra vs Valana" },
+      { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
+      { year: "2024", date: "31 October 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
+      { year: "2025", date: "10–13 July 2025", title: "Nataraja Psychedelic Gathering", detail: "Festival line-up" },
+      { year: "2026", date: "9 May 2026", title: "Symbiosis Journey · Part II", detail: "Nataraja × NOCT" },
+      { year: "2026", date: "16–19 July 2026", title: "Nataraja Psychedelic Gathering", detail: "10th anniversary · Chillout line-up" },
+      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
+      { year: "2026", date: "16–19 July 2026", title: "Nataraja Psychedelic Gathering", detail: "10th anniversary · Mainstage line-up" },
+      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
+    ],
     collectivesTitle: "Labels & collectives",
     collectives: [
       {
@@ -537,7 +601,17 @@ const T = {
       ["Goal", "Collaborations with collectives and a presence on electronic stages in France and abroad."],
       ["Set length", "1.5 to 3 hours; extended sets available"],
     ],
-    contactTitle: "Links & contact",
+    contactTitle: "Contact",
+    contactForm: {
+      name: "Name",
+      email: "Email",
+      subject: "Subject",
+      subjects: ["Booking", "Collaboration", "Press", "Other"],
+      message: "Message",
+      submit: "Send",
+      note: "Sending opens your email app with the message ready to go.",
+      sent: "Your email app has opened: just send the message.",
+    },
     placeholderMail: "Contact to be added",
     contactQrCaption: "Scan to choose between Booking and SoundCloud",
     contactQrAlt: "QR code to VALANA's Booking and SoundCloud links",
@@ -545,12 +619,35 @@ const T = {
   },
 };
 
-const ANCHORS = ["univers", "origine", "biographie", "sons", "labels", "booking", "contact"];
+// Nombre de cartes visibles avant le bouton « Voir plus »
+const EVENTS_PREVIEW_COUNT = 6;
+
+// Affiches et photos d'évènements, par ordre chronologique (les textes sont dans T.*.eventTimeline).
+// La frise les affiche du plus récent au plus ancien. Les photos en paysage ont un point
+// de cadrage (focus) : elles sont recadrées en portrait autour de Valana.
+const EVENT_IMAGES = [
+  "/events/unisson-freedom.jpg",
+  { src: "/events/natafest-22.jpg", focus: "50% 50%" },
+  "/events/green-23.jpg",
+  "/events/natafest-24-lineup.jpg",
+  { src: "/events/natafest-24.jpg", focus: "54% 50%" },
+  "/events/bp-hallow-24.jpg",
+  "/events/natafest-25.jpg",
+  "/events/natanoct-symbiosis-26.jpg",
+  "/events/natafest-26-chillout.jpg",
+  "/events/natafest-25-stage.jpg",
+  "/events/natafest-26-mainstage.jpg",
+  { src: "/events/natafest-25-backstage.jpg", focus: "8% 50%" },
+];
+
+const ANCHORS = ["univers", "origine", "biographie", "sons", "evenements", "labels", "booking", "contact"];
 
 export default function App() {
   const [lang, setLang] = useState("fr");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [contactSent, setContactSent] = useState(false);
   const t = T[lang];
 
   useEffect(() => {
@@ -567,6 +664,20 @@ export default function App() {
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [mobileMenuOpen]);
+
+  // Images protégées : pas de menu « Enregistrer l'image » ni de glisser-déposer
+  useEffect(() => {
+    const blockImageSave = (event) => {
+      if (event.target instanceof Element && event.target.closest("img, .event-media")) event.preventDefault();
+    };
+
+    document.addEventListener("contextmenu", blockImageSave);
+    document.addEventListener("dragstart", blockImageSave);
+    return () => {
+      document.removeEventListener("contextmenu", blockImageSave);
+      document.removeEventListener("dragstart", blockImageSave);
+    };
+  }, []);
 
   useEffect(() => {
     const updateFloatingActions = () => setShowFloatingActions(window.scrollY > 180);
@@ -641,12 +752,36 @@ export default function App() {
             "--hero-background-image": `url("${publicAsset("/hero-background.jpeg")}")`,
             "--hero-sky-mask": `url("${publicAsset("/hero-sky-mask.png")}")`,
             "--hero-glow-mask": `url("${publicAsset("/hero-glow-mask.png")}")`,
+            "--hero-lake-mask": `url("${publicAsset("/hero-lake-mask.png")}")`,
           }}
         >
           <div className="hero-aurora" aria-hidden="true">
             {AURORA_BANDS.map((band) => <AuroraBand key={band.id} {...band} />)}
           </div>
           <div className="hero-aurora-glow" aria-hidden="true" />
+          {/* Lac : l'image est reprise et ondulée sous le masque de l'eau, avec des reflets qui scintillent */}
+          <div className="hero-lake" aria-hidden="true">
+            <svg className="aurora-filter-defs" aria-hidden="true" focusable="false">
+              <filter id="lake-ripple" x="0" y="0" width="100%" height="100%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.09" numOctaves="2" seed="5" result="ripples">
+                  <animate
+                    attributeName="baseFrequency"
+                    dur="14s"
+                    repeatCount="indefinite"
+                    values="0.0035 0.09;0.0045 0.075;0.003 0.1;0.0035 0.09"
+                    calcMode="spline"
+                    keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"
+                  />
+                </feTurbulence>
+                <feOffset in="ripples" dy="0" result="flow">
+                  <animate attributeName="dy" dur="9s" repeatCount="indefinite" values="0;14;0" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" />
+                </feOffset>
+                <feDisplacementMap in="SourceGraphic" in2="flow" scale="9" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </svg>
+            <div className="hero-lake-water" />
+            <div className="hero-lake-glints" />
+          </div>
           <div className="hero-starfield" aria-hidden="true">
             {Array.from({ length: 21 }, (_, index) => {
               const column = index % 7;
@@ -721,14 +856,44 @@ export default function App() {
                 decoding="async"
               />
               <div className="origin-horizon" aria-hidden="true" />
+              {/* Quelques étoiles scintillantes, du même style que celles du landing */}
+              <div className="origin-stars" aria-hidden="true">
+                {[
+                  [22, 26, true, "-1.3s", "3.1s"],
+                  [76, 18, false, "-4.2s", "4.6s"],
+                  [86, 60, false, "-0.6s", "2.4s"],
+                  [14, 56, false, "-2.7s", "5.2s"],
+                  [34, 80, true, "-3.6s", "3.8s"],
+                  [64, 84, false, "-5.1s", "2.9s"],
+                ].map(([left, top, cross, delay, duration]) => (
+                  <span
+                    key={`${left}-${top}`}
+                    className={cross ? "hero-star-cross" : undefined}
+                    style={{ left: `${left}%`, top: `${top}%`, "--star-delay": delay, "--star-duration": duration }}
+                  />
+                ))}
+              </div>
               <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
                 <defs>
                   <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
-                  {/* Chevrons violets : verre teinté, clair en haut, magenta profond en bas */}
-                  <linearGradient id="portal-violet-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#ecd2ff" />
-                    <stop offset="45%" stopColor="#a078e6" />
-                    <stop offset="100%" stopColor="#5b2a7e" />
+                  {/* Chevrons : un sur deux en dégradé turquoise, un sur deux en dégradé violacé */}
+                  <linearGradient id="portal-chevron-turq" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#e6fff9" />
+                    <stop offset="45%" stopColor="#7fe6d4" />
+                    <stop offset="100%" stopColor="#2fa69a" />
+                  </linearGradient>
+                  <linearGradient id="portal-chevron-turq-gem" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="100%" stopColor="#a6f3e6" />
+                  </linearGradient>
+                  <linearGradient id="portal-chevron-violet" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f3e8ff" />
+                    <stop offset="45%" stopColor="#b896ef" />
+                    <stop offset="100%" stopColor="#7a52c4" />
+                  </linearGradient>
+                  <linearGradient id="portal-chevron-violet-gem" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="100%" stopColor="#dcc8fb" />
                   </linearGradient>
                   <linearGradient id="portal-metal-gradient" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="#e2f2e8" />
@@ -766,10 +931,14 @@ export default function App() {
                     </feTurbulence>
                     <feDisplacementMap in="SourceGraphic" in2="flow" scale="6" xChannelSelector="R" yChannelSelector="G" />
                   </filter>
+                  {/* Les couleurs de la gemme passent par des variables CSS, seules à traverser les <use> */}
                   <g id="portal-tooth">
                     <path d="M200 2 219 26 209 22 200 37 191 22 181 26Z" />
-                    <path d="M200 9 211 24 200 20 189 24Z" />
-                    <path d="M200 25v7" />
+                    <path
+                      d="M200 6.5 214 25 200 19.5 186 25Z"
+                      style={{ fill: "var(--gem-fill)", stroke: "var(--gem-edge)", strokeWidth: 0.6 }}
+                    />
+                    <path d="M200 25v7" style={{ fill: "none", stroke: "var(--gem-line)", strokeWidth: 1 }} />
                   </g>
                 </defs>
                 <polygon className="ornament-bezel" points="200,1 301,28 372,99 399,200 372,301 301,372 200,399 99,372 28,301 1,200 28,99 99,28" />
@@ -914,6 +1083,62 @@ export default function App() {
           </div>
         </section>
 
+        <section className="row" id="evenements">
+          <h2>{t.eventsTitle}</h2>
+          <p className="events-intro">{t.eventsIntro}</p>
+          <div className="events">
+            {t.eventGroups.map((group) => (
+              <article className="event-group" key={group.region}>
+                <h3>{group.region}</h3>
+                <p className="event-place">{group.place}</p>
+                <ul className="event-venues">
+                  {group.venues.map((venue) => <li key={venue}>{venue}</li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+          <ol className="event-timeline">
+            {t.eventTimeline
+              .map((event, index) => ({ event, index }))
+              .reverse()
+              .slice(0, showAllEvents ? undefined : EVENTS_PREVIEW_COUNT)
+              .map(({ event, index }) => {
+              const image = EVENT_IMAGES[index];
+              const { src: path, focus } = typeof image === "string" ? { src: image } : image;
+              const src = publicAsset(path);
+              return (
+                <li className="event-card" key={path}>
+                  <div className={`event-media${focus ? " event-media-cropped" : ""}`} style={{ "--event-image": `url("${src}")` }}>
+                    <img
+                      src={src}
+                      alt={`${event.title} — ${event.date}`}
+                      loading="lazy"
+                      decoding="async"
+                      style={focus ? { objectPosition: focus } : undefined}
+                    />
+                  </div>
+                  <div className="event-info">
+                    <span className="event-year">{event.year}</span>
+                    <h3>{event.title}</h3>
+                    <p className="event-date">{event.date}</p>
+                    <p className="event-detail">{event.detail}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          {t.eventTimeline.length > EVENTS_PREVIEW_COUNT && (
+            <button
+              className="events-toggle"
+              type="button"
+              aria-expanded={showAllEvents}
+              onClick={() => setShowAllEvents((open) => !open)}
+            >
+              {showAllEvents ? t.eventsLess : t.eventsMore}
+            </button>
+          )}
+        </section>
+
         <section className="row" id="labels">
           <h2>{t.collectivesTitle}</h2>
           <div className="prose">
@@ -996,8 +1221,47 @@ export default function App() {
             ) : (
               <p className="todo">{t.placeholderMail}</p>
             )}
+            {INFO.email && (
+              <form
+                className="contact-form"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const data = new FormData(event.currentTarget);
+                  const subject = `[${data.get("subject")}] ${data.get("name")}`;
+                  const body = `${data.get("message")}\n\n${data.get("name")} · ${data.get("email")}`;
+                  window.location.href =
+                    `mailto:${INFO.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                  setContactSent(true);
+                }}
+              >
+                <label>
+                  <span>{t.contactForm.name}</span>
+                  <input name="name" type="text" autoComplete="name" required />
+                </label>
+                <label>
+                  <span>{t.contactForm.email}</span>
+                  <input name="email" type="email" autoComplete="email" required />
+                </label>
+                <label className="contact-form-wide">
+                  <span>{t.contactForm.subject}</span>
+                  <select name="subject" defaultValue={t.contactForm.subjects[0]}>
+                    {t.contactForm.subjects.map((subject) => <option key={subject}>{subject}</option>)}
+                  </select>
+                </label>
+                <label className="contact-form-wide">
+                  <span>{t.contactForm.message}</span>
+                  <textarea name="message" rows="6" required />
+                </label>
+                <div className="contact-form-footer">
+                  <p className="contact-form-note" aria-live="polite">
+                    {contactSent ? t.contactForm.sent : t.contactForm.note}
+                  </p>
+                  <button className="booking-cta" type="submit"><span>{t.contactForm.submit}</span></button>
+                </div>
+              </form>
+            )}
             {links.length > 0 && (
-              <ul className="links" aria-label={t.links}>
+              <ul className="links contact-print-links" aria-label={t.links}>
                 {links.map(([name, url]) => (
                   <li key={name} className={name === "SoundCloud" ? "soundcloud-contact" : undefined}>
                     <a
