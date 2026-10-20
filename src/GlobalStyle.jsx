@@ -980,7 +980,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .contact .mail { font-size: clamp(1rem, 2.2vw, 1.25rem); }
 .contact > div { text-align: center; }
 /* Espace sous l'adresse pour que la barre flottante (Booking) ne recouvre pas la fin de page */
-.row.press { padding-bottom: calc(5rem + 5.5rem + env(safe-area-inset-bottom, 0px)); }
+.row.press { padding-bottom: 5rem; }
 .links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
 .contact .links { justify-content: center; }
 .links a {
@@ -991,6 +991,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
     box-shadow var(--hover-ease), scale var(--hover-ease);
 }
 .link-screen-label { display: inline-flex; align-items: center; gap: 0.45rem; }
+/* Liens des labels : à l'écran, seul le nom s'affiche (pastille) ; pictogramme et adresse sont pour le PDF */
+.collective-links .link-icon,
+.collective-links .link-url { display: none; }
 .soundcloud-logo { width: 1.25rem; height: 1rem; fill: #fff; }
 .soundcloud-wave {
   fill: none; stroke: var(--night); stroke-width: 1; stroke-linecap: round;
@@ -1047,6 +1050,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top: 1px solid var(--line); font-size: 0.95rem; }
+/* Mentions en bas de page ; marge basse pour passer sous la barre flottante */
+.site-footer {
+  padding-block: 1.6rem calc(1.6rem + 5rem + env(safe-area-inset-bottom, 0px));
+  text-align: center; font: 600 0.75rem var(--display); letter-spacing: 0.08em;
+}
 
 @media (min-width: 801px) {
   .booking-layout { grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.65fr); }
@@ -1187,7 +1195,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
 /* Impression PDF */
 @media print {
   @page {
-    size: A4 landscape;
+    size: A4 portrait;
     margin: 10mm 12mm;
   }
 
@@ -1395,6 +1403,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   #presse { display: block; padding: 3mm 0 0; text-align: center; }
   .press-print { display: block; color: #153b32; font-size: 10pt; }
   .row.press { padding-bottom: 0; }
+  .site-footer { padding: 4mm 0 0; border-top: 0; color: #41564d; font-size: 8pt; }
   .contact-form { display: none !important; }
   .contact .links > li { display: grid; justify-items: center; gap: 2mm; }
   .contact .links a {
@@ -1430,6 +1439,196 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   .contact-print-qr figcaption {
     color: #41564d; font-size: 9.5pt; line-height: 1.2; text-align: center;
   }
+
+  /* ——— Thème nuit du PDF : fond du site, texte clair, accents aux couleurs des aurores ——— */
+  @page { size: A4 portrait; margin: 0; }
+  :root {
+    --night: #08130f; --bone: #efe9dc; --muted: #a9b7ae; --line: rgba(239, 233, 220, 0.14);
+    --print-aurora: linear-gradient(90deg, #64ee94, #69d7af 30%, #87a5d7 58%, #a078e6 80%, #cd5ab9);
+    --print-card: rgba(239, 233, 220, 0.045);
+    --print-card-line: rgba(239, 233, 220, 0.12);
+  }
+  html, body { background: #08130f; }
+  body { color: #e6e1d6; }
+  main { padding: 0 12mm; }
+  .hero { margin: 0 -12mm; padding: 9mm 12mm 7mm; }
+  .hero::after {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 1mm; content: "";
+    background: var(--print-aurora);
+  }
+  /* Animations d'apparition figées à leur état final (sinon le PDF capture un texte à moitié visible) */
+  .hero *, .hero *::before, .hero *::after { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .hero-tag { margin-top: 2mm; color: #f3eee4; }
+  .hero-genres { margin-top: 2.5mm; color: #e6e1d6; }
+  .row#origine { padding-top: 7mm; }
+  #biographie, #labels, #sons, .booking-contact-print-group { padding-top: 10mm !important; }
+  .row h2 {
+    color: #f3eee4; border-bottom: 0; padding-bottom: 2.5mm;
+    background: var(--print-aurora) left bottom / 100% 0.5mm no-repeat;
+  }
+  .row h2::before { opacity: 1; }
+  .prose p, .book dd, .style p { color: #ddd8cd; }
+
+  /* Origine & biographie : cadres photo en liseré aurore */
+  .row#origine .origin-visual,
+  #biographie .bio-photo-frame,
+  .booking-visual {
+    border: 0.6mm solid transparent;
+    background: linear-gradient(#08130f, #08130f) padding-box, linear-gradient(135deg, #64ee94, #87a5d7, #a078e6, #cd5ab9) border-box;
+  }
+
+  /* Labels */
+  #labels .collective {
+    border: 1px solid var(--print-card-line); border-top: 0;
+    background: var(--print-aurora) top / 100% 1mm no-repeat, var(--print-card);
+    padding-top: 5mm;
+  }
+  #labels .collective-title { color: #f3eee4; }
+  #labels .collective-title img { border-color: var(--print-card-line); background: #101c18; }
+  #labels .collective-title .collective-logo-screen[src*="nataraja-logo.svg"] { display: block; }
+  #labels .collective-title .collective-logo-print { display: none; }
+  #labels .links a, .contact .links a { border-color: rgba(143, 240, 192, 0.45); color: #c9fbe0; }
+
+  /* Identité musicale : cartes sombres, filet de couleur par univers */
+  #sons .lead, #sons .mood, #sons .world-bpm { color: #b9c4bc; }
+  #sons .world {
+    border: 1px solid var(--print-card-line); border-top: 1.2mm solid #64ee94;
+    background: var(--print-card) !important;
+  }
+  #sons .world.w1 { border-top-color: #a078e6; background: rgba(160, 120, 230, 0.06) !important; }
+  #sons .world.w2 { border-top-color: #69d7af; background: rgba(105, 215, 175, 0.05) !important; }
+  #sons .world h3, #sons .style h4 { color: #f3eee4; }
+  #sons .style + .style { border-color: var(--print-card-line); }
+
+  /* Évènements */
+  .event-group { border-color: var(--print-card-line); background: var(--print-card); }
+  .event-group h3 { color: #f3eee4; }
+  .event-place, .events-intro { color: #a9b7ae; }
+  .event-venues li { border-color: rgba(143, 240, 192, 0.45); color: #c9fbe0; }
+
+  /* Booking & contact */
+  .book > div { border-color: var(--print-card-line); background: var(--print-card); }
+  .book dt { color: #8ff0c0; }
+  .contact .mail { color: #f3eee4; border-bottom-color: #cd5ab9; }
+  .contact .links a.link-address { color: #f3eee4; }
+  .contact .links .link-print-label { text-decoration-color: #64ee94; }
+  .contact-soundcloud-marker svg path:first-child { fill: #efe9dc; }
+  .contact-soundcloud-marker svg path:last-child { stroke: #08130f; }
+  .contact-print-qr img { padding: 1.5mm; border-radius: 2mm; background: #fff; }
+  .contact-print-qr figcaption, .press-print, .site-footer { color: #a9b7ae; }
+
+  /* ——— Mise en page portrait : pages remplies en hauteur ——— */
+  .hero { min-height: 105mm; padding-block: 14mm 10mm; background-position: center 55%; }
+  .hero-art { width: 20mm; margin-bottom: 2mm; }
+  .hero h1 { font-size: 44pt; }
+  .hero-tag { font-size: 10.5pt; }
+  .hero-genres { font-size: 9pt; line-height: 1.7; }
+  .prose p { font-size: 12pt; line-height: 1.6; }
+  .row#origine .origin-content { grid-template-columns: minmax(0, 1fr) 62mm; gap: 8mm; }
+  /* Une section par page, texte agrandi pour remplir la hauteur du portrait */
+  #biographie .bio-photo-frame { width: 72mm; margin-right: 8mm; }
+  #biographie .prose p { font-size: 12.5pt; line-height: 1.65; }
+  #biographie .prose p + p { margin-top: 4mm; }
+  #labels > .prose { grid-template-columns: 1fr; gap: 7mm; }
+  #labels .collective { padding: 7mm 8mm 8mm; }
+  #labels .collective-title { font-size: 18pt; }
+  #labels .collective p { font-size: 12pt; line-height: 1.6; }
+  #labels .links a { font-size: 10pt; padding: 1.3mm 3.5mm; }
+  /* Identité musicale : page entière, texte plus confortable */
+  #sons .lead { font-size: 15pt; }
+  #sons .worlds { gap: 4mm; }
+  #sons .world { padding: 5mm 4mm 6mm; }
+  #sons .world h3 { font-size: 15pt; }
+  #sons .mood { font-size: 10.5pt; margin-bottom: 4mm; }
+  #sons .style + .style { margin-top: 3.5mm; padding-top: 3mm; }
+  #sons .style h4 { font-size: 11.5pt; }
+  #sons .style p { font-size: 10.5pt; line-height: 1.45; }
+  /* Évènements : sa propre page, cartes plus aérées */
+  #evenements { break-before: page; page-break-before: always; padding-top: 10mm !important; }
+  .events { grid-template-columns: 1fr; gap: 6mm; }
+  .events-intro { font-size: 12pt; }
+  .events { gap: 9mm; margin-top: 4mm; }
+  .event-group { padding: 9mm 9mm 10mm; }
+  .event-group h3 { font-size: 22pt; }
+  .event-place { font-size: 9.5pt; margin-top: 1mm; }
+  .event-venues { gap: 2.5mm; margin-top: 5mm; }
+  .event-venues li { font-size: 12pt; padding: 1.8mm 4.5mm; }
+  /* Booking & contact : tableau pleine largeur, visuel au-dessus */
+  .booking-layout { grid-template-columns: minmax(0, 1fr) 46mm; }
+  .book dd { font-size: 10.5pt; }
+  #contact { padding-top: 8mm; }
+
+  /* ——— Tailles de texte maximales : chaque section remplit sa page sans déborder ——— */
+  #origine .prose p { font-size: 14pt; line-height: 1.55; }
+  #biographie .prose p { font-size: 16pt; line-height: 1.6; }
+  #labels .collective p { font-size: 13.5pt; line-height: 1.55; }
+  #labels .collective-title { font-size: 20pt; }
+  #sons .lead { font-size: 16pt; }
+  #sons .world h3 { font-size: 16pt; }
+  #sons .world-bpm { font-size: 9.5pt; }
+  #sons .mood { font-size: 11.5pt; }
+  #sons .style h4 { font-size: 12.5pt; }
+  #sons .style p { font-size: 11.5pt; line-height: 1.45; }
+  .events-intro { font-size: 15pt; }
+  .events { gap: 12mm; }
+  .event-group { padding: 11mm 10mm 12mm; }
+  .event-group h3 { font-size: 30pt; }
+  .event-place { font-size: 12pt; }
+  .event-venues { gap: 3mm; margin-top: 6mm; }
+  .event-venues li { font-size: 16pt; padding: 2.4mm 5.5mm; }
+  .book dt { font-size: 14pt; }
+  .book dd { font-size: 14pt; line-height: 1.45; }
+  .book > div { padding: 3.5mm 4mm; }
+  .contact .mail { font-size: 18pt; }
+  .contact .links a.link-address { font-size: 17pt; }
+  .contact-print-qr { width: 50mm; }
+  .contact-print-qr img { width: 50mm; height: 50mm; }
+  .contact-print-qr figcaption { font-size: 11pt; }
+  .press-print { font-size: 11pt; }
+  .site-footer { font-size: 9.5pt; }
+
+  /* ——— Liens des labels en clair dans le PDF : pictogramme + nom + adresse ——— */
+  #labels .collective-links { display: grid; gap: 1.6mm; margin-top: 4mm; }
+  #labels .collective-links a {
+    display: grid; grid-template-columns: 7.5mm 28mm 1fr; align-items: center; gap: 2.5mm;
+    padding: 0; border: 0; border-radius: 0; background: none;
+    color: #e6e1d6; font-size: 11pt; text-decoration: none;
+  }
+  #labels .collective-links .link-icon {
+    display: block; width: 7.5mm; height: 7.5mm; padding: 1.4mm; box-sizing: border-box;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(100, 238, 148, 0.28), rgba(160, 120, 230, 0.28));
+    fill: #c9fbe0;
+  }
+  #labels .collective-links .link-icon-site path,
+  #labels .collective-links .link-icon-artistes path { fill: #c9fbe0; }
+  #labels .collective-links .link-icon-site path { fill: none; stroke: #c9fbe0; stroke-width: 1.6; }
+  #labels .collective-links .link-icon-instagram path { fill: #c9fbe0; fill-rule: evenodd; }
+  #labels .collective-links .link-name { font: 700 10.5pt var(--display); color: #f3eee4; }
+  #labels .collective-links .link-url { display: block; color: #c9fbe0; overflow-wrap: anywhere; }
+
+  /* Contact : QR code aéré pour que le contenu occupe toute la hauteur de la dernière page */
+  .contact-print-qr { margin: 9mm auto 0; gap: 2.5mm; }
+  #presse { padding-top: 9mm; }
+  .site-footer { padding-top: 5mm; }
+
+  /* Pas de lien vers le dossier presse dans le PDF ; QR code un peu plus grand pour occuper la page */
+  #presse { display: none !important; }
+  .contact-print-qr { width: 58mm; margin-top: 11mm; }
+  .contact-print-qr img { width: 58mm; height: 58mm; }
+  .contact-print-qr figcaption { font-size: 12pt; }
+  .site-footer { padding-top: 10mm; }
+
+  /* Dernière page : le bloc Booking + Contact occupe toute la hauteur de la page,
+     le copyright se pose tout en bas, sur le fond nuit */
+  .booking-contact-print-group {
+    display: flex; flex-direction: column; box-sizing: border-box;
+    height: 283mm; break-after: avoid; page-break-after: avoid;
+  }
+  .booking-contact-print-group #contact { flex: 1; display: flex; flex-direction: column; }
+  .booking-contact-print-group #contact > div { flex: 1; display: flex; flex-direction: column; align-items: center; }
+  .contact-print-qr { margin-block: auto; }
+  .site-footer { height: 14mm; padding: 0 !important; display: grid; place-items: center; }
 }
 `;
 

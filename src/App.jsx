@@ -70,8 +70,8 @@ const T = {
     ],
     bioTitle: "Biographie",
     bio: [
-      "Valana évolue depuis vingt ans dans l’univers électronique, dont quinze dans la musique psychédélique transcendantale, et mixe depuis dix ans. Ses premiers pas sur scène ont lieu au Transition Festival, au Portugal. En parallèle, elle poursuit son parcours pendant cinq ans aux côtés de l’association Unisson, puis avec Nataraja, collectif et label parisien pour lequel et avec lequel elle mixe depuis dix ans. Elle a aussi joué ponctuellement dans diverses soirées à Paris et alentours comme au Nexus, à la Sand Fabric, au Bateau Phare, à la Péniche cinéma, aux Folies Pigalle ainsi que sur la côte d'Azur notamment au Green Garden (Antibes), à la Bioscenose, à l'Antre (Nice)...",
-      "Elle débute par les sons nocturnes de la psytrance, de la psygroovy, de la twilight et de la forest, puis s’ouvre à la psytechno, à la bush prog et à la psygressive. Elle explore ensuite des tempos plus lents, jusqu’aux territoires profonds et apaisés de la psybass, de la psydub, de la psybreak et de la psychill.",
+      "Valana évolue depuis vingt ans dans l’univers électronique, dont quinze dans la musique psychédélique transcendantale, et mixe depuis dix ans. Ses premiers pas sur scène ont lieu au Transition Festival, au Portugal. En parallèle, elle poursuit son parcours pendant cinq ans aux côtés de l’association Unisson, puis avec Nataraja, collectif et label parisien pour lequel et avec lequel elle mixe depuis dix ans. Elle a aussi joué ponctuellement dans diverses soirées à Paris et alentours comme au Noct, à la Sand Fabric, au Bateau Phare, à la Péniche cinéma, aux Folies Pigalle ainsi que sur la côte d'Azur notamment à Bloc Party (Mougins), au Green Garden (Antibes), à la Bioscenose, à l'Antre (Nice)...",
+      "Elle débute par les sons nocturnes de la psytrance, de la psygroovy, de la twilight et de la forest, puis s’ouvre à la psytech, à la bush tech, à la bush prog et à la psygressive. Elle explore ensuite des tempos plus lents, jusqu’aux territoires profonds et apaisés de la psybass, de la psydub, de la psybreak et de la psychill.",
       "Au-delà des platines, VALANA s’implique dans l’envers du décor. Référente sur scène, elle s’occupe des branchements et du bon déroulement technique des soirées. Elle a également créé des visuels pour l'association Unisson et le Label Transubtil.",
     ],
     soundTitle: "Identité musicale",
@@ -200,8 +200,9 @@ const T = {
       sent: "Votre messagerie s’est ouverte : il ne reste plus qu’à envoyer le message.",
     },
     placeholderMail: "Contact à renseigner",
-    contactQrCaption: "Scanner pour choisir entre Booking et SoundCloud",
+    contactQrCaption: "Écouter, booking",
     pressKit: "Dossier presse",
+    copyright: "© 2026 VALANA. Tous droits réservés.",
     pressKitDownload: "Télécharger",
     pressKitIntro: "Tout pour présenter VALANA : press kit en PDF, photos HD, logos et affiches d’évènements.",
     pressKitDetail: "Press kit PDF, photos HD, logo, affiches · ZIP 10 Mo",
@@ -231,8 +232,8 @@ const T = {
     ],
     bioTitle: "Biography",
     bio: [
-      "Valana has been part of the electronic music scene for twenty years, including fifteen years in psychedelic trance music, and has been DJing for ten years. Her first steps on stage were at Transition Festival in Portugal. Alongside this, she spent five years with the Unisson association, then joined Nataraja, a Paris-based collective and label for and with whom she has been DJing for ten years. She has also played at various events in and around Paris, including Nexus, Sand Fabrik, Bateau Phare, Péniche Cinéma and Folies Pigalle, as well as on the Côte d’Azur, notably at Green Garden (Antibes), Bioscenose and L’Antre (Nice)...",
-      "She began with the nocturnal sounds of psytrance, psygroovy, twilight and forest, then opened up to psytechno, bush prog and psygressive. She later explored slower tempos, reaching the deep, tranquil territories of psybass, psydub, psybreak and psychill.",
+      "Valana has been part of the electronic music scene for twenty years, including fifteen years in psychedelic trance music, and has been DJing for ten years. Her first steps on stage were at Transition Festival in Portugal. Alongside this, she spent five years with the Unisson association, then joined Nataraja, a Paris-based collective and label for and with whom she has been DJing for ten years. She has also played at various events in and around Paris, including Noct, Sand Fabrik, Bateau Phare, Péniche Cinéma and Folies Pigalle, as well as on the Côte d’Azur, notably at Bloc Party (Mougins), Green Garden (Antibes), Bioscenose and L’Antre (Nice)...",
+      "She began with the nocturnal sounds of psytrance, psygroovy, twilight and forest, then opened up to psytech, bush tech, bush prog and psygressive. She later explored slower tempos, reaching the deep, tranquil territories of psybass, psydub, psybreak and psychill.",
       "Beyond the decks, VALANA is involved behind the scenes. As a stage coordinator, she handles connections and helps ensure the smooth technical running of events. She has also created visuals for the Unisson association and the Transubtil label.",
     ],
     soundTitle: "Musical identity",
@@ -361,8 +362,9 @@ const T = {
       sent: "Your email app has opened: just send the message.",
     },
     placeholderMail: "Contact to be added",
-    contactQrCaption: "Scan to choose between Booking and SoundCloud",
+    contactQrCaption: "Listen, book",
     pressKit: "Press kit",
+    copyright: "© 2026 VALANA. All rights reserved.",
     pressKitDownload: "Download",
     pressKitIntro: "Everything you need to present VALANA: PDF press kit, HD photos, logos and event posters.",
     pressKitDetail: "PDF press kit, HD photos, logo, posters · ZIP 10 MB",
@@ -373,6 +375,28 @@ const T = {
 
 // Formulaire de contact désactivé pour le moment : passer à true pour le réafficher
 const SHOW_CONTACT_FORM = false;
+
+// Pictogramme de chaque lien (affiché dans le PDF, à côté de l'adresse complète)
+const LINK_ICONS = {
+  facebook: "M14 8.5h2.2V5.6H14c-2 0-3.3 1.4-3.3 3.4v1.6H8.8v2.9h1.9V20h3v-6.5h2.3l.4-2.9h-2.7V9.2c0-.4.3-.7.7-.7Z",
+  instagram: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Zm4 4.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm4.6-1.6a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8Z",
+  bandcamp: "M8.5 7H21l-5.5 10H3Z",
+  artistes: "M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3.5 19c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5Zm12.5 0c0-1.9-.6-3.6-1.6-4.9.5-.2 1-.3 1.6-.3 2.5 0 4.5 2.3 4.5 5.2Z",
+  site: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 0c2.2 2.3 3.3 5.1 3.3 8.5s-1.1 6.2-3.3 8.5c-2.2-2.3-3.3-5.1-3.3-8.5S9.8 5.8 12 3.5ZM3.8 12h16.4",
+};
+
+function LinkIcon({ url }) {
+  const key = url.includes("facebook") ? "facebook"
+    : url.includes("instagram") ? "instagram"
+    : url.includes("bandcamp") ? "bandcamp"
+    : url.includes("artistes") ? "artistes"
+    : "site";
+  return (
+    <svg className={`link-icon link-icon-${key}`} viewBox="0 0 24 24" aria-hidden="true">
+      <path d={LINK_ICONS[key]} />
+    </svg>
+  );
+}
 
 // Étoiles ajoutées à la main sur le landing : [gauche %, haut %, teinte, délai, durée].
 // Elles comblent les vides de la grille, avec quelques teintes chaudes ou vertes plus naturelles.
@@ -928,7 +952,13 @@ export default function App() {
                 {collective.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
                 <ul className="links collective-links" aria-label={`${collective.name} — ${t.collectiveLinksLabel}`}>
                   {collective.links.map(([label, url]) => (
-                    <li key={url}><a href={url} target="_blank" rel="noreferrer">{label}</a></li>
+                    <li key={url}>
+                      <a href={url} target="_blank" rel="noreferrer">
+                        <LinkIcon url={url} />
+                        <span className="link-name">{label}</span>
+                        <span className="link-url">{url.replace(/^https?:\/\/(www\.)?/, "")}</span>
+                      </a>
+                    </li>
                   ))}
                 </ul>
               </article>
@@ -1193,6 +1223,10 @@ export default function App() {
         </section>
         </div>
       </main>
+
+      <footer className="site-footer">
+        <p>{t.copyright}</p>
+      </footer>
 
       {showFloatingActions && (
         <nav className="floating-actions" aria-label={t.quickActionsLabel}>

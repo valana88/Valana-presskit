@@ -11,14 +11,14 @@ export default function Contact() {
   const auroraRef = useRef(null);
   const copy = language === "en"
     ? {
-        intro: "Psychedelic trance & groovy music",
-        booking: "Booking · Send an email",
+        intro: "Psytrance, groove, alternative and chill",
+        booking: "Booking",
         listen: "SoundCloud · Listen",
         linksLabel: "VALANA links",
       }
     : {
-        intro: "Trance psychédélique & musique groovy",
-        booking: "Booking · Envoyer un e-mail",
+        intro: "Psytrance, groove, alternative et chill",
+        booking: "Booking",
         listen: "SoundCloud · Écouter",
         linksLabel: "Liens VALANA",
       };
