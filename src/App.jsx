@@ -379,6 +379,13 @@ const HERO_EXTRA_STARS = [
 // image : on les fait avancer à cadence réduite, et seulement quand la zone est à l'écran.
 const SVG_FRAME_INTERVAL = 50; // ms, soit 20 images/s : invisible sur des mouvements aussi lents
 
+// Styles affichés sous le bouton Booking du landing : une ligne par tableau
+const HERO_GENRES = [
+  ["Psytrance", "Twilight", "Forest", "Psytech", "Bushtech", "Bushprog"],
+  ["Electro groove & funk", "Ethno orientale", "Psygressive"],
+  ["Psybass", "psydub", "Psybreak", "Psychill", "Ambient"],
+];
+
 // Nombre de cartes visibles avant le bouton « Voir plus »
 const EVENTS_PREVIEW_COUNT = 6;
 
@@ -676,9 +683,16 @@ export default function App() {
               </a>
             )}
             <p className="hero-genres" aria-label={t.heroGenresLabel}>
-              Psytrance · Twilight · Forest · Psytechno · Bush Prog · Electro groove &amp; funk
-              <br />
-              Psygressive · Psybass · psydub · Psybreak · Psychill
+              {HERO_GENRES.map((line) => (
+                <span className="hero-genres-line" key={line[0]}>
+                  {line.map((genre, index) => (
+                    <span key={genre}>
+                      {index > 0 && " · "}
+                      <span className="hero-genre">{genre}</span>
+                    </span>
+                  ))}
+                </span>
+              ))}
             </p>
           </div>
           <div className="horizon" aria-hidden="true" />

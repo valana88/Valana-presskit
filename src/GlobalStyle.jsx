@@ -465,6 +465,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: 0.12em; text-transform: uppercase;
   text-shadow: 0 2px 12px rgba(8, 19, 15, 0.9);
 }
+/* Une ligne par groupe de styles ; un style n'est jamais coupé en deux */
+.hero-genres-line { display: block; }
+.hero-genre { white-space: nowrap; }
 .horizon {
   position: absolute; left: 0; right: 0; bottom: 0; height: 7rem;
   background: linear-gradient(to top, rgba(8, 19, 15, 0.7), transparent);
