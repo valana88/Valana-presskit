@@ -923,6 +923,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .mail { font: 700 clamp(1.2rem, 3vw, 2rem) var(--display); text-decoration: none; border-bottom: 2px solid var(--magenta); }
 .contact .mail { font-size: clamp(1rem, 2.2vw, 1.25rem); }
 .contact > div { text-align: center; }
+/* Espace sous l'adresse pour que la barre flottante (Booking) ne recouvre pas la fin de page */
+.row.contact { padding-bottom: calc(5rem + 5.5rem + env(safe-area-inset-bottom, 0px)); }
 .links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
 .contact .links { justify-content: center; }
 .links a {
@@ -1325,6 +1327,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   }
   .contact .links { justify-content: center; }
   .contact .contact-print-links { display: flex; }
+  .row.contact { padding-bottom: 6mm; }
   .contact-form { display: none !important; }
   .contact .links > li { display: grid; justify-items: center; gap: 2mm; }
   .contact .links a {

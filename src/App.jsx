@@ -352,9 +352,13 @@ const T = {
       {
         region: "Paris & alentours",
         place: "Île-de-France",
-        venues: ["Unisson", "Nexus", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
+        venues: ["Unisson", "NOCT", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
       },
-      { region: "Côte d’Azur", place: "Antibes · Nice", venues: ["Green Garden", "Bioscenose", "L’Antre"] },
+      {
+        region: "Côte d’Azur",
+        place: "Antibes · Nice · Mougins",
+        venues: ["Green Garden", "Bioscenose", "L’Antre", "Bloc Party"],
+      },
     ],
     eventsMore: "Voir plus",
     eventsLess: "Voir moins",
@@ -409,7 +413,7 @@ const T = {
         bpm: "145–180",
         tempo: 162,
         wave: "fast",
-        mood: "Énergie, puissance, transe",
+        mood: "Une montée d’énergie hypnotique, taillée pour les grands dancefloors",
         styles: [
           ["Psytrance", "Des basses puissantes et des mélodies immersives pour faire monter l’énergie du dancefloor."],
           ["Twilight", "Une psytrance plus sombre et intense, aux sonorités acides et aux rythmes entraînants."],
@@ -421,7 +425,7 @@ const T = {
         bpm: "125–145",
         tempo: 135,
         wave: "syncopated",
-        mood: "Groove, exploration, liberté",
+        mood: "Des grooves libres et hybrides, entre techno, prog et funk psychédélique",
         styles: [
           ["Psytechno", "La rencontre entre la pulsation hypnotique de la techno et les textures psychédéliques."],
           ["Bush Prog", "Une progressive aux grooves souples et aux sonorités chaleureuses, pensée pour le mouvement."],
@@ -434,7 +438,7 @@ const T = {
         bpm: "60–125",
         tempo: 92,
         wave: "slow",
-        mood: "Profondeur, nuances, évasion",
+        mood: "Des basses profondes et des paysages lents pour voyager les yeux fermés",
         styles: [
           ["Psybass", "Des basses profondes et des textures psychédéliques dans des tempos plus posés."],
           ["Psydub", "Des échos, des basses rondes et des paysages sonores inspirés du dub."],
@@ -503,9 +507,13 @@ const T = {
       {
         region: "Paris & surroundings",
         place: "Île-de-France",
-        venues: ["Unisson", "Nexus", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
+        venues: ["Unisson", "NOCT", "Sand Fabrik", "Bateau Phare", "Péniche Cinéma", "Folies Pigalle"],
       },
-      { region: "Côte d’Azur", place: "Antibes · Nice", venues: ["Green Garden", "Bioscenose", "L’Antre"] },
+      {
+        region: "Côte d’Azur",
+        place: "Antibes · Nice · Mougins",
+        venues: ["Green Garden", "Bioscenose", "L’Antre", "Bloc Party"],
+      },
     ],
     eventsMore: "Show more",
     eventsLess: "Show less",
@@ -560,7 +568,7 @@ const T = {
         bpm: "145–180",
         tempo: 162,
         wave: "fast",
-        mood: "Energy, power, trance",
+        mood: "A hypnotic surge of energy, built for big dancefloors",
         styles: [
           ["Psytrance", "Powerful basslines and immersive melodies that build energy on the dancefloor."],
           ["Twilight", "A darker, more intense psytrance sound, with acidic textures and driving rhythms."],
@@ -572,7 +580,7 @@ const T = {
         bpm: "125–145",
         tempo: 135,
         wave: "syncopated",
-        mood: "Groove, exploration, freedom",
+        mood: "Free, hybrid grooves between techno, prog and psychedelic funk",
         styles: [
           ["Psytechno", "The meeting point of techno's hypnotic pulse and psychedelic textures."],
           ["Bush Prog", "Progressive sounds with fluid grooves and warm textures, made for movement."],
@@ -585,7 +593,7 @@ const T = {
         bpm: "60–125",
         tempo: 92,
         wave: "slow",
-        mood: "Depth, nuance, escape",
+        mood: "Deep bass and slow soundscapes to travel with your eyes closed",
         styles: [
           ["Psybass", "Deep bass and psychedelic textures at more laid-back tempos."],
           ["Psydub", "Echoes, rounded basslines and soundscapes inspired by dub."],
@@ -618,6 +626,9 @@ const T = {
     links: "Listen",
   },
 };
+
+// Formulaire de contact désactivé pour le moment : passer à true pour le réafficher
+const SHOW_CONTACT_FORM = false;
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
 const EVENTS_PREVIEW_COUNT = 6;
@@ -1221,7 +1232,7 @@ export default function App() {
             ) : (
               <p className="todo">{t.placeholderMail}</p>
             )}
-            {INFO.email && (
+            {SHOW_CONTACT_FORM && INFO.email && (
               <form
                 className="contact-form"
                 onSubmit={(event) => {
