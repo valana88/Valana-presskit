@@ -1,0 +1,66 @@
+import { createGlobalStyle } from "styled-components";
+
+const AuroraStyle = createGlobalStyle`
+  /* Rideaux d'aurore (composant AuroraBand), partagés par le press kit et la page contact */
+  .aurora-filter-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .aurora-band {
+    position: absolute;
+    top: 0; left: -6%;
+    width: 112%; height: 78%;
+    overflow: visible;
+    transform-origin: 50% 80%;
+    will-change: transform;
+  }
+  /* Rideaux dispersés : chacun occupe une portion du ciel, s'estompe sur les côtés
+     et apparaît puis s'éteint à son propre rythme */
+  .aurora-band-patch {
+    top: var(--band-top); left: var(--band-left);
+    width: var(--band-width); height: var(--band-height);
+    filter: blur(2.5px);
+    opacity: 0;
+    mask-image: linear-gradient(to right, transparent, #000 28%, #000 72%, transparent);
+    animation: aurora-appear var(--appear-duration) ease-in-out var(--appear-delay) infinite;
+  }
+  @keyframes aurora-appear {
+    0% { opacity: 0; }
+    22% { opacity: var(--appear-peak); }
+    42% { opacity: calc(var(--appear-peak) * 0.6); }
+    60% { opacity: calc(var(--appear-peak) * 0.9); }
+    82%, 100% { opacity: 0; }
+  }
+  .aurora-band-main {
+    filter: blur(1.5px);
+    opacity: 0.72;
+    animation: aurora-breathe-main 11s ease-in-out infinite alternate;
+    /* Trouées douces et irrégulières : plusieurs rideaux de longueurs inégales plutôt qu'un bandeau */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%, #000 7%, #000 21%, rgba(0, 0, 0, 0.2) 29%, #000 37%, #000 49%,
+      rgba(0, 0, 0, 0.35) 55%, #000 61%, #000 70%, rgba(0, 0, 0, 0.1) 79%, #000 87%, #000 94%, transparent 100%
+    );
+  }
+  .aurora-band-far {
+    filter: blur(4px);
+    opacity: 0.38;
+    animation: aurora-breathe-far 15s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-breathe-main {
+    from { transform: scaleY(0.95) skewX(-2deg); opacity: 0.62; }
+    50% { opacity: 0.8; }
+    to { transform: scaleY(1.05) skewX(2deg); opacity: 0.7; }
+  }
+  @keyframes aurora-breathe-far {
+    from { transform: scaleY(1.04) skewX(1.5deg); opacity: 0.3; }
+    to { transform: scaleY(0.96) skewX(-1.5deg); opacity: 0.45; }
+  }
+  @media (max-width: 800px) {
+    .aurora-band-main, .aurora-band-far { left: -70%; width: 240%; }
+    .aurora-band-patch { left: calc(var(--band-left) * 2.4 - 70%); width: calc(var(--band-width) * 2.4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-band { animation: none; }
+    .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
+  }
+`;
+
+export default AuroraStyle;

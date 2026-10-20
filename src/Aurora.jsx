@@ -1,5 +1,3 @@
-import "./aurora.css";
-
 /* Aurore : une courbe ondulée extrudée vers le haut en rideau, texturée de rayons.
    La courbe se déforme sur place (morphing SVG) : les plis se forment et se défont sans défiler. */
 const AURORA_WIDTH = 1200;

@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
 :root {
   --night: #08130f;
   --moss: #1f4a3a;
@@ -16,6 +19,10 @@
   --hover-border: rgba(140, 240, 222, 0.85);
   --hover-glow: 0 0 1.4rem rgba(63, 208, 192, 0.3);
   --hover-scale: 1.05;
+  /* Boutons : fond nuit et liseré aux couleurs des aurores, comme les cadres photo */
+  --btn-fill: rgba(8, 19, 15, 0.92);
+  --btn-border: linear-gradient(100deg, #64ee94, #69d7af 30%, #87a5d7 58%, #a078e6 80%, #cd5ab9);
+  --btn-height: 2.8rem;
   --body: Verdana, sans-serif;
 }
 
@@ -317,15 +324,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
   justify-content: center;
   width: auto;
   gap: 0.55rem;
-  min-height: 2.8rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid rgba(63, 208, 192, 0.72);
+  min-height: var(--btn-height);
+  padding: 0.6rem 1.15rem;
+  border: 1px solid transparent;
   border-radius: 99px;
-  background: rgba(8, 19, 15, 0.94);
+  /* Boutons secondaires : même liseré aurore, atténué, pour laisser Booking au premier plan */
+  background:
+    linear-gradient(var(--btn-fill), var(--btn-fill)) padding-box,
+    linear-gradient(rgba(8, 19, 15, 0.45), rgba(8, 19, 15, 0.45)) border-box,
+    var(--btn-border) border-box;
   color: var(--bone);
-  font: 700 0.84rem/1.2 var(--display);
+  font: 700 0.84rem/1.2 var(--display); letter-spacing: 0.06em;
   text-decoration: none;
-  box-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.34), 0 0 1rem rgba(63, 208, 192, 0.14);
+  box-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(12px);
   cursor: pointer;
   transition:
@@ -334,10 +345,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .floating-actions .floating-action:hover {
   scale: var(--hover-scale);
-  background: rgba(18, 50, 45, 0.95);
-  border-color: var(--hover-border);
-  box-shadow: 0 0.6rem 1.7rem rgba(0, 0, 0, 0.4), var(--hover-glow);
+  background:
+    linear-gradient(rgba(16, 38, 34, 0.95), rgba(16, 38, 34, 0.95)) padding-box,
+    var(--btn-border) border-box;
+  box-shadow: 0 0.6rem 1.7rem rgba(0, 0, 0, 0.4), 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
 }
+/* Icônes des boutons secondaires teintées comme les aurores */
+.floating-actions .floating-pdf svg { color: #8ff0c0; }
 .floating-actions .floating-action:focus-visible { outline-offset: 4px; }
 .floating-actions .floating-action .soundcloud-logo { width: 1.25rem; height: 1rem; fill: currentColor; }
 .floating-actions .listen-notes {
@@ -369,19 +383,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 248px;
   min-width: 0;
   margin: 0;
-  border: 1px solid var(--turq);
-  border-radius: 99px;
-  background: rgba(8, 19, 15, 0.94);
-  box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
+  /* Même hauteur que PDF et Écouter : la barre flottante reste alignée */
+  padding: 0.6rem 1.6rem;
+  font-size: 0.95rem;
   animation: booking-cta-shimmer 3.4s ease-in-out infinite;
 }
-.floating-actions .floating-booking:hover { border-color: var(--bone); }
 .floating-actions .floating-pdf { grid-column: 1; grid-row: 1; justify-self: start; }
 .floating-actions .floating-booking { grid-column: 2; grid-row: 1; justify-self: center; }
 .floating-actions .floating-listen { grid-column: 3; grid-row: 1; justify-self: end; }
 @keyframes booking-cta-shimmer {
-  0%, 100% { box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18), 0 0 0 rgba(136, 194, 255, 0); }
-  50% { box-shadow: 0 0 1.5rem rgba(63, 208, 192, 0.34), 0 0 1.1rem rgba(136, 194, 255, 0.24); }
+  0%, 100% { box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.14), 0 0 1.6rem rgba(160, 120, 230, 0.1); }
+  50% { box-shadow: 0 0 1.4rem rgba(100, 238, 148, 0.3), 0 0 2rem rgba(160, 120, 230, 0.26); }
 }
 @keyframes floating-actions-in {
   from { opacity: 0; }
@@ -393,8 +405,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero-art {
   position: relative;
   display: grid; place-items: center; margin-bottom: clamp(0.9rem, 1.8vw, 1.4rem);
-  /* ≈ 1,35 × la hauteur des capitales du titre (font-size clamp(3.2rem, 10vw, 7.5rem)) */
-  width: clamp(4.2rem, 9.7vw, 7.3rem); aspect-ratio: 1;
+  /* ≈ 1,3 × la hauteur des capitales du titre (font-size clamp(3.2rem, 10vw, 7.5rem)) :
+     assez présent pour équilibrer le titre, sans lui faire concurrence */
+  width: clamp(4rem, 9.2vw, 6.9rem); aspect-ratio: 1;
 }
 /* Emblème fondu dans le ciel comme un astre : pas de disque opaque ni de couronne nette,
    seulement un léger voile sombre diffus et un halo très doux qui prolonge le cercle */
@@ -838,16 +851,23 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .event-detail { margin-top: 0.15rem; color: var(--muted); font-size: 0.85rem; }
 .events-toggle {
   justify-self: center;
-  padding: 0.6rem 1.6rem; border: 1px solid var(--turq-line); border-radius: 99px;
-  background: rgba(8, 19, 15, 0.6); color: var(--bone); cursor: pointer;
+  min-height: var(--btn-height); padding: 0.6rem 1.6rem; border: 1px solid transparent; border-radius: 99px;
+  background:
+    linear-gradient(var(--btn-fill), var(--btn-fill)) padding-box,
+    linear-gradient(rgba(8, 19, 15, 0.45), rgba(8, 19, 15, 0.45)) border-box,
+    var(--btn-border) border-box;
+  color: var(--bone); cursor: pointer;
   font: 700 0.9rem var(--display); letter-spacing: 0.06em;
   transition:
     border-color var(--hover-ease), background-color var(--hover-ease),
     box-shadow var(--hover-ease), scale var(--hover-ease);
 }
 .events-toggle:hover {
-  scale: var(--hover-scale); border-color: var(--hover-border);
-  background: var(--hover-fill); box-shadow: var(--hover-glow);
+  scale: var(--hover-scale);
+  background:
+    linear-gradient(rgba(16, 38, 34, 0.95), rgba(16, 38, 34, 0.95)) padding-box,
+    var(--btn-border) border-box;
+  box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
 }
 @media (max-width: 1000px) {
   .event-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -867,32 +887,33 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .booking-layout h2 { margin-bottom: 2rem; text-align: left; }
 .booking-cta {
-  --booking-ease: 650ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  --booking-ease: 750ms cubic-bezier(0.25, 0.8, 0.25, 1);
   position: relative; isolation: isolate; overflow: hidden;
   display: grid; gap: 0.15rem; justify-items: center;
-  padding: 0.7rem 1.4rem; border: 1px solid var(--turq); border-radius: 99px;
-  background: rgba(8, 19, 15, 0.9); text-decoration: none;
+  min-height: var(--btn-height); align-content: center;
+  padding: 0.6rem 1.6rem; border: 1px solid transparent; border-radius: 99px;
+  background: linear-gradient(var(--btn-fill), var(--btn-fill)) padding-box, var(--btn-border) border-box;
+  text-decoration: none;
   font: 700 0.9rem/1.4 var(--display); letter-spacing: 0.08em;
-  color: var(--bone); box-shadow: 0 0 1.2rem rgba(63, 208, 192, 0.18);
+  color: var(--bone); box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.14), 0 0 1.6rem rgba(160, 120, 230, 0.12);
   transition:
-    color 520ms ease 60ms, border-color var(--booking-ease),
-    box-shadow var(--booking-ease), scale var(--booking-ease);
+    color var(--booking-ease), box-shadow var(--booking-ease), scale var(--booking-ease);
 }
 /* Survol : une lumière crème se diffuse depuis le centre jusqu'à remplir le bouton */
 .booking-cta::before {
   position: absolute; inset: 0; z-index: -1;
   border-radius: inherit; content: "";
-  background: radial-gradient(ellipse closest-side, var(--bone) 0 62%, rgba(239, 233, 220, 0) 100%) center / 40% 70% no-repeat;
+  /* Survol : le fond crème apparaît en fondu, simplement, sans effet de propagation */
+  background: var(--bone);
   opacity: 0;
-  transition: opacity var(--booking-ease), background-size var(--booking-ease);
+  transition: opacity var(--booking-ease);
 }
-.booking-cta:hover::before { opacity: 1; background-size: 260% 520%; }
+.booking-cta:hover::before { opacity: 1; }
 .booking-cta span + span { font: 400 0.72rem/1.4 var(--body); letter-spacing: 0; }
 .booking-cta:hover {
-  scale: 1.04;
-  border-color: var(--bone);
+  scale: 1.02;
   color: var(--night);
-  box-shadow: 0 0.5rem 1.4rem rgba(0, 0, 0, 0.28), 0 0 1.4rem rgba(239, 233, 220, 0.25);
+  box-shadow: 0 0 1.6rem rgba(239, 233, 220, 0.22), 0 0 3rem rgba(180, 200, 255, 0.12);
 }
 .book { max-width: 64ch; margin-inline: auto; width: 100%; }
 .book > div { display: grid; grid-template-columns: 8rem 1fr; gap: 1.5rem; padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
@@ -992,6 +1013,9 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     padding: 1rem 2rem; font-size: 1.1rem;
   }
   .hero-booking { width: 248px; min-width: 248px; }
+  /* Booking fixe : même taille que celui du landing ; PDF et Écouter s'alignent sur sa hauteur */
+  .floating-actions .floating-booking { width: 248px; padding: 1rem 2rem; font-size: 1.1rem; }
+  .floating-actions .floating-action { min-height: 3.69rem; padding-inline: 1.4rem; }
   .contact .mail { font-size: 20px; }
 }
 
@@ -1360,3 +1384,6 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     color: #41564d; font-size: 9.5pt; line-height: 1.2; text-align: center;
   }
 }
+`;
+
+export default GlobalStyle;

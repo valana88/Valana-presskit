@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { AURORA_BANDS, AuroraBand } from "./Aurora.jsx";
-import "./contact.css";
 
 // Rideaux affichés sur la page contact (le plus haut est omis : la carte le cacherait)
 const CONTACT_BANDS = AURORA_BANDS.filter(({ id }) => id !== "aurora-band-patch-high");
