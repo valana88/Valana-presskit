@@ -1601,7 +1601,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
     display: flex; gap: 3mm; grid-column: 2; grid-row: 1 / span 3;
   }
   .event-group-images img {
-    display: block; width: 36mm; height: 54mm; object-fit: cover;
+    display: block; width: 31mm; height: 48mm; object-fit: cover;
     border-radius: 2mm; border: 0.4mm solid rgba(160, 120, 230, 0.6);
   }
 

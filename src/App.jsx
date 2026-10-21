@@ -107,6 +107,7 @@ const T = {
       { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
       { year: "2026", date: "16–19 juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Spécial 10 ans · line-up Mainstage" },
       { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
+      { year: "2026", date: "28 novembre 2026 · Nice", title: "Vibrance", detail: "L’Antre · Medhra b2b Valana · Psygroovy" },
     ],
     collectivesTitle: "Labels & collectifs",
     collectives: [
@@ -201,7 +202,7 @@ const T = {
       sent: "Votre messagerie s’est ouverte : il ne reste plus qu’à envoyer le message.",
     },
     placeholderMail: "Contact à renseigner",
-    contactQrCaption: "Écouter, booking",
+    contactQrCaption: "Booking, site internet, son",
     pressKit: "Dossier presse",
     copyright: "© 2026 VALANA. Tous droits réservés.",
     pressKitDownload: "Télécharger",
@@ -270,6 +271,7 @@ const T = {
       { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
       { year: "2026", date: "16–19 July 2026", title: "Nataraja Psychedelic Gathering", detail: "10th anniversary · Mainstage line-up" },
       { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
+      { year: "2026", date: "28 November 2026 · Nice", title: "Vibrance", detail: "L’Antre · Medhra b2b Valana · Psygroovy" },
     ],
     collectivesTitle: "Labels & collectives",
     collectives: [
@@ -364,7 +366,7 @@ const T = {
       sent: "Your email app has opened: just send the message.",
     },
     placeholderMail: "Contact to be added",
-    contactQrCaption: "Listen, book",
+    contactQrCaption: "Booking, website, music",
     pressKit: "Press kit",
     copyright: "© 2026 VALANA. All rights reserved.",
     pressKitDownload: "Download",
@@ -427,7 +429,7 @@ const PRESS_KIT_PATH = "/press/VALANA_dossier-presse.zip";
 const EVENT_REGION_IMAGES = [
   ["/events/natafest-26-mainstage.jpg", "/events/natafest-25.jpg", "/events/natafest-24-lineup.jpg"],
   ["/events/natanoct-symbiosis-26.jpg", "/events/unisson-freedom.jpg"],
-  ["/events/bp-hallow-24.jpg", "/events/green-23.jpg"],
+  ["/events/vibrance-antre-26.jpg", "/events/bp-hallow-24.jpg", "/events/green-23.jpg"],
 ];
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
@@ -449,6 +451,7 @@ const EVENT_IMAGES = [
   "/events/natafest-25-stage.jpg",
   "/events/natafest-26-mainstage.jpg",
   { src: "/events/natafest-25-backstage.jpg", focus: "8% 50%" },
+  "/events/vibrance-antre-26.jpg",
 ];
 
 const ANCHORS = ["origine", "biographie", "labels", "sons", "evenements", "booking", "contact"];
