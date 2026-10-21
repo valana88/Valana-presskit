@@ -1,14 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { AURORA_BANDS, AuroraBand } from "./Aurora.jsx";
 
 // Rideaux affichés sur la page contact (le plus haut est omis : la carte le cacherait)
 const CONTACT_BANDS = AURORA_BANDS.filter(({ id }) => id !== "aurora-band-patch-high");
-const SVG_FRAME_INTERVAL = 50;
 
 export default function Contact() {
   // Plus de bouton de langue : l'anglais reste accessible avec ?lang=en dans l'adresse
   const language = new URLSearchParams(window.location.search).get("lang") === "en" ? "en" : "fr";
-  const auroraRef = useRef(null);
   const copy = language === "en"
     ? {
         intro: "Psytrance, groove, alternative and chill",
@@ -29,26 +27,6 @@ export default function Contact() {
     document.documentElement.lang = language;
   }, [language]);
 
-  // Les rideaux avancent 20 fois par seconde (filtres coûteux), et restent figés si l'utilisateur
-  // a demandé de réduire les animations
-  useEffect(() => {
-    const svgs = [...auroraRef.current.querySelectorAll("svg")];
-    svgs.forEach((svg) => svg.pauseAnimations());
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-
-    let frame;
-    let lastDraw = 0;
-    const start = performance.now();
-    const tick = (now) => {
-      frame = requestAnimationFrame(tick);
-      if (now - lastDraw < SVG_FRAME_INTERVAL) return;
-      lastDraw = now;
-      svgs.forEach((svg) => svg.setCurrentTime((now - start) / 1000));
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
   return (
     <>
       <div
@@ -58,7 +36,7 @@ export default function Contact() {
           "--contact-sky-mask": `url("${import.meta.env.BASE_URL}hero-sky-mask.png")`,
         }}
       >
-        <div className="contact-aurora" aria-hidden="true" ref={auroraRef}>
+        <div className="contact-aurora" aria-hidden="true">
           {CONTACT_BANDS.map((band) => <AuroraBand key={band.id} {...band} />)}
         </div>
         <div className="contact-starfield" aria-hidden="true">
@@ -94,6 +72,7 @@ export default function Contact() {
         </div>
       </div>
       <main>
+        <div className="frame-halo" aria-hidden="true"><span /></div>
         <img className="emblem" src={`${import.meta.env.BASE_URL}hero-emblem.png`} alt="" />
         <h1 className="mark">VALANA</h1>
         <p className="intro">{copy.intro}</p>

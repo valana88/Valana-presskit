@@ -118,18 +118,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mask-repeat: no-repeat;
   mask-composite: intersect;
 }
-/* Lac : copie ondulée de l'image limitée à l'eau, cadrée comme le fond (center / cover) */
+/* Lac : reflets de lumière limités à l'eau par le masque du lac, cadré comme le fond */
 .hero-lake {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
   mask-image: var(--hero-lake-mask);
   mask-size: cover; mask-position: center; mask-repeat: no-repeat;
-}
-.hero-lake-water {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, rgba(8, 19, 15, 0.14), rgba(8, 19, 15, 0) 42%, rgba(8, 19, 15, 0.58)),
-    var(--hero-background-image) center / cover no-repeat;
-  filter: url(#lake-ripple);
 }
 /* Reflets : fines lignes de lumière horizontales qui ondulent et scintillent */
 .hero-lake-glints {
@@ -142,26 +135,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
     rgba(210, 190, 255, 0.05) 17px, transparent 18px 23px, rgba(255, 220, 185, 0.06) 24px, transparent 25px 34px
   );
   mask-image: radial-gradient(ellipse 34% 100% at 50% 50%, #000, rgba(0, 0, 0, 0.35) 60%, transparent);
-  filter: url(#lake-ripple) blur(0.6px);
+  /* Mouvement par transformation et opacité seulement : animé par la carte graphique */
+  will-change: transform, opacity;
   animation: lake-glints 12s ease-in-out infinite alternate;
 }
 @keyframes lake-glints {
-  from { opacity: 0.35; background-position: 0 0; }
-  to { opacity: 0.7; background-position: 0 4px; }
-}
-/* Sapins : copie de l'image limitée à la forêt (masque élargi de quelques pixels sur le ciel
-   pour que la cime puisse bouger), cadrée comme le fond */
-.hero-trees {
-  position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  mask-image: var(--hero-trees-mask);
-  mask-size: cover; mask-position: center; mask-repeat: no-repeat;
-}
-.hero-trees-sway {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, rgba(8, 19, 15, 0.14), rgba(8, 19, 15, 0) 42%, rgba(8, 19, 15, 0.58)),
-    var(--hero-background-image) center / cover no-repeat;
-  filter: url(#trees-wind);
+  from { opacity: 0.35; transform: translateY(0); }
+  to { opacity: 0.7; transform: translateY(4px); }
 }
 /* Lumière de l'aurore sur les crêtes et la cime des arbres : fond le ciel et le relief ensemble */
 .hero-aurora-glow {
@@ -248,14 +228,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background: radial-gradient(circle, #fff 0 28%, rgba(200, 255, 220, 0.94) 52%, transparent 80%);
 }
 @keyframes star-twinkle {
-  0%, 100% {
-    opacity: 0.5; transform: scale(0.5);
-    box-shadow: 0 0 4px 1px rgb(var(--star-glow, 201 235 255) / 0.58), 0 0 8px 1.5px rgb(var(--star-halo, 136 194 255) / 0.2);
-  }
-  50% {
-    opacity: 0.8; transform: scale(1);
-    box-shadow: 0 0 7px 1.5px rgb(var(--star-glow, 221 243 255) / 0.86), 0 0 15px 3.5px rgb(var(--star-halo, 136 194 255) / 0.4);
-  }
+  /* Seulement taille et opacité : pas de halo recalculé à chaque image */
+  0%, 100% { opacity: 0.5; transform: scale(0.5); }
+  50% { opacity: 0.85; transform: scale(1); }
 }
 .hero-content {
   position: relative; z-index: 2;
@@ -277,7 +252,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   color: #fbf7ee;
   /* Lumière astrale : contour sombre serré pour la lisibilité, puis halo clair et lavande,
      et une ombre large dessous pour détacher le titre des aurores */
-  --title-glow: 0.3;
+  --title-glow: 0.5;
   text-shadow:
     0 0 1px rgba(255, 255, 255, 0.6),
     0 2px 5px rgba(8, 12, 24, 0.85),
@@ -285,14 +260,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
     0 0 44px rgba(170, 160, 240, calc(var(--title-glow) * 0.7)),
     0 0 90px rgba(150, 190, 255, calc(var(--title-glow) * 0.45)),
     0 6px 30px rgba(8, 12, 24, 0.55);
-  animation:
-    rise 1.6s cubic-bezier(.2,.7,.2,1) both,
-    cosmic-title-shimmer 9s ease-in-out 1.6s infinite;
-}
-@property --title-glow { syntax: "<number>"; inherits: false; initial-value: 0.3; }
-@keyframes cosmic-title-shimmer {
-  0%, 100% { --title-glow: 0.42; }
-  50% { --title-glow: 0.62; }
+  animation: rise 1.6s cubic-bezier(.2,.7,.2,1) both;
 }
 .hero-tag {
   margin-top: 1rem; font: 600 clamp(0.7rem, 1.5vw, 0.95rem)/1.5 var(--display);
@@ -316,7 +284,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero-booking {
   position: relative;
   isolation: isolate;
-  animation: booking-cta-shimmer 3.4s ease-in-out infinite;
 }
 .floating-actions .floating-action {
   display: flex;
@@ -386,15 +353,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   /* Même hauteur que PDF et Écouter : la barre flottante reste alignée */
   padding: 0.6rem 1.6rem;
   font-size: 0.95rem;
-  animation: booking-cta-shimmer 3.4s ease-in-out infinite;
 }
 .floating-actions .floating-pdf { grid-column: 1; grid-row: 1; justify-self: start; }
 .floating-actions .floating-booking { grid-column: 2; grid-row: 1; justify-self: center; }
 .floating-actions .floating-listen { grid-column: 3; grid-row: 1; justify-self: end; }
-@keyframes booking-cta-shimmer {
-  0%, 100% { box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.14), 0 0 1.6rem rgba(160, 120, 230, 0.1); }
-  50% { box-shadow: 0 0 1.4rem rgba(100, 238, 148, 0.3), 0 0 2rem rgba(160, 120, 230, 0.26); }
-}
 @keyframes floating-actions-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -438,25 +400,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
     drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.6))
     drop-shadow(0 0 6px rgba(215, 232, 255, 0.35))
     drop-shadow(0 0 16px rgba(170, 200, 255, 0.18));
-  animation: emblem-glow 9s ease-in-out infinite alternate;
 }
 @keyframes astre-halo {
   from { opacity: 0.75; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1.04); }
-}
-@keyframes emblem-glow {
-  from {
-    filter:
-      drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.65))
-      drop-shadow(0 0 4px rgba(225, 240, 255, 0.4))
-      drop-shadow(0 0 12px rgba(170, 200, 255, 0.18));
-  }
-  to {
-    filter:
-      drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.8))
-      drop-shadow(0 0 6px rgba(230, 245, 255, 0.55))
-      drop-shadow(0 0 18px rgba(180, 205, 255, 0.3));
-  }
 }
 .hero-genres {
   margin-top: clamp(3.5rem, 10vh, 6.5rem);
@@ -516,7 +463,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background:
     /* Reflet de lumière qui glisse lentement sur le métal */
     conic-gradient(
-      from var(--gate-glint),
+      from 300deg,
       transparent 0deg, rgba(255, 255, 255, 0.28) 7deg, transparent 16deg,
       transparent 176deg, rgba(255, 255, 255, 0.12) 184deg, transparent 194deg
     ),
@@ -546,9 +493,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0) border-box;
   opacity: 0.75;
 }
-@property --gate-glint { syntax: "<angle>"; inherits: false; initial-value: 300deg; }
-.origin-visual { animation: gate-glint 26s linear infinite; }
-@keyframes gate-glint { to { --gate-glint: 660deg; } }
 .origin-stars {
   position: absolute; inset: 0.72rem; z-index: 0;
   border-radius: 50%; overflow: hidden; pointer-events: none;
@@ -556,7 +500,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .origin-photo {
   display: block; width: 100%; height: 100%; object-fit: cover;
   border: 2px solid rgba(5, 18, 22, 0.9); border-radius: 50%;
-  filter: url(#portal-ripple) saturate(1.08);
+  filter: saturate(1.08);
 }
 /* Horizon des événements : liseré de plasma au contact de l'anneau, ombre de l'anneau,
    ondes concentriques et reflet tournant */
@@ -692,10 +636,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   fill: rgba(214, 230, 224, 0.78); font: 500 15px/1 system-ui, sans-serif;
   filter: drop-shadow(0 -0.6px 0 rgba(0, 0, 0, 0.85)) drop-shadow(0 0.6px 0 rgba(255, 255, 255, 0.22));
   letter-spacing: 1px; text-anchor: start;
-  transform-box: view-box; transform-origin: center;
+}
+/* Inscription dans son propre calque, tourné en entier : rotation animée par la carte
+   graphique, sans recalculer le texte ni redessiner l'anneau à chaque image */
+.origin-inscription {
+  position: absolute; z-index: 1; inset: -1rem; width: calc(100% + 2rem); height: calc(100% + 2rem);
+  overflow: visible; pointer-events: none;
+  will-change: transform;
   animation: inscription-rotation 90s linear infinite;
 }
 @keyframes inscription-rotation { to { transform: rotate(360deg); } }
+.origin-inscription svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .ornament-sigil { stroke: #c8f5d8; stroke-width: 1.2; }
 .ornament-sigil circle { fill: #64ee94; stroke: var(--bone); stroke-width: 0.8; }
 .ornament-sigil:nth-of-type(2n) circle { fill: #a078e6; }
@@ -1182,7 +1133,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   }
   .hero-starfield span, .origin-stars span { animation: none; opacity: 0.65; }
   .origin-visual { animation: none; }
-  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art img, .hero-art::before, .row h2::before, .hero-lake-glints { animation: none; }
+  .aurora-band, .hero-aurora::before, .hero-aurora-glow, .hero-art::before, .row h2::before, .hero-lake-glints, .origin-inscription { animation: none; }
   .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
   .hero-booking, .floating-booking { animation: none; }
   .floating-actions { animation: none; }
@@ -1203,7 +1154,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   *, *::before, *::after {
     box-shadow: none !important; text-shadow: none !important; filter: none !important;
   }
-  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .hero-lake, .hero-trees, .event-timeline, .events-toggle, .booking-cta, .floating-actions { display: none !important; }
+  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .hero-lake, .event-timeline, .events-toggle, .booking-cta, .floating-actions { display: none !important; }
   :root {
     --night: #fff;
     --bone: #13231e;
@@ -1261,7 +1212,8 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   .row#origine .origin-visual::after,
   .row#origine .origin-ornaments,
   .row#origine .origin-horizon,
-  .row#origine .origin-stars { display: none !important; }
+  .row#origine .origin-stars,
+  .row#origine .origin-inscription { display: none !important; }
   .row#origine .origin-photo {
     border: 0; border-radius: 3mm; object-fit: cover;
   }

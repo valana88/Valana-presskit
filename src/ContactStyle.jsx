@@ -90,12 +90,10 @@ const ContactStyle = createGlobalStyle`
     0%, 100% {
       opacity: 0.5;
       transform: scale(0.5);
-      box-shadow: 0 0 4px 1px rgba(201, 235, 255, 0.58), 0 0 8px 1.5px rgba(136, 194, 255, 0.2);
     }
     50% {
-      opacity: 0.8;
+      opacity: 0.85;
       transform: scale(1);
-      box-shadow: 0 0 7px 1.5px rgba(221, 243, 255, 0.86), 0 0 15px 3.5px rgba(136, 194, 255, 0.4);
     }
   }
 
@@ -111,8 +109,7 @@ const ContactStyle = createGlobalStyle`
     text-align: center;
   }
 
-  /* Cadre aux couleurs des aurores (vert → turquoise → bleu-violet → violet → magenta),
-     dont le dégradé glisse lentement */
+  /* Cadre aux couleurs des aurores (vert → turquoise → bleu-violet → violet → magenta) */
   main::after {
     position: absolute;
     inset: -3px;
@@ -123,37 +120,37 @@ const ContactStyle = createGlobalStyle`
     background:
       linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)) padding-box,
       linear-gradient(135deg, #d6ffe2 0%, #64ee94 18%, #69d7af 34%, #87a5d7 52%, #a078e6 70%, #cd5ab9 86%, #ecd2ff 100%) border-box;
-    background-size: 100% 100%, 260% 260%;
-    background-position: 0 0, 100% 0;
-    animation: contact-frame-gradient 9s ease-in-out infinite alternate;
   }
 
-  /* Halo qui tournoie derrière le cadre : dégradé conique flouté, qui tourne autour de la carte */
-  @property --halo-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-  main::before {
+  /* Halo qui tournoie derrière le cadre : un disque au dégradé conique tourne (transformation
+     animée par la carte graphique) dans un cadre arrondi flouté */
+  .frame-halo {
     position: absolute;
     inset: -10px;
     z-index: -2;
+    overflow: hidden;
     border-radius: 16px 46px;
-    content: "";
+    filter: blur(17px);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  .frame-halo span {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 180%; aspect-ratio: 1;
+    border-radius: 50%;
     background: conic-gradient(
-      from var(--halo-angle),
       rgb(120, 255, 170), rgba(105, 230, 190, 0.35) 16%, transparent 30%,
       rgb(175, 130, 250) 50%, rgba(220, 100, 200, 0.4) 66%, transparent 80%,
       rgb(120, 255, 170)
     );
-    filter: blur(17px);
-    opacity: 0.8;
+    transform: translate(-50%, -50%);
+    will-change: transform;
     animation: contact-halo-spin 10s linear infinite;
   }
 
   @keyframes contact-halo-spin {
-    to { --halo-angle: 360deg; }
-  }
-
-  @keyframes contact-frame-gradient {
-    from { background-position: 0 0, 100% 0; }
-    to { background-position: 0 0, 0 100%; }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
   }
 
   .mark {
@@ -278,7 +275,7 @@ const ContactStyle = createGlobalStyle`
       animation: none;
       opacity: 0.65;
     }
-    main::before, main::after { animation: none; }
+    .frame-halo span { animation: none; }
   }
 `;
 

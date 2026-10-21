@@ -413,10 +413,6 @@ const HERO_EXTRA_STARS = [
   [17, 40, "green", "-0.3s", "3.2s"],
 ];
 
-// Les animations SVG (aurores, lac, porte des étoiles) recalculent des filtres coûteux à chaque
-// image : on les fait avancer à cadence réduite, et seulement quand la zone est à l'écran.
-const SVG_FRAME_INTERVAL = 50; // ms, soit 20 images/s : invisible sur des mouvements aussi lents
-
 // Styles affichés sous le bouton Booking du landing : une ligne par tableau
 const HERO_GENRES = [
   ["Psytrance", "Twilight", "Forest", "Psytech", "Bushtech", "Bushprog"],
@@ -480,47 +476,13 @@ export default function App() {
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [mobileMenuOpen]);
 
-  // Horloge commune des animations SVG des zones [data-svg-clock]
+  // Zones animées [data-anim-zone] : animations CSS suspendues quand elles sont hors écran
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const scenes = [...document.querySelectorAll("[data-svg-clock]")].map((element) => ({
-      element,
-      visible: false,
-      svgs: [...element.querySelectorAll("svg")].filter((svg) => !svg.parentElement.closest("svg")),
-    }));
-    scenes.forEach(({ svgs }) => svgs.forEach((svg) => svg.pauseAnimations()));
-
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const scene = scenes.find(({ element }) => element === entry.target);
-        scene.visible = entry.isIntersecting;
-        entry.target.classList.toggle("is-offscreen", !entry.isIntersecting);
-      });
+      entries.forEach((entry) => entry.target.classList.toggle("is-offscreen", !entry.isIntersecting));
     });
-    scenes.forEach(({ element }) => observer.observe(element));
-
-    let frame;
-    let elapsed = 0;
-    let previous = performance.now();
-    let lastDraw = 0;
-    const tick = (now) => {
-      frame = requestAnimationFrame(tick);
-      const delta = Math.min(now - previous, 100);
-      previous = now;
-      if (reduceMotion.matches || !scenes.some(({ visible }) => visible)) return;
-      elapsed += delta;
-      if (now - lastDraw < SVG_FRAME_INTERVAL) return;
-      lastDraw = now;
-      scenes.forEach(({ visible, svgs }) => {
-        if (visible) svgs.forEach((svg) => svg.setCurrentTime(elapsed / 1000));
-      });
-    };
-    frame = requestAnimationFrame(tick);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-    };
+    document.querySelectorAll("[data-anim-zone]").forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
 
   // Images protégées : pas de menu « Enregistrer l'image » ni de glisser-déposer
@@ -605,72 +567,21 @@ export default function App() {
         </svg>
         <section
           className="hero"
-          data-svg-clock
+          data-anim-zone
           id="univers"
           style={{
             "--hero-background-image": `url("${publicAsset("/hero-background.jpeg")}")`,
             "--hero-sky-mask": `url("${publicAsset("/hero-sky-mask.png")}")`,
             "--hero-glow-mask": `url("${publicAsset("/hero-glow-mask.png")}")`,
             "--hero-lake-mask": `url("${publicAsset("/hero-lake-mask.png")}")`,
-            "--hero-trees-mask": `url("${publicAsset("/hero-trees-mask.png")}")`,
           }}
         >
           <div className="hero-aurora" aria-hidden="true">
             {AURORA_BANDS.map((band) => <AuroraBand key={band.id} {...band} />)}
           </div>
-          {/* Sapins : copie de l'image limitée à la forêt, qui oscille légèrement comme sous le vent */}
-          <div className="hero-trees" aria-hidden="true">
-            <svg className="aurora-filter-defs" aria-hidden="true" focusable="false">
-              <filter id="trees-wind" x="0" y="0.2" width="1" height="0.8">
-                <feTurbulence type="fractalNoise" baseFrequency="0.005 0.01" numOctaves="1" seed="9" result="gust">
-                  <animate
-                    attributeName="baseFrequency"
-                    dur="34s"
-                    repeatCount="indefinite"
-                    values="0.005 0.01;0.0062 0.0085;0.0044 0.011;0.005 0.01"
-                    calcMode="spline"
-                    keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"
-                  />
-                </feTurbulence>
-                {/* Déplacement horizontal uniquement : le canal vertical est neutralisé (0,5) */}
-                <feColorMatrix in="gust" type="matrix" values="1 0 0 0 0  0 0 0 0 0.5  0 0 0 0 0  0 0 0 0 1" result="sway" />
-                <feDisplacementMap in="SourceGraphic" in2="sway" scale="0" xChannelSelector="R" yChannelSelector="G">
-                  <animate
-                    attributeName="scale"
-                    dur="9s"
-                    repeatCount="indefinite"
-                    values="10;-20;16;-10;22;10"
-                    calcMode="spline"
-                    keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1;.45 0 .55 1"
-                  />
-                </feDisplacementMap>
-              </filter>
-            </svg>
-            <div className="hero-trees-sway" />
-          </div>
           <div className="hero-aurora-glow" aria-hidden="true" />
           {/* Lac : l'image est reprise et ondulée sous le masque de l'eau, avec des reflets qui scintillent */}
           <div className="hero-lake" aria-hidden="true">
-            <svg className="aurora-filter-defs" aria-hidden="true" focusable="false">
-              <filter id="lake-ripple" x="0" y="0" width="100%" height="100%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.004 0.11" numOctaves="2" seed="5" result="ripples">
-                  <animate
-                    attributeName="baseFrequency"
-                    dur="26s"
-                    repeatCount="indefinite"
-                    values="0.004 0.11;0.0046 0.1;0.0036 0.12;0.004 0.11"
-                    calcMode="spline"
-                    keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1"
-                  />
-                </feTurbulence>
-                <feOffset in="ripples" dy="0" result="flow">
-                  <animate attributeName="dy" dur="16s" repeatCount="indefinite" values="0;8;0" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" />
-                </feOffset>
-                {/* Faible amplitude : les reflets tremblent à peine, surtout à l'horizontale, comme une eau calme */}
-                <feDisplacementMap in="SourceGraphic" in2="flow" scale="3.5" xChannelSelector="R" yChannelSelector="G" />
-              </filter>
-            </svg>
-            <div className="hero-lake-water" />
             <div className="hero-lake-glints" />
           </div>
           <div className="hero-starfield" aria-hidden="true">
@@ -752,7 +663,7 @@ export default function App() {
             <div className="prose">
               {t.origin.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
-            <figure className="origin-visual" data-svg-clock>
+            <figure className="origin-visual" data-anim-zone>
               <img
                 className="origin-photo"
                 src={publicAsset("/origin-photo.jpeg")}
@@ -780,7 +691,6 @@ export default function App() {
               </div>
               <svg className="origin-ornaments" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
                 <defs>
-                  <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
                   {/* Chevrons : un sur deux en dégradé turquoise, un sur deux en dégradé violacé */}
                   <linearGradient id="portal-chevron-turq" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#e6fff9" />
@@ -824,18 +734,6 @@ export default function App() {
                     <feComposite in="SourceGraphic" in2="shineIn" operator="arithmetic" k1="0" k2="1" k3="0.75" k4="0" result="lit" />
                     <feDropShadow in="lit" dx="0" dy="1.6" stdDeviation="1.6" floodColor="#020a0e" floodOpacity="0.75" />
                   </filter>
-                  {/* Horizon des événements : la photo ondule très légèrement */}
-                  <filter id="portal-ripple" x="0" y="0" width="100%" height="100%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.011 0.013" numOctaves="2" seed="3" result="flow">
-                      <animate
-                        attributeName="baseFrequency"
-                        dur="16s"
-                        repeatCount="indefinite"
-                        values="0.011 0.013;0.014 0.010;0.010 0.014;0.011 0.013"
-                      />
-                    </feTurbulence>
-                    <feDisplacementMap in="SourceGraphic" in2="flow" scale="6" xChannelSelector="R" yChannelSelector="G" />
-                  </filter>
                   {/* Les couleurs de la gemme passent par des variables CSS, seules à traverser les <use> */}
                   <g id="portal-tooth">
                     <path d="M200 2 219 26 209 22 200 37 191 22 181 26Z" />
@@ -857,11 +755,6 @@ export default function App() {
                     transform={`rotate(${index * 10} 200 200)`}
                   />
                 ))}
-                <text className="ornament-inscription">
-                  <textPath href="#origin-inscription-path" textLength="1218" lengthAdjust="spacing">
-                    वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧
-                  </textPath>
-                </text>
                 {Array.from({ length: 8 }, (_, index) => (
                   <use
                     key={index}
@@ -899,6 +792,18 @@ export default function App() {
                   <path d="M0 -7V7 M-7 0H7" /><circle r="2" />
                 </g>
               </svg>
+              <div className="origin-inscription" aria-hidden="true">
+              <svg viewBox="0 0 400 400" focusable="false">
+                <defs>
+                  <path id="origin-inscription-path" d="M 200 6 A 194 194 0 1 1 199.99 6" />
+                </defs>
+                <text className="ornament-inscription">
+                  <textPath href="#origin-inscription-path" textLength="1218" lengthAdjust="spacing">
+                    वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧ वलन ✧ प्रकृतेः चेतनायाः नादस्य च अनन्तः प्रवाहः ✧
+                  </textPath>
+                </text>
+              </svg>
+              </div>
             </figure>
           </div>
         </section>

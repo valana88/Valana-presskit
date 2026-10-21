@@ -7,18 +7,30 @@ const AuroraStyle = createGlobalStyle`
     position: absolute;
     top: 0; left: -6%;
     width: 112%; height: 78%;
-    overflow: visible;
     transform-origin: 50% 80%;
-    will-change: transform;
+    will-change: transform, opacity;
+  }
+  /* Trois formes du rideau en fondu enchaîné : seule l'opacité change (animée par le GPU) */
+  .aurora-frame {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: fill; pointer-events: none; user-select: none;
+    opacity: 0;
+    animation: aurora-morph var(--morph-duration) ease-in-out infinite;
+  }
+  .aurora-frame-0 { animation-delay: 0s; }
+  .aurora-frame-1 { animation-delay: calc(var(--morph-duration) / -3 * 2); }
+  .aurora-frame-2 { animation-delay: calc(var(--morph-duration) / -3); }
+  @keyframes aurora-morph {
+    0%, 100% { opacity: 1; }
+    33.3% { opacity: 0; }
+    66.6% { opacity: 0; }
   }
   /* Rideaux dispersés : chacun occupe une portion du ciel, s'estompe sur les côtés
      et apparaît puis s'éteint à son propre rythme */
   .aurora-band-patch {
     top: var(--band-top); left: var(--band-left);
     width: var(--band-width); height: var(--band-height);
-    filter: blur(2.5px);
     opacity: 0;
-    mask-image: linear-gradient(to right, transparent, #000 28%, #000 72%, transparent);
     animation: aurora-appear var(--appear-duration) ease-in-out var(--appear-delay) infinite;
   }
   @keyframes aurora-appear {
@@ -29,18 +41,10 @@ const AuroraStyle = createGlobalStyle`
     82%, 100% { opacity: 0; }
   }
   .aurora-band-main {
-    filter: blur(1.5px);
     opacity: 0.72;
     animation: aurora-breathe-main 11s ease-in-out infinite alternate;
-    /* Trouées douces et irrégulières : plusieurs rideaux de longueurs inégales plutôt qu'un bandeau */
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%, #000 7%, #000 21%, rgba(0, 0, 0, 0.2) 29%, #000 37%, #000 49%,
-      rgba(0, 0, 0, 0.35) 55%, #000 61%, #000 70%, rgba(0, 0, 0, 0.1) 79%, #000 87%, #000 94%, transparent 100%
-    );
   }
   .aurora-band-far {
-    filter: blur(4px);
     opacity: 0.38;
     animation: aurora-breathe-far 15s ease-in-out infinite alternate;
   }
@@ -58,7 +62,8 @@ const AuroraStyle = createGlobalStyle`
     .aurora-band-patch { left: calc(var(--band-left) * 2.4 - 70%); width: calc(var(--band-width) * 2.4); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .aurora-band { animation: none; }
+    .aurora-band, .aurora-frame { animation: none; }
+    .aurora-frame-0 { opacity: 1; }
     .aurora-band-patch { opacity: calc(var(--appear-peak) * 0.6); }
   }
 `;
