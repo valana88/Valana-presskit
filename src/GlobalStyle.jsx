@@ -832,16 +832,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
     var(--btn-border) border-box;
   box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
 }
-@media (max-width: 800px) {
+/* Responsive : 3 images par rangée, puis 2 sur tablette, puis 1 en pleine largeur sur mobile */
+@media (max-width: 900px) {
+  .event-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
   .event-group { padding-inline: 1rem; }
-  /* Mobile : trois évènements par rangée, fiches compactes */
-  .event-column { gap: 0.55rem; }
-  .event-info { padding: 0.6rem 0.55rem 0.7rem; }
-  .event-info::before { left: 0.55rem; right: 0.55rem; }
-  .event-year { font-size: 0.65rem; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
-  .event-info h4 { font-size: 0.72rem; }
-  .event-date { font-size: 0.68rem; }
-  .event-detail { display: none; }
+  .event-column { grid-template-columns: 1fr; gap: 1.1rem; }
 }
 
 /* Booking */
