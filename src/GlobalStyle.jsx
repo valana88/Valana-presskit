@@ -414,6 +414,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 /* Une ligne par groupe de styles ; un style n'est jamais coupé en deux */
 .hero-genres-line { display: block; }
+/* Mobile : chaque groupe de styles tient sur une seule ligne, la taille suit la largeur de l'écran */
+@media (max-width: 800px) {
+  .hero .hero-genres { max-width: none; }
+  .hero-genres-line { white-space: nowrap; font-size: min(0.78rem, 2vw); letter-spacing: 0.05em; }
+}
 .hero-genre { white-space: nowrap; }
 .horizon {
   position: absolute; left: 0; right: 0; bottom: 0; height: 7rem;
