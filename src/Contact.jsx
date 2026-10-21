@@ -11,16 +11,18 @@ export default function Contact() {
     ? {
         intro: "Psytrance, groove, alternative and chill",
         booking: "Booking",
-        listen: "SoundCloud · Listen",
+        listen: "Listen",
         linksLabel: "VALANA links",
         site: "Full press kit",
+        presskit: "Press kit",
       }
     : {
         intro: "Psytrance, groove, alternative et chill",
         booking: "Booking",
-        listen: "SoundCloud · Écouter",
+        listen: "Écouter",
         linksLabel: "Liens VALANA",
         site: "Press kit complet",
+        presskit: "Press kit",
       };
 
   useEffect(() => {
@@ -80,6 +82,12 @@ export default function Contact() {
           <a className="primary" href="mailto:valana.booking@gmail.com">
             <span>{copy.booking}</span>
           </a>
+          <a href={`${import.meta.env.BASE_URL}${language === "en" ? "?lang=en" : ""}`}>
+            <svg className="link-glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 0c2.2 2.3 3.3 5.1 3.3 8.5s-1.1 6.2-3.3 8.5c-2.2-2.3-3.3-5.1-3.3-8.5S9.8 5.8 12 3.5ZM3.8 12h16.4" />
+            </svg>
+            <span>{copy.presskit}</span>
+          </a>
           <a href="https://soundcloud.com/valana-psyche" target="_blank" rel="noreferrer">
             <svg className="soundcloud-logo" viewBox="0 0 32 24" aria-hidden="true">
               <path d="M7 19.5h19a4.5 4.5 0 0 0 .5-9A10.5 10.5 0 0 0 6.4 9.1 5.3 5.3 0 0 0 7 19.5Z" />
@@ -88,9 +96,6 @@ export default function Contact() {
             <span>{copy.listen}</span>
           </a>
         </nav>
-        <a className="site-link" href={`${import.meta.env.BASE_URL}${language === "en" ? "?lang=en" : ""}`}>
-          {copy.site} →
-        </a>
       </main>
     </>
   );

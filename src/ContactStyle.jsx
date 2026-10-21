@@ -196,6 +196,7 @@ const ContactStyle = createGlobalStyle`
 
   a:focus-visible { outline: 3px solid #3fd0c0; outline-offset: 4px; }
   .soundcloud-logo { width: 26px; height: 20px; fill: currentColor; }
+  .link-glyph { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 
   .soundcloud-wave {
     fill: none;
