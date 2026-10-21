@@ -1017,6 +1017,12 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   padding-block: 1.6rem calc(1.6rem + 5rem + env(safe-area-inset-bottom, 0px));
   text-align: center; font: 600 0.75rem var(--display); letter-spacing: 0.08em;
 }
+/* Logo discret au-dessus du copyright, avec la même lueur douce que sur le landing */
+.footer-logo {
+  display: block; width: 3.2rem; height: 3.2rem; margin: 0.4rem auto 0.9rem;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 4px rgba(215, 232, 255, 0.3)) drop-shadow(0 0 12px rgba(160, 120, 230, 0.2));
+}
 
 @media (min-width: 801px) {
   .booking-layout { grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.65fr); }
@@ -1586,7 +1592,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
      le copyright se pose tout en bas, sur le fond nuit */
   .booking-contact-print-group {
     display: flex; flex-direction: column; box-sizing: border-box;
-    height: 283mm; break-after: avoid; page-break-after: avoid;
+    height: 263mm; break-after: avoid; page-break-after: avoid;
   }
   .booking-contact-print-group #contact { flex: 1; display: flex; flex-direction: column; }
   .booking-contact-print-group #contact > div { flex: 1; display: flex; flex-direction: column; align-items: center; }
@@ -1613,6 +1619,10 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   /* Identité musicale : Chill compte 6 styles, texte resserré pour tenir sur la page */
   #sons .style p { font-size: 10.8pt; line-height: 1.4; }
   #sons .style + .style { margin-top: 2.6mm; padding-top: 2.2mm; }
+
+  /* Logo du pied de page dans le PDF : centré au-dessus du copyright, en bas de la dernière page */
+  .site-footer { height: auto !important; display: flex !important; flex-direction: column; align-items: center; gap: 2mm; padding: 2mm 0 0 !important; }
+  .footer-logo { width: 13mm; height: 13mm; margin: 0; opacity: 0.85; }
 }
 `;
 

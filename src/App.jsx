@@ -98,15 +98,16 @@ const T = {
       { year: "2019", date: "9 mars 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
       { year: "2022", date: "7–10 juillet 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Bourgogne" },
       { year: "2023", date: "19 juin 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
+      { year: "2024", date: "26 avril 2024 · Paris", title: "Euclidean Utopia", detail: "Nataraja × Sand Fabrik" },
       { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up" },
       { year: "2024", date: "11–14 juillet 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
       { year: "2024", date: "31 octobre 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
       { year: "2025", date: "10–13 juillet 2025", title: "Nataraja Psychedelic Gathering", detail: "Line-up du festival" },
       { year: "2026", date: "9 mai 2026", title: "Symbiosis Journey · Part II", detail: "Nataraja × NOCT" },
       { year: "2026", date: "16–19 juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Spécial 10 ans · line-up Chillout" },
-      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
+      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines" },
       { year: "2026", date: "16–19 juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Spécial 10 ans · line-up Mainstage" },
-      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines · photo Black Cat Production" },
+      { year: "2026", date: "Juillet 2026", title: "Nataraja Psychedelic Gathering", detail: "Aux platines" },
       { year: "2026", date: "28 novembre 2026 · Nice", title: "Vibrance", detail: "L’Antre · Medhra b2b Valana · Psygroovy" },
     ],
     collectivesTitle: "Labels & collectifs",
@@ -262,15 +263,16 @@ const T = {
       { year: "2019", date: "9 March 2019 · Paris", title: "Road to Freedom Festival", detail: "Unisson · Medhra vs Valana" },
       { year: "2022", date: "7–10 July 2022", title: "Nataraja Psychedelic Gathering", detail: "Festival · Burgundy" },
       { year: "2023", date: "19 June 2023 · Antibes", title: "Psychedelic After Party", detail: "Green Garden" },
+      { year: "2024", date: "26 April 2024 · Paris", title: "Euclidean Utopia", detail: "Nataraja × Sand Fabrik" },
       { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Line-up" },
       { year: "2024", date: "11–14 July 2024", title: "Nataraja Psychedelic Gathering", detail: "Nataraja Records" },
       { year: "2024", date: "31 October 2024 · Mougins", title: "Halloween Party", detail: "Bloc Party · Nataraja Records" },
       { year: "2025", date: "10–13 July 2025", title: "Nataraja Psychedelic Gathering", detail: "Festival line-up" },
       { year: "2026", date: "9 May 2026", title: "Symbiosis Journey · Part II", detail: "Nataraja × NOCT" },
       { year: "2026", date: "16–19 July 2026", title: "Nataraja Psychedelic Gathering", detail: "10th anniversary · Chillout line-up" },
-      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
+      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks" },
       { year: "2026", date: "16–19 July 2026", title: "Nataraja Psychedelic Gathering", detail: "10th anniversary · Mainstage line-up" },
-      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks · photo Black Cat Production" },
+      { year: "2026", date: "July 2026", title: "Nataraja Psychedelic Gathering", detail: "On the decks" },
       { year: "2026", date: "28 November 2026 · Nice", title: "Vibrance", detail: "L’Antre · Medhra b2b Valana · Psygroovy" },
     ],
     collectivesTitle: "Labels & collectives",
@@ -442,6 +444,7 @@ const EVENT_IMAGES = [
   "/events/unisson-freedom.jpg",
   { src: "/events/natafest-22.jpg", focus: "50% 50%" },
   "/events/green-23.jpg",
+  "/events/euclidean-utopia-24.jpg",
   "/events/natafest-24-lineup.jpg",
   { src: "/events/natafest-24.jpg", focus: "54% 50%" },
   "/events/bp-hallow-24.jpg",
@@ -455,7 +458,7 @@ const EVENT_IMAGES = [
 ];
 
 // Région de chaque évènement (même ordre que EVENT_IMAGES) : 0 Festival, 1 Paris & alentours, 2 Côte d'Azur
-const EVENT_IMAGE_REGIONS = [1, 0, 2, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2];
+const EVENT_IMAGE_REGIONS = [1, 0, 2, 1, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2];
 
 const ANCHORS = ["origine", "biographie", "labels", "sons", "evenements", "booking", "contact"];
 
@@ -1155,6 +1158,7 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
+        <img className="footer-logo" src={publicAsset("/hero-emblem.png")} alt="VALANA" loading="lazy" decoding="async" />
         <p>{t.copyright}</p>
       </footer>
 
