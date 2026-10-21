@@ -433,7 +433,7 @@ const EVENT_REGION_IMAGES = [
 ];
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
-const EVENTS_PREVIEW_COUNT = 6;
+const EVENTS_PREVIEW_COUNT = 2;
 
 // Affiches et photos d'évènements, par ordre chronologique (les textes sont dans T.*.eventTimeline).
 // La frise les affiche du plus récent au plus ancien. Les photos en paysage ont un point
@@ -454,13 +454,16 @@ const EVENT_IMAGES = [
   "/events/vibrance-antre-26.jpg",
 ];
 
+// Région de chaque évènement (même ordre que EVENT_IMAGES) : 0 Festival, 1 Paris & alentours, 2 Côte d'Azur
+const EVENT_IMAGE_REGIONS = [1, 0, 2, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2];
+
 const ANCHORS = ["origine", "biographie", "labels", "sons", "evenements", "booking", "contact"];
 
 export default function App() {
   const [lang, setLang] = useState("fr");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
-  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [openRegions, setOpenRegions] = useState({});
   const [contactSent, setContactSent] = useState(false);
   const t = T[lang];
 
@@ -942,62 +945,66 @@ export default function App() {
           <h2>{t.eventsTitle}</h2>
           <p className="events-intro">{t.eventsIntro}</p>
           <div className="events">
-            {t.eventGroups.map((group, index) => (
-              <article className="event-group" key={group.region}>
-                <h3>{group.region}</h3>
-                <p className="event-place">{group.place}</p>
-                <ul className="event-venues">
-                  {group.venues.map((venue) => <li key={venue}>{venue}</li>)}
-                </ul>
-                {/* Affiches de la région : affichées dans le PDF uniquement */}
-                <div className="event-group-images" aria-hidden="true">
-                  {EVENT_REGION_IMAGES[index].map((image) => (
-                    <img key={image} src={publicAsset(image)} alt="" loading="lazy" decoding="async" />
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-          <ol className="event-timeline">
-            {t.eventTimeline
-              .map((event, index) => ({ event, index }))
-              .reverse()
-              .slice(0, showAllEvents ? undefined : EVENTS_PREVIEW_COUNT)
-              .map(({ event, index }) => {
-              const image = EVENT_IMAGES[index];
-              const { src: path, focus } = typeof image === "string" ? { src: image } : image;
-              const src = publicAsset(path);
+            {t.eventGroups.map((group, regionIndex) => {
+              // Évènements de la région, du plus récent au plus ancien
+              const regionEvents = t.eventTimeline
+                .map((event, index) => ({ event, index }))
+                .filter(({ index }) => EVENT_IMAGE_REGIONS[index] === regionIndex)
+                .reverse();
+              const open = Boolean(openRegions[regionIndex]);
               return (
-                <li className="event-card" key={path}>
-                  <div className={`event-media${focus ? " event-media-cropped" : ""}`} style={{ "--event-image": `url("${src}")` }}>
-                    <img
-                      src={src}
-                      alt={`${event.title} — ${event.date}`}
-                      loading="lazy"
-                      decoding="async"
-                      style={focus ? { objectPosition: focus } : undefined}
-                    />
+                <article className="event-group" key={group.region}>
+                  <h3>{group.region}</h3>
+                  <p className="event-place">{group.place}</p>
+                  <ul className="event-venues">
+                    {group.venues.map((venue) => <li key={venue}>{venue}</li>)}
+                  </ul>
+                  {/* Affiches de la région : affichées dans le PDF uniquement */}
+                  <div className="event-group-images" aria-hidden="true">
+                    {EVENT_REGION_IMAGES[regionIndex].map((image) => (
+                      <img key={image} src={publicAsset(image)} alt="" loading="lazy" decoding="async" />
+                    ))}
                   </div>
-                  <div className="event-info">
-                    <span className="event-year">{event.year}</span>
-                    <h3>{event.title}</h3>
-                    <p className="event-date">{event.date}</p>
-                    <p className="event-detail">{event.detail}</p>
-                  </div>
-                </li>
+                  <ol className="event-column">
+                    {regionEvents.slice(0, open ? undefined : EVENTS_PREVIEW_COUNT).map(({ event, index }) => {
+                      const image = EVENT_IMAGES[index];
+                      const { src: path, focus } = typeof image === "string" ? { src: image } : image;
+                      const src = publicAsset(path);
+                      return (
+                        <li className="event-card" key={path}>
+                          <div className={`event-media${focus ? " event-media-cropped" : ""}`} style={{ "--event-image": `url("${src}")` }}>
+                            <img
+                              src={src}
+                              alt={`${event.title} — ${event.date}`}
+                              loading="lazy"
+                              decoding="async"
+                              style={focus ? { objectPosition: focus } : undefined}
+                            />
+                          </div>
+                          <div className="event-info">
+                            <span className="event-year">{event.year}</span>
+                            <h4>{event.title}</h4>
+                            <p className="event-date">{event.date}</p>
+                            <p className="event-detail">{event.detail}</p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                  {regionEvents.length > EVENTS_PREVIEW_COUNT && (
+                    <button
+                      className="events-toggle"
+                      type="button"
+                      aria-expanded={open}
+                      onClick={() => setOpenRegions((state) => ({ ...state, [regionIndex]: !open }))}
+                    >
+                      {open ? t.eventsLess : `${t.eventsMore} (${regionEvents.length - EVENTS_PREVIEW_COUNT})`}
+                    </button>
+                  )}
+                </article>
               );
             })}
-          </ol>
-          {t.eventTimeline.length > EVENTS_PREVIEW_COUNT && (
-            <button
-              className="events-toggle"
-              type="button"
-              aria-expanded={showAllEvents}
-              onClick={() => setShowAllEvents((open) => !open)}
-            >
-              {showAllEvents ? t.eventsLess : t.eventsMore}
-            </button>
-          )}
+          </div>
         </section>
 
         <div className="booking-contact-print-group">

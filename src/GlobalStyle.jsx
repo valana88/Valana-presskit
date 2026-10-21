@@ -739,7 +739,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .events-intro { text-align: center; font-style: italic; color: var(--muted); margin-top: -0.75rem; }
 .events {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
-  width: min(100%, 70rem); margin-inline: auto;
+  align-items: start; width: min(100%, 70rem); margin-inline: auto;
 }
 .event-group {
   position: relative; padding: 1.4rem 1.6rem 1.6rem;
@@ -763,11 +763,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   padding: 0.3rem 0.8rem; border: 1px solid var(--turq-line); border-radius: 99px;
   font: 600 0.85rem var(--display);
 }
-/* Frise chronologique : image entière sur un fond flouté de la même image, sans recadrage */
-.event-timeline {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
-  width: min(100%, 70rem); margin: 1rem auto 0; padding: 0; list-style: none;
+/* Une colonne par région : ses évènements du plus récent au plus ancien, image entière sur un
+   fond flouté de la même image, sans recadrage */
+.event-column {
+  display: grid; gap: 1.2rem; margin: 1.4rem 0 0; padding: 0; list-style: none;
 }
+.event-group .events-toggle { display: block; margin: 1.2rem auto 0; }
 .event-card {
   display: flex; flex-direction: column; overflow: hidden;
   border: 1px solid rgba(239, 233, 220, 0.12); border-radius: 4px 22px 4px 22px;
@@ -806,7 +807,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background: linear-gradient(90deg, #64ee94, #a078e6); -webkit-background-clip: text; background-clip: text;
   color: transparent;
 }
-.event-info h3 { font: 700 1.05rem/1.25 var(--display); }
+.event-info h4 { font: 700 1.05rem/1.25 var(--display); }
 .event-date { margin-top: 0.25rem; color: var(--bone); font-size: 0.9rem; }
 .event-detail { margin-top: 0.15rem; color: var(--muted); font-size: 0.85rem; }
 .events-toggle {
@@ -830,13 +831,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
   box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
 }
 @media (max-width: 1000px) {
-  .event-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .event-group { padding-inline: 1.1rem; }
 }
 @media (max-width: 800px) {
   .events { grid-template-columns: 1fr; }
-}
-@media (max-width: 560px) {
-  .event-timeline { grid-template-columns: 1fr; }
+  /* Une seule colonne à l'écran : les deux évènements côte à côte */
+  .event-column { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
+  .event-info { padding: 0.8rem 0.9rem 1rem; }
+  .event-info h4 { font-size: 0.92rem; }
+  .event-date, .event-detail { font-size: 0.8rem; }
 }
 
 /* Booking */
@@ -1159,7 +1162,7 @@ footer { padding: 2.5rem clamp(1rem, 4vw, 3rem); color: var(--muted); border-top
   *, *::before, *::after {
     box-shadow: none !important; text-shadow: none !important; filter: none !important;
   }
-  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .hero-lake, .event-timeline, .events-toggle, .booking-cta, .floating-actions { display: none !important; }
+  .bar, .print, .horizon, .hero-starfield, .hero-aurora, .hero-aurora-glow, .hero-lake, .event-column, .events-toggle, .booking-cta, .floating-actions { display: none !important; }
   :root {
     --night: #fff;
     --bone: #13231e;
