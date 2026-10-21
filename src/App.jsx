@@ -78,7 +78,7 @@ const T = {
     soundIntro:
       "Des styles variés, des univers musicaux éclectiques !",
     eventsTitle: "Évènements",
-    eventsIntro: "Festivals, clubs et soirées où VALANA a joué.",
+    eventsIntro: "Festivals, clubs et soirées passés et à venir",
     eventGroups: [
       { region: "Festival", place: "Bourgogne", venues: ["Nataraja Festival"] },
       {
@@ -242,7 +242,7 @@ const T = {
     soundIntro:
       "A wide range of styles across eclectic musical spectrums",
     eventsTitle: "Events",
-    eventsIntro: "Festivals, clubs and parties where VALANA has played.",
+    eventsIntro: "Past and upcoming festivals, clubs and parties",
     eventGroups: [
       { region: "Festival", place: "Burgundy", venues: ["Nataraja Festival"] },
       {
@@ -433,7 +433,7 @@ const EVENT_REGION_IMAGES = [
 ];
 
 // Nombre de cartes visibles avant le bouton « Voir plus »
-const EVENTS_PREVIEW_COUNT = 2;
+const EVENTS_PREVIEW_COUNT = 3;
 
 // Affiches et photos d'évènements, par ordre chronologique (les textes sont dans T.*.eventTimeline).
 // La frise les affiche du plus récent au plus ancien. Les photos en paysage ont un point

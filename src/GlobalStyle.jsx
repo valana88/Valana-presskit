@@ -737,9 +737,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 /* Évènements */
 .events-intro { text-align: center; font-style: italic; color: var(--muted); margin-top: -0.75rem; }
+/* Une région par bloc, l'une sous l'autre : titre, puis ses évènements par rangées de trois */
 .events {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem;
-  align-items: start; width: min(100%, 70rem); margin-inline: auto;
+  display: grid; grid-template-columns: 1fr; gap: 2rem;
+  width: min(100%, 70rem); margin-inline: auto;
 }
 .event-group {
   position: relative; padding: 1.4rem 1.6rem 1.6rem;
@@ -766,7 +767,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* Une colonne par région : ses évènements du plus récent au plus ancien, image entière sur un
    fond flouté de la même image, sans recadrage */
 .event-column {
-  display: grid; gap: 1.2rem; margin: 1.4rem 0 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem;
+  margin: 1.4rem 0 0; padding: 0; list-style: none;
 }
 .event-group .events-toggle { display: block; margin: 1.2rem auto 0; }
 .event-card {
@@ -830,16 +832,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
     var(--btn-border) border-box;
   box-shadow: 0 0 1.1rem rgba(100, 238, 148, 0.2), 0 0 1.6rem rgba(160, 120, 230, 0.16);
 }
-@media (max-width: 1000px) {
-  .event-group { padding-inline: 1.1rem; }
-}
 @media (max-width: 800px) {
-  .events { grid-template-columns: 1fr; }
-  /* Une seule colonne à l'écran : les deux évènements côte à côte */
-  .event-column { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
-  .event-info { padding: 0.8rem 0.9rem 1rem; }
-  .event-info h4 { font-size: 0.92rem; }
-  .event-date, .event-detail { font-size: 0.8rem; }
+  .event-group { padding-inline: 1rem; }
+  /* Mobile : trois évènements par rangée, fiches compactes */
+  .event-column { gap: 0.55rem; }
+  .event-info { padding: 0.6rem 0.55rem 0.7rem; }
+  .event-info::before { left: 0.55rem; right: 0.55rem; }
+  .event-year { font-size: 0.65rem; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+  .event-info h4 { font-size: 0.72rem; }
+  .event-date { font-size: 0.68rem; }
+  .event-detail { display: none; }
 }
 
 /* Booking */
